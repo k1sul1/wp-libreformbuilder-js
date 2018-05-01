@@ -5,7 +5,7 @@ const nodeEnv = process.env.NODE_ENV || 'development'
 const isProd = nodeEnv === 'production'
 
 var config = {
-  devtool: isProd ? 'source-map' : 'cheap-eval-source-map',
+  devtool: isProd ? 'source-map' : 'cheap-module-eval-source-map',
   context: path.join(__dirname, './app'),
   entry: {
     common: [
