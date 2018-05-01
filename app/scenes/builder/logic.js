@@ -93,7 +93,7 @@ export default kea({
             const { children } = data
 
             if (children) {
-              const posInChildren = children.indexOf(from)
+              const posInChildren = Array.isArray(children) ? children.indexOf(from) : -1
 
               // remove if exists
               if (posInChildren > -1) {
@@ -118,12 +118,12 @@ export default kea({
       },
 
       [actions.deleteField]: (state, payload) => {
-        const { fieldKey, ...rest } = payload
+        const { fieldKey } = payload
 
-        return Object.entries(rest)
+        return Object.entries(state)
           .map(([key, data]) => {
             const { children } = data
-            const posInChildren = children.indexOf(fieldKey)
+            const posInChildren = Array.isArray(children) ? children.indexOf(fieldKey) : -1
 
             if (posInChildren > -1) {
               children.splice(posInChildren, 1)
