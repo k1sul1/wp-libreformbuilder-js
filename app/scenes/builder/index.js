@@ -1,9 +1,15 @@
 import './styles.scss'
 
 import React, { Component } from 'react'
+import { DragDropContext } from 'react-dnd'
+import HTML5Backend from 'react-dnd-html5-backend'
 import { connect } from 'kea'
 import builderLogic from './logic'
 
+import Builder from '../../components/builder'
+import AllFields from '../../components/all-fields'
+
+@DragDropContext(HTML5Backend)
 @connect({
   actions: [
     builderLogic, [
@@ -21,46 +27,6 @@ import builderLogic from './logic'
   ]
 })
 export default class BuilderScene extends Component {
-  constructor () {
-    super()
-
-    this.renderField = this.renderField.bind(this)
-  }
-
-  renderField ([key, data]) {
-    const { builderTree } = this.props
-    const { tag, attributes, children } = data
-    const takesChildren = Boolean(children)
-    let Tag = tag
-
-    if (key === 'builder') {
-      Tag = 'div'
-    } else if (!Tag) {
-      throw new Error(`Tried to render field ${key}, but no tag was found.`)
-    }
-
-    const element = takesChildren ? (
-      <Tag {...attributes}>
-        <div className="child-container">
-          {children.map(id => [id, builderTree[id]]).map(this.renderField)}
-        </div>
-      </Tag>
-    ) : (
-      <Tag {...attributes} />
-    )
-
-    return (
-      <article key={key}>
-        <header>
-          <h4>{key}</h4>
-        </header>
-        <section>
-          {element}
-        </section>
-      </article>
-    )
-  }
-
   componentDidMount () {
     setTimeout(() => {
       this.actions.moveField('test1', 'builder', 0)
@@ -78,13 +44,8 @@ export default class BuilderScene extends Component {
 
     return (
       <main>
-        <div id="builder">
-          {[Object.entries(builderTree)[0]].map(this.renderField)}
-        </div>
-
-        <div id="fields">
-          {Object.entries(fields).map(this.renderField)}
-        </div>
+        <Builder tree={builderTree} />
+        <AllFields fields={fields} />
       </main>
     )
   }
