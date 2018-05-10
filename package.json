@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "start": "./node_modules/.bin/webpack-dev-server --history-api-fallback --hot --port 2000",
+    "start": "./node_modules/.bin/webpack-dev-server --history-api-fallback --port 2000",
     "build": "NODE_ENV=production ./node_modules/.bin/webpack --progress",
     "prerender": "NODE_ENV=production node prerender.js"
   },
