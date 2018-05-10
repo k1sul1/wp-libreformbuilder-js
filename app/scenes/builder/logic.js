@@ -1,8 +1,10 @@
 import { kea } from 'kea'
+import { put } from 'redux-saga/effects'
 import { merge } from 'lodash'
 import shortid from 'shortid'
 import PropTypes from 'prop-types'
 
+const logReturn = x => console.log(x) || x
 const objectFromArray = (obj, [k, v]) => ({ ...obj, [k]: v })
 const defaultFields = {
   wrapper: {
@@ -117,10 +119,14 @@ export default kea({
         return draft
       },
 
+      /**
+       * Delete field. Saga deletes everything inside too.
+       */
       [actions.deleteField]: (state, payload) => {
         const { fieldKey } = payload
+        const entries = Object.entries(state)
 
-        return Object.entries(state)
+        return logReturn(entries
           .map(([key, data]) => {
             const { children } = data
             const posInChildren = Array.isArray(children) ? children.indexOf(fieldKey) : -1
@@ -131,9 +137,29 @@ export default kea({
 
             return [key, data]
           })
-          .reduce(objectFromArray, {})
+          .filter(([key, data]) => key !== fieldKey)
+          .reduce(objectFromArray, {}))
       },
     }],
+  }),
+
+  takeEvery: ({ actions, workers }) => ({
+    /**
+     * Delete every field which isn't anywhere
+     */
+    [actions.deleteField]: function * (params) {
+      const entries = Object.entries(yield this.get('builderTree'))
+      const allChildren = entries
+        .filter(([key, { children }]) => children !== false)
+        .reduce((acc, [key, { children }]) => [...acc, children], [])
+      const notAnywhere = entries.filter(([key]) => (
+        key !== 'builder' && allChildren.indexOf(key) === -1
+      )).map(([key]) => key)
+
+      for (let i = 0; i < notAnywhere.length; i++) {
+        yield put(actions.deleteField(notAnywhere[i]))
+      }
+    },
   }),
 
   // SELECTORS (data from reducer + more)
