@@ -61,6 +61,14 @@ export default class Field extends Component {
     this.actions.moveField(key, target, 0)
   }
 
+  moveToTop = (key) => {
+    this.actions.moveField(key, 'builder', 0)
+  }
+
+  moveToBottom = (key) => {
+    this.actions.moveField(key, 'builder', Number.MAX_SAFE_INTEGER)
+  }
+
   renderControls (key, index) {
     const { builderTree, origin } = this.props
     return (
@@ -70,8 +78,10 @@ export default class Field extends Component {
         )}
         {origin === 'Builder' && key !== 'builder' && (
           <Fragment>
+            <button onClick={() => this.moveToTop(key)}>Move to top</button>
             <button onClick={() => this.moveUp(key, index)}>Move up</button>
             <button onClick={() => this.moveDown(key, index)}>Move down</button>
+            <button onClick={() => this.moveToBottom(key)}>Move to bottom</button>
             <label>Move under
               <select onChange={(e) => this.moveUnder(key, e)}>
                 <option default>---</option>
