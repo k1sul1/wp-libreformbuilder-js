@@ -1,6 +1,24 @@
 import React, { Component } from 'react'
 import { DragSource, DropTarget } from 'react-dnd'
+import { connect } from 'kea'
+import builderLogic from '../../scenes/builder/logic'
 
+@connect({
+  actions: [
+    builderLogic, [
+      'addField',
+      'moveField',
+      'deleteField',
+    ]
+  ],
+  props: [
+    builderLogic, [
+      'fields',
+      'builderTree',
+      'populatedField'
+    ]
+  ]
+})
 @DragSource('field', {
   canDrag () {
     return true
@@ -52,7 +70,7 @@ export default class Field extends Component {
   }
 
   renderField ([key, data]) {
-    const { tree, connectDropTarget } = this.props
+    const { builderTree, connectDropTarget } = this.props
     const { tag, attributes, children } = data
     const takesChildren = Boolean(children)
     let Tag = tag
@@ -66,7 +84,7 @@ export default class Field extends Component {
     const element = takesChildren ? (
       <Tag {...attributes}>
         {connectDropTarget(<div className="child-container">
-          {children.map(id => [id, tree[id]]).map(this.renderField)}
+          {children.map(id => [id, builderTree[id]]).map(this.renderField)}
         </div>)}
       </Tag>
     ) : (

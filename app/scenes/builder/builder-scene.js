@@ -11,13 +11,13 @@ import AllFields from '../../components/all-fields/all-fields'
 
 @DragDropContext(HTML5Backend)
 @connect({
-  actions: [
-    builderLogic, [
-      'addField',
-      'moveField',
-      'deleteField',
-    ]
-  ],
+  // actions: [
+    // builderLogic, [
+      // 'addField',
+      // 'moveField',
+      // 'deleteField',
+    // ]
+  // ],
   props: [
     builderLogic, [
       'fields',
@@ -40,12 +40,12 @@ export default class BuilderScene extends Component {
   }
 
   render () {
-    const { fields, builderTree } = this.props
+    // const { fields, builderTree } = this.props
 
     return (
       <main>
-        <Builder tree={builderTree} actions={this.actions} />
-        <AllFields fields={fields} actions={this.actions} />
+        <Builder />
+        <AllFields />
       </main>
     )
   }

@@ -2,6 +2,25 @@ import React, { Component } from 'react'
 import { DropTarget } from 'react-dnd'
 import Field from '../field/field'
 
+import { connect } from 'kea'
+import builderLogic from '../../scenes/builder/logic'
+
+@connect({
+  actions: [
+    builderLogic, [
+      'addField',
+      'moveField',
+      'deleteField',
+    ]
+  ],
+  props: [
+    builderLogic, [
+      'fields',
+      'builderTree',
+      'populatedField'
+    ]
+  ]
+})
 @DropTarget(['field'], {
   hover (props, monitor, component) {
     console.log('hover builder', props)
@@ -26,12 +45,17 @@ import Field from '../field/field'
 }))
 export default class Builder extends Component {
   render () {
-    const { tree, connectDropTarget, actions } = this.props
+    const { connectDropTarget, actions, builderTree } = this.props
 
     return connectDropTarget(
       <div id="builder">
-        {[Object.entries(tree)[0]].map(([key, data]) => (
-          <Field key={key} fkey={key} data={data} tree={tree} origin={'Builder'} actions={actions} />
+        {[Object.entries(builderTree)[0]].map(([key, data]) => (
+          <Field
+            key={key}
+            fkey={key}
+            data={data}
+            origin={'Builder'}
+            actions={actions} />
         ))}
       </div>
     )
