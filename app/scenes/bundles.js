@@ -4,5 +4,5 @@ import async from '~/components/async'
 export default {
   homepage: async('Homepage', () => import(/* webpackChunkName: "homepage" */'./homepage')),
   todos: async('Todos', () => import(/* webpackChunkName: "todos" */'./todos')),
-  builder: async('Builder', () => import(/* webpackChunkName: "builder" */'./builder')),
+  builder: async('Builder', () => import(/* webpackChunkName: "builder" */'./builder/builder-scene.js')),
 }

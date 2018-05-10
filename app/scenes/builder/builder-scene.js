@@ -6,8 +6,8 @@ import HTML5Backend from 'react-dnd-html5-backend'
 import { connect } from 'kea'
 import builderLogic from './logic'
 
-import Builder from '../../components/builder'
-import AllFields from '../../components/all-fields'
+import Builder from '../../components/builder/builder'
+import AllFields from '../../components/all-fields/all-fields'
 
 @DragDropContext(HTML5Backend)
 @connect({
@@ -44,8 +44,8 @@ export default class BuilderScene extends Component {
 
     return (
       <main>
-        <Builder tree={builderTree} />
-        <AllFields fields={fields} />
+        <Builder tree={builderTree} actions={this.actions} />
+        <AllFields fields={fields} actions={this.actions} />
       </main>
     )
   }
