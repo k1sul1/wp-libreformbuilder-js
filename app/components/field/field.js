@@ -18,6 +18,7 @@ Modal.setAppElement('#root')
   props: [
     builderLogic, [
       'builderTree',
+      'fields',
       'getPopulatedField',
       'getFieldParent',
       'getAbilityToHaveChildren',
@@ -47,6 +48,21 @@ export default class Field extends Component {
   closeModal = () => {
     this.setState({ modal: {
       open: false,
+    }})
+  }
+
+  selectField = (key) => {
+    // move with modal
+    const selectedFieldData = this.props.getPopulatedField(key, {
+      attributes: { placeholder: 'Hamster' }
+    })
+
+    // console.log(selectedFieldData)
+
+    this.setState({ modal: {
+      ...this.state.modal,
+      selectedField: key,
+      selectedFieldData, // Maximum callstack etc
     }})
   }
 
@@ -83,10 +99,19 @@ export default class Field extends Component {
   }
 
   renderModal (state) {
-    const { builderTree } = this.props
+    // put into own component
+    const { builderTree, fields } = this.props
+    const { open, addFieldTarget, selectedField, selectedFieldData } = state
+
+    if (!open) {
+      return
+    }
+
+    console.log(selectedField, selectedFieldData)
+
     return (
       <Modal
-        isOpen={state.open}
+        isOpen={open}
         onRequestClose={this.closeModal}
         contentlabel={'Add field'}>
         <header>
@@ -95,8 +120,14 @@ export default class Field extends Component {
         </header>
 
         <label>
+          Select field
+          {Object.entries(fields).map(([key, data]) => (
+            <button onClick={() => this.selectField(key)} key={key}>{key}</button>
+          ))}
+        </label>
+        <label>
           Target (duplicated code)
-          <select defaultValue={state.addFieldTarget}>
+          <select defaultValue={addFieldTarget}>
             {Object.entries(builderTree)
               .filter(([k, { children }]) => children)
               .map(([key, data]) => (
@@ -104,6 +135,9 @@ export default class Field extends Component {
               ))}
           </select>
         </label>
+
+        <h3>Field preview</h3>
+        {selectedField && this.renderField([selectedField, selectedFieldData])}
       </Modal>
     )
   }
