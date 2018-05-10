@@ -25,17 +25,22 @@ const defaultFields = {
 }
 const defaultBuilderTree = {
   builder: {
-    children: ['test2'],
+    children: ['test1'],
   },
   test1: {
+    field: 'wrapper',
+    children: ['test2', 'test3'],
+    tag: 'div',
+  },
+  test2: {
     field: 'text',
     children: false,
     tag: 'input',
   },
-  test2: {
-    field: 'wrapper',
-    children: ['test1'],
-    tag: 'div',
+  test3: {
+    field: 'text',
+    children: false,
+    tag: 'input',
   }
 }
 

@@ -1,19 +1,7 @@
-# kea-example
+# WP Libre Formbuilder
+Graphical User Interface for WP Libre Form. You control the markup, but your end-users can build forms without any HTML knowledge.
 
-This is the example app for kea.
+## Why no drag & drop?
+DnD interfaces are often tedious to use. Sure, they work great on desktop, when there's one level, but complex forms may have any number of levels. Using mobile devices with limited screen space makes it spectacularly easy to ~~ruin everything~~ misplace elements.
 
-This app is automatically set up as the boilerplate when you use the scaffolding tool:
-
-```
-npm install -g kea
-
-kea new myproject
-cd myproject
-
-npm install
-npm start
-```
-
-and then open http://localhost:2000/
-
-... or clone it instead of scaffolding, if that's your cup of tea.
+By not relying on DnD the code stays relatively simple, and works on every device. You have controls for moving fields up and down, and a field to move a field anywhere in the form.
