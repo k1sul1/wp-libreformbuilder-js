@@ -5,18 +5,10 @@ import { connect } from 'kea'
 import builderLogic from '../../scenes/builder/logic'
 
 @connect({
-  // actions: [
-    // builderLogic, [
-      // 'addField',
-      // 'moveField',
-      // 'deleteField',
-    // ]
-  // ],
   props: [
     builderLogic, [
       'fields',
       'builderTree',
-      'populatedField'
     ]
   ]
 })
