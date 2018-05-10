@@ -58,11 +58,11 @@ export default kea({
       toIndex: toFieldIndex,
       data: fieldData,
     }),
-    moveField: (startFieldKey, toFieldKey, toFieldIndex) => ({
+    moveField: (startFieldKey, toFieldKey, toFieldIndex) => logReturn(({
       from: startFieldKey,
       to: toFieldKey,
       toIndex: toFieldIndex,
-    }),
+    })),
     deleteField: (fieldKey) => ({ fieldKey }),
   }),
 
@@ -174,6 +174,13 @@ export default kea({
       (field) => {
         return (key, overwriteWith) => merge(field[key], { id: shortid.generate() }, overwriteWith)
       },
+      PropTypes.func
+    ],
+    fieldParent: [
+      () => [selectors.builderTree],
+      (tree) => (k) => Object.entries(tree)
+        .filter(([key, { children }]) => children && children.indexOf(k) > -1)
+        .map(([key]) => key)[0] || false,
       PropTypes.func
     ]
   })

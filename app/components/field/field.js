@@ -18,7 +18,8 @@ Modal.setAppElement('#root')
   props: [
     builderLogic, [
       'builderTree',
-      'populatedField'
+      'populatedField',
+      'fieldParent',
     ]
   ]
 })
@@ -44,13 +45,14 @@ export default class Field extends Component {
     this.openModal()
   }
 
-  moveUp = (key) => {
-    console.log('move up')
+  moveUp = (key, index) => {
+    const parent = this.props.fieldParent(key)
+    this.actions.moveField(key, parent, index - 1)
   }
 
-  moveDown = (key) => {
-    // this.actions.moveField(
-    console.log('move down')
+  moveDown = (key, index) => {
+    const parent = this.props.fieldParent(key)
+    this.actions.moveField(key, parent, index + 1)
   }
 
   moveUnder = (key, e) => {
@@ -59,7 +61,7 @@ export default class Field extends Component {
     this.actions.moveField(key, target, 0)
   }
 
-  renderControls (key) {
+  renderControls (key, index) {
     const { builderTree, origin } = this.props
     return (
       <div className="controls">
@@ -68,8 +70,8 @@ export default class Field extends Component {
         )}
         {origin === 'Builder' && key !== 'builder' && (
           <Fragment>
-            <button onClick={() => this.moveUp(key)}>Move up</button>
-            <button onClick={() => this.moveDown(key)}>Move down</button>
+            <button onClick={() => this.moveUp(key, index)}>Move up</button>
+            <button onClick={() => this.moveDown(key, index)}>Move down</button>
             <label>Move under
               <select onChange={(e) => this.moveUnder(key, e)}>
                 <option default>---</option>
@@ -87,7 +89,7 @@ export default class Field extends Component {
     )
   }
 
-  renderField ([key, data]) {
+  renderField ([key, data], index = 0) {
     // console.log(key, this.props)
     const { builderTree } = this.props
     const { tag, attributes, children } = data
@@ -113,7 +115,7 @@ export default class Field extends Component {
       <article key={key}>
         <header>
           <h4>{key}</h4>
-          {this.renderControls(key)}
+          {this.renderControls(key, index)}
         </header>
         <section>
           {element}
