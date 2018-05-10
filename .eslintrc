@@ -14,6 +14,7 @@
     "arrow-parens": 0,
     "comma-dangle": 0,
     "jsx-quotes": ["error", "prefer-double"],
+    "indent": ["warn", 2, { "ignoreComments": true }],
   },
   "extends": ["standard", "standard-react"],
   "parser": "babel-eslint"
