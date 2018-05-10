@@ -98,6 +98,10 @@ export default class Field extends Component {
     this.actions.moveField(key, 'builder', Number.MAX_SAFE_INTEGER)
   }
 
+  deleteField = (key) => {
+    this.actions.deleteField(key)
+  }
+
   renderModal (state) {
     // put into own component
     const { builderTree, fields } = this.props
@@ -166,6 +170,7 @@ export default class Field extends Component {
                   ))}
               </select>
             </label>
+            <button onClick={() => this.deleteField(key)}>Delete</button>
           </Fragment>
         )}
       </div>

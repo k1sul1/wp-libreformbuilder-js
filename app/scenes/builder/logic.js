@@ -162,7 +162,7 @@ export default kea({
       const entries = Object.entries(yield this.get('builderTree'))
       const allChildren = entries
         .filter(([key, { children }]) => children !== false)
-        .reduce((acc, [key, { children }]) => [...acc, children], [])
+        .reduce((acc, [key, { children }]) => [...acc, ...children], [])
       const notAnywhere = entries.filter(([key]) => (
         key !== 'builder' && allChildren.indexOf(key) === -1
       )).map(([key]) => key)
