@@ -36,11 +36,17 @@ const defaultBuilderTree = {
     field: 'text',
     children: false,
     tag: 'input',
+    attributes: {
+      placeholder: 'Dog',
+    }
   },
   test3: {
     field: 'text',
     children: false,
     tag: 'input',
+    attributes: {
+      placeholder: 'Cat',
+    }
   }
 }
 
@@ -169,17 +175,24 @@ export default kea({
 
   // SELECTORS (data from reducer + more)
   selectors: ({ constants, selectors }) => ({
-    populatedField: [
+    getPopulatedField: [
       () => [selectors.fields],
       (field) => {
         return (key, overwriteWith) => merge(field[key], { id: shortid.generate() }, overwriteWith)
       },
       PropTypes.func
     ],
-    fieldParent: [
+    getFieldParent: [
       () => [selectors.builderTree],
       (tree) => (k) => Object.entries(tree)
         .filter(([key, { children }]) => children && children.indexOf(k) > -1)
+        .map(([key]) => key)[0] || false,
+      PropTypes.func
+    ],
+    getAbilityToHaveChildren: [
+      () => [selectors.builderTree],
+      (tree) => (k) => Object.entries(tree)
+        .filter(([key, { children }]) => k === key && Boolean(children))
         .map(([key]) => key)[0] || false,
       PropTypes.func
     ]

@@ -18,8 +18,9 @@ Modal.setAppElement('#root')
   props: [
     builderLogic, [
       'builderTree',
-      'populatedField',
-      'fieldParent',
+      'getPopulatedField',
+      'getFieldParent',
+      'getAbilityToHaveChildren',
     ]
   ]
 })
@@ -27,31 +28,43 @@ export default class Field extends Component {
   constructor () {
     super()
     this.state = {
-      modalOpen: false,
+      modal: {
+        open: false,
+      },
     }
 
     this.renderField = this.renderField.bind(this)
   }
 
-  openModal = () => {
-    this.setState({ modalOpen: true })
+  openModal = (data) => {
+    this.setState({ modal: {
+      ...this.state.modal,
+      ...data,
+      open: true,
+    }})
   }
 
   closeModal = () => {
-    this.setState({ modalOpen: false })
+    this.setState({ modal: {
+      open: false,
+    }})
   }
 
   addField = (key) => {
-    this.openModal()
+    const { getFieldParent, getAbilityToHaveChildren } = this.props
+    const addFieldTarget = getAbilityToHaveChildren(key) ? key : getFieldParent(key)
+    this.openModal({
+      addFieldTarget,
+    })
   }
 
   moveUp = (key, index) => {
-    const parent = this.props.fieldParent(key)
+    const parent = this.props.getFieldParent(key)
     this.actions.moveField(key, parent, index - 1)
   }
 
   moveDown = (key, index) => {
-    const parent = this.props.fieldParent(key)
+    const parent = this.props.getFieldParent(key)
     this.actions.moveField(key, parent, index + 1)
   }
 
@@ -67,6 +80,32 @@ export default class Field extends Component {
 
   moveToBottom = (key) => {
     this.actions.moveField(key, 'builder', Number.MAX_SAFE_INTEGER)
+  }
+
+  renderModal (state) {
+    const { builderTree } = this.props
+    return (
+      <Modal
+        isOpen={state.open}
+        onRequestClose={this.closeModal}
+        contentlabel={'Add field'}>
+        <header>
+          <h2>Add field</h2>
+          <button onClick={this.closeModal}>&times;</button>
+        </header>
+
+        <label>
+          Target (duplicated code)
+          <select defaultValue={state.addFieldTarget}>
+            {Object.entries(builderTree)
+              .filter(([k, { children }]) => children)
+              .map(([key, data]) => (
+                <option value={key} key={key}>{key}</option>
+              ))}
+          </select>
+        </label>
+      </Modal>
+    )
   }
 
   renderControls (key, index) {
@@ -131,18 +170,7 @@ export default class Field extends Component {
           {element}
         </section>
 
-        <Modal
-          isOpen={this.state.modalOpen}
-          onRequestClose={this.closeModal}
-          contentlabel={'Add field'}>
-          <header>
-            <h2>Add field</h2>
-            <button onClick={this.closeModal}>&times;</button>
-          </header>
-
-
-          Settings
-        </Modal>
+        {this.renderModal(this.state.modal)}
       </article>
     )
   }
