@@ -147,13 +147,17 @@ export default class Field extends Component {
   }
 
   renderControls (key, index) {
-    const { builderTree, origin } = this.props
+    const { builderTree, mode, modes } = this.props
+
     return (
       <div className="controls">
-        {origin === 'Builder' && (
-          <button onClick={() => this.addField(key)}>Add field</button>
+        {modes[mode] === modes.insert && (
+          <Fragment>
+            <button onClick={() => this.addField(key)}>Add field</button>
+            <button onClick={() => this.deleteField(key)}>Delete</button>
+          </Fragment>
         )}
-        {origin === 'Builder' && key !== 'builder' && (
+        {modes[mode] === modes.move && (
           <Fragment>
             <button onClick={() => this.moveToTop(key)}>Move to top</button>
             <button onClick={() => this.moveUp(key, index)}>Move up</button>
