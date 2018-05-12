@@ -66,7 +66,7 @@ const builderModes = {
     move: MODE_MOVE,
     preview: MODE_PREVIEW,
   },
-  enabled: MODE_INSERT,
+  enabled: MODE_PREVIEW,
 }
 
 export default kea({
