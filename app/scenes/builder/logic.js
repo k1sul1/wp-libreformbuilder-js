@@ -50,6 +50,25 @@ const defaultBuilderTree = {
   }
 }
 
+const MODE_INSERT = 0
+const MODE_MOVE = 1
+const MODE_PREVIEW = 2
+
+export const MODES = {
+  MODE_INSERT,
+  MODE_MOVE,
+  MODE_PREVIEW,
+}
+
+const builderModes = {
+  available: {
+    insert: MODE_INSERT,
+    move: MODE_MOVE,
+    preview: MODE_PREVIEW,
+  },
+  enabled: MODE_INSERT,
+}
+
 export default kea({
   path: () => ['scenes', 'builder'],
 
@@ -57,6 +76,7 @@ export default kea({
   ],
 
   actions: ({ constants }) => ({
+    setMode: (mode) => mode,
     addAvailableField: (key, data) => ({ [key]: data }),
 
     addField: (toFieldKey, toFieldIndex, fieldData) => ({
@@ -73,6 +93,9 @@ export default kea({
   }),
 
   reducers: ({ actions, constants }) => ({
+    mode: [builderModes, PropTypes.object, {}, {
+      [actions.setMode]: (state, payload) => ({ ...state, enabled: payload }),
+    }],
     fields: [defaultFields, PropTypes.object, {}, {
       [actions.addAvailableField]: (state, payload) => ({ ...state, ...payload }),
     }],
@@ -175,6 +198,26 @@ export default kea({
 
   // SELECTORS (data from reducer + more)
   selectors: ({ constants, selectors }) => ({
+    modes: [
+      () => [selectors.mode],
+      ({ available }) => ({ ...available }),
+      PropTypes.object
+    ],
+    textMode: [
+      () => [selectors.mode],
+      ({ available, enabled }) => {
+        const modeIndex = Object.values(available).indexOf(enabled)
+        const modeText = Object.keys(available)[modeIndex]
+
+        return modeText
+      },
+      PropTypes.string
+    ],
+    mode: [
+      () => [selectors.mode],
+      ({ enabled }) => enabled,
+      PropTypes.number
+    ],
     getPopulatedField: [
       () => [selectors.fields],
       (field) => {
