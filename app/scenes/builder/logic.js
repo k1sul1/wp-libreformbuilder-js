@@ -104,7 +104,7 @@ export default kea({
       [actions.addAvailableField]: (state, payload) => ({ ...state, ...payload }),
     }],
 
-    builderTree: [defaultBuilderTree, PropTypes.object, {}, {
+    builderTree: [defaultBuilderTree, PropTypes.object, { persist: true }, {
       [actions.addField]: (state, payload) => {
         const { to, toIndex, data } = payload
         const { id, ...rest } = data // Use populatedField selector to populate `rest`
@@ -225,7 +225,11 @@ export default kea({
     getPopulatedField: [
       () => [selectors.fields],
       (field) => {
-        return (key, overwriteWith) => merge(field[key], { id: shortid.generate() }, overwriteWith)
+        return (key, overwriteWith) => merge(
+          field[key],
+          { id: shortid.generate(), field: key },
+          overwriteWith
+        )
       },
       PropTypes.func
     ],

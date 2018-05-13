@@ -53,25 +53,18 @@ export default class WorkArea extends Component {
   }
 
   selectField = (key) => {
-    // move with modal
-    const selectedFieldData = this.props.getPopulatedField(key, {
-      attributes: { placeholder: 'Hamster' }
-    })
-
-    // console.log(selectedFieldData)
-
     this.setState({ modal: {
       ...this.state.modal,
       selectedField: key,
-      selectedFieldData, // Maximum callstack etc
     }})
   }
 
-  addField = (key) => {
+  addField = (key, index) => {
     const { getFieldParent, getAbilityToHaveChildren } = this.props
     const addFieldTarget = getAbilityToHaveChildren(key) ? key : getFieldParent(key)
     this.openModal({
       addFieldTarget,
+      addFieldIndex: index,
     })
   }
 
@@ -103,16 +96,56 @@ export default class WorkArea extends Component {
     this.actions.deleteField(key)
   }
 
-  renderModal (state) {
-    // put into own component
-    const { builderTree, fields } = this.props
-    const { open, addFieldTarget, selectedField, selectedFieldData } = state
+  handleSubmit = (e) => {
+    const { selectedField, addFieldIndex } = this.state.modal
+    const { getPopulatedField } = this.props
+    const { addField } = this.actions
+    const form = e.target
+    const entries = Array.from(new window.FormData(form).entries())
+      .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {})
+    const { target, ...attributes } = entries
 
-    if (!open) {
+    addField(
+      target,
+      addFieldIndex + 1,
+      getPopulatedField(selectedField, { attributes })
+    )
+    this.closeModal()
+    e.preventDefault()
+  }
+
+  renderModal () {
+    const state = this.state.modal
+    const { builderTree, fields, getPopulatedField } = this.props
+
+    if (!state.open) {
       return
     }
 
-    // console.log(selectedField, selectedFieldData)
+    const { open, addFieldTarget, selectedField } = state
+    let controls
+
+    if (selectedField) {
+      const { attributes } = getPopulatedField(selectedField)
+
+      controls = (
+        <div className="attribute-customization">
+          {attributes ? (
+            Object.entries(attributes).map(([name, value]) => {
+              return (
+                <label key={`${name}-${value}`}>
+                  {name}
+
+                  <input type="text" name={name} defaultValue={value} />
+                </label>
+              )
+            })
+          ) : (
+            <p>{`Field doen't allow attribute customization`}</p>
+          )}
+        </div>
+      )
+    }
 
     return (
       <Modal
@@ -121,28 +154,35 @@ export default class WorkArea extends Component {
         contentlabel={'Add field'}>
         <header>
           <h2>Add field</h2>
-          <button onClick={this.closeModal}>&times;</button>
+          <button type="button" onClick={this.closeModal}>&times;</button>
         </header>
 
-        <label>
-          Select field
-          {Object.entries({} || fields).map(([key, data]) => (
-            <button onClick={() => this.selectField(key)} key={key}>{key}</button>
-          ))}
-        </label>
-        <label>
-          Target (duplicated code)
-          <select defaultValue={addFieldTarget}>
-            {Object.entries(builderTree)
-              .filter(([k, { children }]) => children)
-              .map(([key, data]) => (
-                <option value={key} key={key}>{key}</option>
-              ))}
-          </select>
-        </label>
+        <form ref={n => { this.modalForm = n }} onSubmit={this.handleSubmit}>
+          <label>
+            <h3>Select field</h3>
 
-        <h3>Field preview</h3>
-        {false === true && selectedField && this.renderField([selectedField, selectedFieldData])}
+            {Object.entries(fields).map(([key, data]) => (
+              <button type="button" onClick={() => this.selectField(key)} key={key}>{key}</button>
+            ))}
+          </label>
+
+          {controls}
+
+          <br />
+          <label>
+            <h3>Target field</h3>
+
+            <select name="target" defaultValue={addFieldTarget}>
+              {Object.entries(builderTree)
+                .filter(([k, { children }]) => children)
+                .map(([key, data]) => (
+                  <option value={key} key={key}>{key}</option>
+                ))}
+            </select>
+          </label>
+
+          <button>Add</button>
+        </form>
       </Modal>
     )
   }
@@ -154,7 +194,7 @@ export default class WorkArea extends Component {
       <div className="controls">
         {modes[mode] === modes.insert && (
           <Fragment>
-            <button onClick={() => this.addField(key)}>Add field</button>
+            <button onClick={() => this.addField(key, index)}>Add field</button>
             <button onClick={() => this.deleteField(key)}>Delete</button>
           </Fragment>
         )}
@@ -206,7 +246,7 @@ export default class WorkArea extends Component {
         <section>
           {element}
         </section>
-        {this.renderModal(this.state.modal)}
+        {this.renderModal()}
       </article>
     )
   }
