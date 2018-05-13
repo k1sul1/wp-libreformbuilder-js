@@ -122,7 +122,9 @@ export default class WorkArea extends Component {
       return
     }
 
-    const { open, addFieldTarget, selectedField } = state
+    const { open, addFieldTarget, addFieldIndex, selectedField } = state
+    const targetChildren = builderTree[addFieldTarget].children
+    const addUnder = targetChildren[addFieldIndex]
     let controls
 
     if (selectedField) {
@@ -152,34 +154,55 @@ export default class WorkArea extends Component {
         isOpen={open}
         onRequestClose={this.closeModal}
         contentlabel={'Add field'}>
-        <header>
+        <header className="modal-header">
           <h2>Add field</h2>
           <button type="button" onClick={this.closeModal}>&times;</button>
         </header>
 
-        <form ref={n => { this.modalForm = n }} onSubmit={this.handleSubmit}>
-          <label>
-            <h3>Select field</h3>
+        <form className="modal-content" ref={n => { this.modalForm = n }} onSubmit={this.handleSubmit}>
+          <section className="field-select">
+            <label>
+              <h3>Select field</h3>
 
-            {Object.entries(fields).map(([key, data]) => (
-              <button type="button" onClick={() => this.selectField(key)} key={key}>{key}</button>
-            ))}
-          </label>
+              {Object.entries(fields).map(([key, data]) => (
+                <button type="button" onClick={() => this.selectField(key)} key={key}>{key}</button>
+              ))}
+            </label>
+          </section>
 
-          {controls}
+          <section className="field-target">
+            <h3>Target</h3>
 
-          <br />
-          <label>
-            <h3>Target field</h3>
+            <label>
+              <h4>Parent</h4>
 
-            <select name="target" defaultValue={addFieldTarget}>
-              {Object.entries(builderTree)
-                .filter(([k, { children }]) => children)
-                .map(([key, data]) => (
-                  <option value={key} key={key}>{key}</option>
-                ))}
-            </select>
-          </label>
+              <select name="target" defaultValue={addFieldTarget}>
+                {Object.entries(builderTree)
+                  .filter(([k, { children }]) => children)
+                  .map(([key, data]) => (
+                    <option value={key} key={key}>{key}</option>
+                  ))}
+              </select>
+            </label>
+
+            {addUnder && (
+              <label>
+                <h4>Child</h4>
+
+                <select name="target_index" defaultValue={addUnder}>
+                  {targetChildren
+                    .map(key => (
+                      <option value={key} key={key}>{key}</option>
+                    ))}
+                </select>
+              </label>
+            )}
+          </section>
+
+          <section className="field-attributes">
+            <h3>Attributes</h3>
+            {controls || <p>Select field first.</p>}
+          </section>
 
           <button>Add</button>
         </form>
