@@ -8,3 +8,32 @@
     display: block;
   }
 }
+
+.modal-header {
+  overflow: hidden;
+
+  h2 {
+    float: left;
+    margin: 0;
+    padding: 0;
+  }
+
+  button {
+    float: right;
+  }
+}
+
+.modal-content {
+  .field-target {
+    overflow: hidden;
+
+    h4 {
+      margin: 0;
+      padding: 0;
+    }
+
+    label {
+      float: left;
+    }
+  }
+}
