@@ -4,6 +4,7 @@ import React, { Component, Fragment } from 'react'
 import Modal from 'react-modal'
 import { connect } from 'kea'
 import builderLogic from '../../scenes/builder/logic'
+// import { renderTree } from '../preview/preview'
 
 Modal.setAppElement('#root')
 
@@ -25,7 +26,7 @@ Modal.setAppElement('#root')
     ]
   ]
 })
-export default class Field extends Component {
+export default class WorkArea extends Component {
   constructor () {
     super()
     this.state = {
@@ -111,7 +112,7 @@ export default class Field extends Component {
       return
     }
 
-    console.log(selectedField, selectedFieldData)
+    // console.log(selectedField, selectedFieldData)
 
     return (
       <Modal
@@ -125,7 +126,7 @@ export default class Field extends Component {
 
         <label>
           Select field
-          {Object.entries(fields).map(([key, data]) => (
+          {Object.entries({} || fields).map(([key, data]) => (
             <button onClick={() => this.selectField(key)} key={key}>{key}</button>
           ))}
         </label>
@@ -141,7 +142,7 @@ export default class Field extends Component {
         </label>
 
         <h3>Field preview</h3>
-        {selectedField && this.renderField([selectedField, selectedFieldData])}
+        {false === true && selectedField && this.renderField([selectedField, selectedFieldData])}
       </Modal>
     )
   }
@@ -182,27 +183,20 @@ export default class Field extends Component {
   }
 
   renderField ([key, data], index = 0) {
-    // console.log(key, this.props)
     const { builderTree } = this.props
-    const { tag, attributes, children } = data
-    const takesChildren = Boolean(children)
-    let Tag = tag
+    const { tag: Tag, attributes, children } = data
 
-    if (key === 'builder') {
-      Tag = 'div'
-    } else if (!Tag) {
-      throw new Error(`Tried to render field ${key}, but no tag was found.`)
-    }
-
-    const element = takesChildren ? (
+    const element = children ? (
       <Tag {...attributes}>
-        <div className="child-container">
-          {children.map(id => [id, builderTree[id]]).map(this.renderField)}
-        </div>
+        {children
+          .map(id => [id, builderTree[id]])
+          .map(([id, data], i) => this.renderField([id, data], i))
+        }
       </Tag>
     ) : (
       <Tag {...attributes} />
     )
+
     return (
       <article key={key}>
         <header>
@@ -212,15 +206,22 @@ export default class Field extends Component {
         <section>
           {element}
         </section>
-
         {this.renderModal(this.state.modal)}
       </article>
     )
   }
 
   render () {
-    const { fkey, data } = this.props
+    const { builderTree } = this.props
+    const data = builderTree.builder.children
+      .map(id => [id, builderTree[id]])
 
-    return this.renderField([fkey, data])
+    return (
+      <Fragment>
+        {data
+          .map(([id, data], i) => this.renderField([id, data], i))
+        }
+      </Fragment>
+    )
   }
 }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import WorkArea from '../field/field'
+// import WorkArea from '../field/field'
+import WorkArea from '../work-area/work-area'
 import Preview from '../preview/preview'
 
 import { connect } from 'kea'
@@ -38,16 +39,12 @@ export default class Builder extends Component {
           ))}
         </header>
 
-        {(modes[textMode] === modes.insert || modes[textMode] === modes.move) &&
-          [Object.entries(builderTree)[0]].map(([key, data]) => (
-            <WorkArea
-              key={key}
-              fkey={key}
-              data={data}
-              mode={textMode}
-              modes={modes}
-            />
-        ))}
+        {(modes[textMode] === modes.insert || modes[textMode] === modes.move) && (
+          <WorkArea
+            mode={textMode}
+            modes={modes}
+          />
+        )}
 
         {modes[textMode] === modes.preview && (
           <Preview tree={builderTree} />
