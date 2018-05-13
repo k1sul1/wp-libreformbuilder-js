@@ -12,6 +12,7 @@ const defaultFields = {
     tag: 'div',
     attributes: {
       'data-test': 'Test 2',
+      className: 'child-container',
     }
   },
   text: {
@@ -31,6 +32,9 @@ const defaultBuilderTree = {
     field: 'wrapper',
     children: ['test2', 'test3'],
     tag: 'div',
+    attributes: {
+      className: 'child-container',
+    }
   },
   test2: {
     field: 'text',
@@ -66,7 +70,7 @@ const builderModes = {
     move: MODE_MOVE,
     preview: MODE_PREVIEW,
   },
-  enabled: MODE_PREVIEW,
+  enabled: MODE_INSERT,
 }
 
 export default kea({
