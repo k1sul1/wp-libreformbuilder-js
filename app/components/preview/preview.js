@@ -1,6 +1,6 @@
 import './styles.scss'
 
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 
 const renderTree = (tree) => {
   const nodeGenerator = ({ tag: Tag, attributes, children, key }) => children ? (
@@ -21,14 +21,30 @@ const renderTree = (tree) => {
   )
 }
 export default class Preview extends Component {
+  state = {
+    html: '',
+  }
+
+  componentDidMount () {
+    this.setState({ html: this.result.querySelector('form').innerHTML })
+  }
+
+  // componentWillReceiveProps () {
+    // this.setState({ html: this.result.querySelector('form').innerHTML })
+  // }
+
   render () {
     const { tree } = this.props
 
     return (
-      <pre>
-        {JSON.stringify(tree, null, 2)}
-        {renderTree(tree)}
-      </pre>
+      <Fragment>
+        <div className="preview" ref={n => { this.result = n }}>
+          {renderTree(tree)}
+        </div>
+
+        <textarea className="result-html" value={this.state.html} />
+      </Fragment>
+
     )
   }
 }
