@@ -32,6 +32,9 @@ export default class WorkArea extends Component {
     this.state = {
       modal: {
         open: false,
+        selectedField: null,
+        addFieldTarget: null,
+        addFieldIndex: null,
       },
     }
 
@@ -97,17 +100,17 @@ export default class WorkArea extends Component {
   }
 
   handleSubmit = (e) => {
-    const { selectedField, addFieldIndex } = this.state.modal
+    const { selectedField } = this.state.modal
     const { getPopulatedField } = this.props
     const { addField } = this.actions
     const form = e.target
     const entries = Array.from(new window.FormData(form).entries())
       .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {})
-    const { target, ...attributes } = entries
+    const { target, targetIndex, ...attributes } = entries
 
     addField(
       target,
-      addFieldIndex + 1,
+      parseInt(targetIndex) + 1,
       getPopulatedField(selectedField, { attributes })
     )
     this.closeModal()
@@ -176,7 +179,7 @@ export default class WorkArea extends Component {
             <label>
               <h4>Parent</h4>
 
-              <select name="target" defaultValue={addFieldTarget}>
+              <select name="target" readOnly defaultValue={addFieldTarget}>
                 {Object.entries(builderTree)
                   .filter(([k, { children }]) => children)
                   .map(([key, data]) => (
@@ -187,12 +190,12 @@ export default class WorkArea extends Component {
 
             {addUnder && (
               <label>
-                <h4>Child</h4>
+                <h4>Child to add under</h4>
 
-                <select name="target_index" defaultValue={addUnder}>
+                <select name="targetIndex" defaultValue={addFieldIndex}>
                   {targetChildren
-                    .map(key => (
-                      <option value={key} key={key}>{key}</option>
+                    .map((key, index) => (
+                      <option value={index} key={key}>{key}</option>
                     ))}
                 </select>
               </label>
@@ -204,7 +207,7 @@ export default class WorkArea extends Component {
             {controls || <p>Select field first.</p>}
           </section>
 
-          <button>Add</button>
+          {controls && <button>Add</button>}
         </form>
       </Modal>
     )

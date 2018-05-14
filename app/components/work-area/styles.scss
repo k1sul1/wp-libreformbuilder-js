@@ -9,6 +9,12 @@
   }
 }
 
+select[readonly] {
+  cursor: normal;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
 .modal-header {
   overflow: hidden;
 
