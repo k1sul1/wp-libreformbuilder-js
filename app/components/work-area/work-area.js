@@ -1,8 +1,10 @@
 import './styles.scss'
 
 import React, { Component, Fragment } from 'react'
+// import HTML from 'html-react-parser'
 import Modal from 'react-modal'
 import { connect } from 'kea'
+import HTML from '../HTML/HTML'
 import builderLogic from '../../scenes/builder/logic'
 // import { renderTree } from '../preview/preview'
 
@@ -250,9 +252,8 @@ export default class WorkArea extends Component {
 
   renderField ([key, data], index = 0) {
     const { builderTree } = this.props
-    const { tag: Tag, attributes, children } = data
-
-    const element = children ? (
+    const { tag: Tag, attributes, children, html } = data
+    let element = children ? (
       <Tag {...attributes}>
         {children
           .map(id => [id, builderTree[id]])
@@ -263,8 +264,12 @@ export default class WorkArea extends Component {
       <Tag {...attributes} />
     )
 
+    if (html) {
+      element = <HTML element={element}>{html}</HTML>
+    }
+
     return (
-      <article key={key}>
+      <article key={key} data-key={key}>
         <header>
           <h4>{key}</h4>
           {this.renderControls(key, index)}
