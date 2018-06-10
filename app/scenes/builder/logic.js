@@ -13,7 +13,7 @@ const defaultFields = {
     // the actual values.
     template: `<div class="outer">
     <h1>Heading</h1>
-    <div class="child-container">
+    <div class="field-container">
     </div>
     <h2>Under container</h2>
     </div>`,
@@ -25,7 +25,7 @@ const defaultFields = {
   },
   text: {
     children: false,
-    template: `<div class="outer2"><p>Hi!</p><div class="child-container"></div></div>`,
+    template: `<div class="field-container"></div>`,
     tag: 'input',
     attributes: {
       type: 'text',
@@ -42,7 +42,7 @@ const defaultBuilderTree = {
     children: ['test2', 'test3'],
     template: `<div class="outer">
     <h1>Heading</h1>
-    <div class="child-container">
+    <div class="field-container">
     </div>
     <h2>Under container</h2>
     </div>`,
@@ -54,7 +54,7 @@ const defaultBuilderTree = {
   test2: {
     field: 'text',
     children: false,
-    template: `<div class="outer2"><p>Hi!</p><div class="child-container"></div></div>`,
+    template: `<div class="field-container"></div>`,
     tag: 'input',
     attributes: {
       placeholder: 'Dog',
