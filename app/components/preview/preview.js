@@ -4,7 +4,7 @@ import React, { Component, Fragment } from 'react'
 import HTML from '../HTML/HTML'
 
 const renderTree = (tree) => {
-  const nodeGenerator = ({ tag: Tag, attributes, children, key, html }) => {
+  const nodeGenerator = ({ tag: Tag, attributes, children, key, template }) => {
     let element = children ? (
       <Tag {...attributes} key={key}>
         {children.map(key => nodeGenerator({ ...tree[key], key }))}
@@ -13,8 +13,8 @@ const renderTree = (tree) => {
       <Tag {...attributes} key={key} />
     )
 
-    if (html) {
-      element = <HTML element={element}>{html}</HTML>
+    if (template) {
+      element = <HTML element={element}>{template}</HTML>
     }
 
     return element
