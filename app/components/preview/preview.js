@@ -4,14 +4,25 @@ import React, { Component, Fragment } from 'react'
 import HTML from '../HTML/HTML'
 
 const renderTree = (tree) => {
-  const nodeGenerator = ({ tag: Tag, attributes, children, key, template }) => {
+  const nodeGenerator = ({ tag: Tag, attributes, children, key, template, label }) => {
+    const textContent = attributes['data-text']
     let element = children ? (
       <Tag {...attributes} key={key}>
+        {textContent}
         {children.map(key => nodeGenerator({ ...tree[key], key }))}
       </Tag>
     ) : (
       <Tag {...attributes} key={key} />
     )
+
+    if (label) {
+      element = (
+        <label>
+          <span className="wplf-label">{label}</span>
+          {element}
+        </label>
+      )
+    }
 
     if (template) {
       element = <HTML element={element}>{template}</HTML>

@@ -17,6 +17,7 @@ const defaultFields = {
     </div>
     <h2>Under container</h2>
     </div>`,
+    label: false,
     tag: 'div',
     attributes: {
       'data-test': 'Test 2',
@@ -26,10 +27,21 @@ const defaultFields = {
   text: {
     children: false,
     template: `<div class="field-container"></div>`,
+    label: 'Text field label',
     tag: 'input',
     attributes: {
       type: 'text',
       placeholder: 'Test',
+    }
+  },
+  label: { // Bad idea, don't do it, use label prop
+    children: [],
+    template: `<label>
+      <span class="child-container"></span>
+    </label>`,
+    tag: 'strong',
+    attributes: {
+      'data-text': 'Your field label',
     }
   }
 }
@@ -46,6 +58,7 @@ const defaultBuilderTree = {
     </div>
     <h2>Under container</h2>
     </div>`,
+    label: false,
     tag: 'div',
     attributes: {
       className: 'child-container',
@@ -55,6 +68,7 @@ const defaultBuilderTree = {
     field: 'text',
     children: false,
     template: `<div class="field-container"></div>`,
+    label: 'Text field label',
     tag: 'input',
     attributes: {
       placeholder: 'Dog',
@@ -63,6 +77,7 @@ const defaultBuilderTree = {
   test3: {
     field: 'text',
     children: false,
+    label: 'Text field label',
     tag: 'input',
     attributes: {
       placeholder: 'Cat',
