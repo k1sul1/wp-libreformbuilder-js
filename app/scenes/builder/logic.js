@@ -9,13 +9,15 @@ const objectFromArray = (obj, [k, v]) => ({ ...obj, [k]: v })
 const defaultFields = {
   wrapper: {
     children: [],
-    tag: 'div',
-    html: `<div class="outer">
+    // Template is the container for the field, tag and attributes are
+    // the actual values.
+    template: `<div class="outer">
     <h1>Heading</h1>
     <div class="child-container">
     </div>
     <h2>Under container</h2>
     </div>`,
+    tag: 'div',
     attributes: {
       'data-test': 'Test 2',
       className: 'child-container',
@@ -23,6 +25,7 @@ const defaultFields = {
   },
   text: {
     children: false,
+    template: `<div class="outer2"><p>Hi!</p><div class="child-container"></div></div>`,
     tag: 'input',
     attributes: {
       type: 'text',
@@ -37,13 +40,13 @@ const defaultBuilderTree = {
   test1: {
     field: 'wrapper',
     children: ['test2', 'test3'],
-    tag: 'div',
-    html: `<div class="outer">
+    template: `<div class="outer">
     <h1>Heading</h1>
     <div class="child-container">
     </div>
     <h2>Under container</h2>
     </div>`,
+    tag: 'div',
     attributes: {
       className: 'child-container',
     }
@@ -51,6 +54,7 @@ const defaultBuilderTree = {
   test2: {
     field: 'text',
     children: false,
+    template: `<div class="outer2"><p>Hi!</p><div class="child-container"></div></div>`,
     tag: 'input',
     attributes: {
       placeholder: 'Dog',

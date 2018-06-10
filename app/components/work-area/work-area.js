@@ -252,7 +252,7 @@ export default class WorkArea extends Component {
 
   renderField ([key, data], index = 0) {
     const { builderTree } = this.props
-    const { tag: Tag, attributes, children, html } = data
+    const { tag: Tag, attributes, children, template } = data
     let element = children ? (
       <Tag {...attributes}>
         {children
@@ -264,8 +264,8 @@ export default class WorkArea extends Component {
       <Tag {...attributes} />
     )
 
-    if (html) {
-      element = <HTML element={element}>{html}</HTML>
+    if (template) {
+      element = <HTML element={element}>{template}</HTML>
     }
 
     return (
