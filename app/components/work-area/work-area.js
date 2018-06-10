@@ -108,12 +108,12 @@ export default class WorkArea extends Component {
     const form = e.target
     const entries = Array.from(new window.FormData(form).entries())
       .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {})
-    const { target, targetIndex, ...attributes } = entries
+    const { target, targetIndex, label, ...attributes } = entries
 
     addField(
       target,
       parseInt(targetIndex) + 1,
-      getPopulatedField(selectedField, { attributes })
+      getPopulatedField(selectedField, { attributes, label })
     )
     this.closeModal()
     e.preventDefault()
@@ -133,7 +133,7 @@ export default class WorkArea extends Component {
     let controls
 
     if (selectedField) {
-      const { attributes } = getPopulatedField(selectedField)
+      const { attributes, label } = getPopulatedField(selectedField)
 
       controls = (
         <div className="attribute-customization">
@@ -149,6 +149,16 @@ export default class WorkArea extends Component {
             })
           ) : (
             <p>{`Field doen't allow attribute customization`}</p>
+          )}
+
+          {label ? (
+            <label>
+              Field label
+
+              <input type="text" name="label" defaultValue={label} />
+            </label>
+          ) : (
+            <p>Field doesn't take a label.</p>
           )}
         </div>
       )
@@ -252,9 +262,11 @@ export default class WorkArea extends Component {
 
   renderField ([key, data], index = 0) {
     const { builderTree } = this.props
-    const { tag: Tag, attributes, children, template } = data
+    const { tag: Tag, attributes, children, template, label } = data
+    const textContent = attributes['data-text']
     let element = children ? (
       <Tag {...attributes}>
+        {textContent}
         {children
           .map(id => [id, builderTree[id]])
           .map(([id, data], i) => this.renderField([id, data], i))
@@ -275,7 +287,14 @@ export default class WorkArea extends Component {
           {this.renderControls(key, index)}
         </header>
         <section>
-          {element}
+          {label ? (
+            <label>
+              <span className="wplf-label">
+                {label}
+              </span>
+              {element}
+            </label>
+          ) : element}
         </section>
         {this.renderModal()}
       </article>
