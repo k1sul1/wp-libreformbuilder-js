@@ -30,6 +30,7 @@
     "babel-runtime": "^6.26.0",
     "es6-promise": "^4.2.4",
     "history": "^4.7.2",
+    "html-react-parser": "^0.4.6",
     "kea": "^0.27.8",
     "kea-localstorage": "^0.2.0",
     "kea-saga": "^0.3.2",

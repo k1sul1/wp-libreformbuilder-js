@@ -1,15 +1,24 @@
 import './styles.scss'
 
 import React, { Component, Fragment } from 'react'
+import HTML from '../HTML/HTML'
 
 const renderTree = (tree) => {
-  const nodeGenerator = ({ tag: Tag, attributes, children, key }) => children ? (
-    <Tag {...attributes} key={key}>
-      {children.map(key => nodeGenerator({ ...tree[key], key }))}
-    </Tag>
-  ) : (
-    <Tag {...attributes} key={key} />
-  )
+  const nodeGenerator = ({ tag: Tag, attributes, children, key, html }) => {
+    let element = children ? (
+      <Tag {...attributes} key={key}>
+        {children.map(key => nodeGenerator({ ...tree[key], key }))}
+      </Tag>
+    ) : (
+      <Tag {...attributes} key={key} />
+    )
+
+    if (html) {
+      element = <HTML element={element}>{html}</HTML>
+    }
+
+    return element
+  }
   const rootNodes = tree.builder.children
     .map(key => ({ ...tree[key], key }))
     .map(nodeGenerator)

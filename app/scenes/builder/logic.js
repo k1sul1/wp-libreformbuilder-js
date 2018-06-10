@@ -10,6 +10,12 @@ const defaultFields = {
   wrapper: {
     children: [],
     tag: 'div',
+    html: `<div class="outer">
+    <h1>Heading</h1>
+    <div class="child-container">
+    </div>
+    <h2>Under container</h2>
+    </div>`,
     attributes: {
       'data-test': 'Test 2',
       className: 'child-container',
@@ -32,6 +38,12 @@ const defaultBuilderTree = {
     field: 'wrapper',
     children: ['test2', 'test3'],
     tag: 'div',
+    html: `<div class="outer">
+    <h1>Heading</h1>
+    <div class="child-container">
+    </div>
+    <h2>Under container</h2>
+    </div>`,
     attributes: {
       className: 'child-container',
     }
