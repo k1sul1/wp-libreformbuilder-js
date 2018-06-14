@@ -3,6 +3,41 @@ import { put } from 'redux-saga/effects'
 import { merge } from 'lodash'
 import shortid from 'shortid'
 import PropTypes from 'prop-types'
+import req from '../../utils/req'
+
+const dirtyParser = (html) => {
+  let el = document.createElement('div')
+  el.innerHTML = html
+  el = el.children[0]
+
+  const attributes = {}
+  const labelEl = el.querySelector('label')
+  const label = labelEl ? labelEl.textContent : false
+
+  for (let i = el.attributes.length - 1; i >= 0; i--) {
+    const k = el.attributes[i].name
+    const v = el.attributes[i].value
+
+    switch (k) {
+    case 'class': {
+      attributes['className'] = v
+      break
+    }
+
+    case 'for': {
+      attributes['htmlFor'] = v
+      break
+    }
+
+    default: {
+      attributes[k] = v
+      break
+    }
+    }
+  }
+
+  return [el.tagName.toLowerCase(), attributes, label]
+}
 
 const logReturn = x => console.log(x) || x
 const objectFromArray = (obj, [k, v]) => ({ ...obj, [k]: v })
@@ -122,7 +157,25 @@ export default kea({
       [actions.setMode]: (state, payload) => ({ ...state, enabled: payload }),
     }],
     fields: [defaultFields, PropTypes.object, {}, {
-      [actions.addAvailableField]: (state, payload) => ({ ...state, ...payload }),
+      [actions.addAvailableField]: (state, payload) => {
+        const [key, data] = Object.entries(payload)[0]
+        const { field, ...filtered } = data
+        const [tag, attributes, label] = dirtyParser(field)
+
+        console.log(tag, attributes, label)
+
+        const fieldObj = {
+          [key]: {
+            children: data.field.indexOf('child-container') !== -1 ? [] : false,
+            label,
+            tag,
+            attributes,
+            ...filtered,
+          }
+        }
+
+        return ({ ...state, ...fieldObj })
+      },
     }],
 
     builderTree: [defaultBuilderTree, PropTypes.object, { persist: true }, {
@@ -201,6 +254,19 @@ export default kea({
       },
     }],
   }),
+
+  start: function * () {
+    const actions = this.actions
+    const fieldReq = yield req.get('/wp-json/wplfb/fields')
+    const { data } = fieldReq
+    const fields = Object.entries(data.fields)
+
+    for (let i = 0; i < fields.length; i++) {
+      yield put(actions.addAvailableField(...fields[i]))
+    }
+
+    // console.log(fields)
+  },
 
   takeEvery: ({ actions, workers }) => ({
     /**
