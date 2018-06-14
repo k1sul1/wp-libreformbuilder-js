@@ -34,16 +34,6 @@ const defaultFields = {
       placeholder: 'Test',
     }
   },
-  label: { // Bad idea, don't do it, use label prop
-    children: [],
-    template: `<label>
-      <span class="child-container"></span>
-    </label>`,
-    tag: 'strong',
-    attributes: {
-      'data-text': 'Your field label',
-    }
-  }
 }
 const defaultBuilderTree = {
   builder: {
