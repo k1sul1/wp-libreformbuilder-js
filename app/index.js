@@ -13,7 +13,7 @@ import './index.html'
 import bundles from './scenes/bundles'
 
 const runAppInAdmin = () => {
-  document.querySelector('#postdivrich').style.display = 'none';
+  document.querySelector('#postdivrich').style.display = 'none'
 }
 
 if (window.wplfb && window.wplfb.active) {
