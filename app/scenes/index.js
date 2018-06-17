@@ -7,6 +7,6 @@ import bundles from './bundles'
 
 export default () => (
   <div>
-    <Route exact path='/' component={bundles.builder} />
+    <Route component={bundles.builder} />
   </div>
 )
