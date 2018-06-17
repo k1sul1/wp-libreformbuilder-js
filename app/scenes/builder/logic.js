@@ -11,8 +11,6 @@ const dirtyParser = (html) => {
   el = el.children[0]
 
   const attributes = {}
-  const labelEl = el.querySelector('label')
-  const label = labelEl ? labelEl.textContent : false
 
   for (let i = el.attributes.length - 1; i >= 0; i--) {
     const k = el.attributes[i].name
@@ -36,7 +34,7 @@ const dirtyParser = (html) => {
     }
   }
 
-  return [el.tagName.toLowerCase(), attributes, label]
+  return [el.tagName.toLowerCase(), attributes]
 }
 
 const logReturn = x => console.log(x) || x
@@ -160,14 +158,11 @@ export default kea({
       [actions.addAvailableField]: (state, payload) => {
         const [key, data] = Object.entries(payload)[0]
         const { field, ...filtered } = data
-        const [tag, attributes, label] = dirtyParser(field)
-
-        console.log(tag, attributes, label)
+        const [tag, attributes] = dirtyParser(field)
 
         const fieldObj = {
           [key]: {
             children: data.field.indexOf('child-container') !== -1 ? [] : false,
-            label,
             tag,
             attributes,
             ...filtered,
