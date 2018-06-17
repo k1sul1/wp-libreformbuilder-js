@@ -308,6 +308,7 @@ export default class WorkArea extends Component {
 
     return (
       <Fragment>
+        {this.renderControls('builder', 0)}
         {data
           .map(([id, data], i) => this.renderField([id, data], i))
         }
