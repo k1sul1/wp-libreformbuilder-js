@@ -8,7 +8,7 @@ import HTML from '../HTML/HTML'
 import builderLogic from '../../scenes/builder/logic'
 // import { renderTree } from '../preview/preview'
 
-Modal.setAppElement('#root')
+Modal.setAppElement('#wplfb_buildarea')
 
 @connect({
   actions: [
