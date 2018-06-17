@@ -1,12 +1,13 @@
 import './styles.scss'
 
 import React from 'react'
-import { Route } from 'react-router'
+// import { Route } from 'react-router'
 
 import bundles from './bundles'
+const { Builder } = bundles
 
 export default () => (
   <div>
-    <Route component={bundles.builder} />
+    <Builder />
   </div>
 )
