@@ -7,17 +7,17 @@ const renderTree = (tree) => {
   const nodeGenerator = ({ tag: Tag, attributes, children, key, template, label }) => {
     const textContent = attributes['data-text']
     let element = children ? (
-      <Tag {...attributes} key={key}>
+      <Tag {...attributes} key={`${key}-tag`}>
         {textContent}
         {children.map(key => nodeGenerator({ ...tree[key], key }))}
       </Tag>
     ) : (
-      <Tag {...attributes} key={key} />
+      <Tag {...attributes} key={`${key}-tag`} />
     )
 
     if (label) {
       element = (
-        <label>
+        <label key={`${key}-label`}>
           <span className="wplf-label">{label}</span>
           {element}
         </label>
@@ -25,7 +25,7 @@ const renderTree = (tree) => {
     }
 
     if (template) {
-      element = <HTML element={element}>{template}</HTML>
+      element = <HTML element={element} key={`${key}-template`}>{template}</HTML>
     }
 
     return element
