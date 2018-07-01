@@ -134,6 +134,9 @@ export default kea({
   ],
 
   actions: ({ constants }) => ({
+    import: (data) => data,
+    export: ({ stateInput, contentEl }) => ({ stateInput, contentEl }),
+
     setMode: (mode) => mode,
     addAvailableField: (key, data) => ({ [key]: data }),
 
@@ -264,6 +267,50 @@ export default kea({
   },
 
   takeEvery: ({ actions, workers }) => ({
+    [actions.import]: function * ({ payload }) {
+      try {
+        const newState = JSON.parse(payload)
+        const state = yield this.get()
+        const importable = ['builderTree']
+
+        for (let i = 0; i < importable.length; i++) {
+          const key = importable[i]
+
+          if (newState[key]) {
+            state[key] = newState[key]
+          }
+        }
+
+        console.log(newState, state)
+      } catch (e) {
+        console.log('No valid payload provided, skipping import')
+      }
+    },
+    [actions.export]: function * ({ payload }) {
+      try {
+        const state = yield this.get()
+        const { stateInput, contentEl } = payload
+        const exportable = ['builderTree']
+        const exportObj = {}
+
+        for (let i = 0; i < exportable.length; i++) {
+          const key = exportable[i]
+
+          if (state[key]) {
+            exportObj[key] = state[key]
+          }
+        }
+
+        console.log(exportObj)
+
+        if (stateInput && contentEl) {
+          stateInput.value = JSON.stringify(exportObj)
+          contentEl.value = 'lol'
+        }
+      } catch (e) {
+        console.log('No valid payload provided, skipping import')
+      }
+    },
     /**
      * Delete every field which isn't anywhere
      */
