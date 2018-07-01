@@ -168,6 +168,7 @@ export default class WorkArea extends Component {
       <Modal
         isOpen={open}
         onRequestClose={this.closeModal}
+        customStyles={{zIndex: 999999999}}
         contentlabel={'Add field'}>
         <header className="modal-header">
           <h2>Add field</h2>
