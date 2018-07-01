@@ -21,6 +21,8 @@ export default class BuilderScene extends Component {
 
   componentDidMount () {
     // Dirty DOM work
+    this.actions.import('')
+    this.actions.export({})
     const publishButton = document.querySelector('#publish')
 
     if (publishButton) {
