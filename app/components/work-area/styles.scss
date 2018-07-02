@@ -15,6 +15,10 @@ select[readonly] {
   opacity: 0.7;
 }
 
+.ReactModal__Overlay--after-open {
+  z-index: 99999;
+}
+
 .modal-header {
   overflow: hidden;
 

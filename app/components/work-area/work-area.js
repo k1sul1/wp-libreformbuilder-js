@@ -51,8 +51,7 @@ export default class WorkArea extends Component {
     }})
   }
 
-  closeModal = (e) => {
-    e.preventDefault()
+  closeModal = () => {
     this.setState({ modal: {
       open: false,
     }})
@@ -173,7 +172,7 @@ export default class WorkArea extends Component {
         contentlabel={'Add field'}>
         <header className="modal-header">
           <h2>Add field</h2>
-          <button type="button" onClick={this.closeModal}>&times;</button>
+          <button type="button" onClick={e => e.preventDefault() || this.closeModal()}>&times;</button>
         </header>
 
         <form className="modal-content" ref={n => { this.modalForm = n }} onSubmit={this.handleSubmit}>
