@@ -51,7 +51,8 @@ export default class WorkArea extends Component {
     }})
   }
 
-  closeModal = () => {
+  closeModal = (e) => {
+    e.preventDefault()
     this.setState({ modal: {
       open: false,
     }})
@@ -105,7 +106,7 @@ export default class WorkArea extends Component {
     const { selectedField } = this.state.modal
     const { getPopulatedField } = this.props
     const { addField } = this.actions
-    const form = e.target
+    const form = e.target.closest('form') || e.target
     const entries = Array.from(new window.FormData(form).entries())
       .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {})
     const { target, targetIndex, label, ...attributes } = entries
@@ -181,7 +182,7 @@ export default class WorkArea extends Component {
               <h3>Select field</h3>
 
               {Object.entries(fields).map(([key, data]) => (
-                <button type="button" onClick={() => this.selectField(key)} key={key}>{key}</button>
+                <button type="button" onClick={(e) => e.preventDefault() && this.selectField(key)} key={key}>{key}</button>
               ))}
             </label>
           </section>
@@ -220,7 +221,7 @@ export default class WorkArea extends Component {
             {controls || <p>Select field first.</p>}
           </section>
 
-          {controls && <button>Add</button>}
+          {controls && <button onClick={this.handleSubmit}>Add</button>}
         </form>
       </Modal>
     )
@@ -233,16 +234,16 @@ export default class WorkArea extends Component {
       <div className="controls">
         {modes[mode] === modes.insert && (
           <Fragment>
-            <button onClick={() => this.addField(key, index)}>Add field</button>
-            <button onClick={() => this.deleteField(key)}>Delete</button>
+            <button onClick={(e) => e.preventDefault() && this.addField(key, index)}>Add field</button>
+            <button onClick={(e) => e.preventDefault() && this.deleteField(key)}>Delete</button>
           </Fragment>
         )}
         {modes[mode] === modes.move && (
           <Fragment>
-            <button onClick={() => this.moveToTop(key)}>Move to top</button>
-            <button onClick={() => this.moveUp(key, index)}>Move up</button>
-            <button onClick={() => this.moveDown(key, index)}>Move down</button>
-            <button onClick={() => this.moveToBottom(key)}>Move to bottom</button>
+            <button onClick={(e) => e.preventDefault() && this.moveToTop(key)}>Move to top</button>
+            <button onClick={(e) => e.preventDefault() && this.moveUp(key, index)}>Move up</button>
+            <button onClick={(e) => e.preventDefault() && this.moveDown(key, index)}>Move down</button>
+            <button onClick={(e) => e.preventDefault() && this.moveToBottom(key)}>Move to bottom</button>
             <label>Move under
               <select onChange={(e) => this.moveUnder(key, e)}>
                 <option default>---</option>
@@ -254,7 +255,7 @@ export default class WorkArea extends Component {
                   ))}
               </select>
             </label>
-            <button onClick={() => this.deleteField(key)}>Delete</button>
+            <button onClick={(e) => e.preventDefault() && this.deleteField(key)}>Delete</button>
           </Fragment>
         )}
       </div>

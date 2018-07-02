@@ -23,6 +23,7 @@ if (window.wplfb && window.wplfb.active) {
   const publishBtn = document.querySelector('#publish')
   const formbuilderBtn = publishBtn.cloneNode(true)
 
+  formbuilderBtn.id = null
   formbuilderBtn.type = 'button'
   formbuilderBtn.value = 'Use formbuilder'
   formbuilderBtn.style.float = 'right'
