@@ -10,6 +10,12 @@ import Builder from '../../components/builder/builder'
     builderLogic, [
       'export',
       'import',
+      'setMode',
+    ]
+  ],
+  props: [
+    builderLogic, [
+      'modes',
     ]
   ],
 })
@@ -21,6 +27,7 @@ export default class BuilderScene extends Component {
 
   componentDidMount () {
     // Dirty DOM work
+    const { modes } = this.props
     const publishButton = document.querySelector('#publish')
 
     if (publishButton) {
@@ -34,6 +41,7 @@ export default class BuilderScene extends Component {
 
       publishButton.addEventListener('click', (e) => { // Not intending to remove
         console.log('I will not let you save')
+        this.actions.setMode(modes.preview)
         this.actions.export({ stateInput, contentEl })
         e.preventDefault()
         e.stopPropagation()
