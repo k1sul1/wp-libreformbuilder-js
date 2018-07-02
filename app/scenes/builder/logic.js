@@ -137,6 +137,8 @@ export default kea({
     import: (data) => data,
     export: ({ stateInput, contentEl }) => ({ stateInput, contentEl }),
 
+    setHTML: (html) => html,
+
     setMode: (mode) => mode,
     addAvailableField: (key, data) => ({ [key]: data }),
 
@@ -174,6 +176,10 @@ export default kea({
 
         return ({ ...state, ...fieldObj })
       },
+    }],
+
+    previewHTML: ['', PropTypes.string, {
+      [actions.setHTML]: (state, payload) => payload,
     }],
 
     builderTree: [defaultBuilderTree, PropTypes.object, { persist: true }, {
@@ -305,7 +311,7 @@ export default kea({
 
         if (stateInput && contentEl) {
           stateInput.value = JSON.stringify(exportObj)
-          contentEl.value = 'lol'
+          contentEl.value = state.previewHTML
         }
       } catch (e) {
         console.log('No valid payload provided, skipping import')

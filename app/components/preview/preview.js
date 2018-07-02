@@ -1,6 +1,8 @@
 import './styles.scss'
 
 import React, { Component, Fragment } from 'react'
+import { connect } from 'kea'
+import builderLogic from '../../scenes/builder/logic'
 import HTML from '../HTML/HTML'
 
 const renderTree = (tree) => {
@@ -40,29 +42,35 @@ const renderTree = (tree) => {
     </form>
   )
 }
+
+@connect({
+  actions: [
+    builderLogic, [
+      'setHTML'
+    ]
+  ],
+  props: [
+    builderLogic, [
+      'builderTree',
+      'previewHTML',
+    ]
+  ]
+})
 export default class Preview extends Component {
-  state = {
-    html: '',
-  }
-
   componentDidMount () {
-    this.setState({ html: this.result.querySelector('form').innerHTML })
+    this.actions.setHTML(this.result.querySelector('form').innerHTML)
   }
-
-  // componentWillReceiveProps () {
-    // this.setState({ html: this.result.querySelector('form').innerHTML })
-  // }
 
   render () {
-    const { tree } = this.props
+    const { builderTree, previewHTML } = this.props
 
     return (
       <Fragment>
         <div className="preview" ref={n => { this.result = n }}>
-          {renderTree(tree)}
+          {renderTree(builderTree)}
         </div>
 
-        <textarea className="result-html" value={this.state.html} />
+        <textarea className="result-html" value={previewHTML} />
       </Fragment>
 
     )
