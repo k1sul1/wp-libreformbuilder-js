@@ -182,7 +182,7 @@ export default class WorkArea extends Component {
               <h3>Select field</h3>
 
               {Object.entries(fields).map(([key, data]) => (
-                <button type="button" onClick={(e) => e.preventDefault() && this.selectField(key)} key={key}>{key}</button>
+                <button type="button" onClick={(e) => e.preventDefault() || this.selectField(key)} key={key}>{key}</button>
               ))}
             </label>
           </section>
@@ -234,16 +234,16 @@ export default class WorkArea extends Component {
       <div className="controls">
         {modes[mode] === modes.insert && (
           <Fragment>
-            <button onClick={(e) => e.preventDefault() && this.addField(key, index)}>Add field</button>
-            <button onClick={(e) => e.preventDefault() && this.deleteField(key)}>Delete</button>
+            <button onClick={(e) => e.preventDefault() || this.addField(key, index)}>Add field</button>
+            <button onClick={(e) => e.preventDefault() || this.deleteField(key)}>Delete</button>
           </Fragment>
         )}
         {modes[mode] === modes.move && (
           <Fragment>
-            <button onClick={(e) => e.preventDefault() && this.moveToTop(key)}>Move to top</button>
-            <button onClick={(e) => e.preventDefault() && this.moveUp(key, index)}>Move up</button>
-            <button onClick={(e) => e.preventDefault() && this.moveDown(key, index)}>Move down</button>
-            <button onClick={(e) => e.preventDefault() && this.moveToBottom(key)}>Move to bottom</button>
+            <button onClick={(e) => e.preventDefault() || this.moveToTop(key)}>Move to top</button>
+            <button onClick={(e) => e.preventDefault() || this.moveUp(key, index)}>Move up</button>
+            <button onClick={(e) => e.preventDefault() || this.moveDown(key, index)}>Move down</button>
+            <button onClick={(e) => e.preventDefault() || this.moveToBottom(key)}>Move to bottom</button>
             <label>Move under
               <select onChange={(e) => this.moveUnder(key, e)}>
                 <option default>---</option>
@@ -255,7 +255,7 @@ export default class WorkArea extends Component {
                   ))}
               </select>
             </label>
-            <button onClick={(e) => e.preventDefault() && this.deleteField(key)}>Delete</button>
+            <button onClick={(e) => e.preventDefault() || this.deleteField(key)}>Delete</button>
           </Fragment>
         )}
       </div>
