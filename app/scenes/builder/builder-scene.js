@@ -21,8 +21,6 @@ export default class BuilderScene extends Component {
 
   componentDidMount () {
     // Dirty DOM work
-    this.actions.import('')
-    this.actions.export({})
     const publishButton = document.querySelector('#publish')
 
     if (publishButton) {
@@ -39,6 +37,11 @@ export default class BuilderScene extends Component {
         this.actions.export({ stateInput, contentEl })
         e.preventDefault()
         e.stopPropagation()
+
+        setTimeout(() => {
+          // 1 second should be enough on all devices
+          publishButton.click()
+        }, 1000)
       }, { once: true, capture: true, passive: false })
     }
   }
