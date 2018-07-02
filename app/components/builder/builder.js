@@ -35,7 +35,7 @@ export default class Builder extends Component {
           </span>
 
           {Object.entries(modes).map(([name, value]) => (
-            <button onClick={(e) => e.preventDefault() && setMode(value)} key={name} >{name}</button>
+            <button onClick={(e) => e.preventDefault() || setMode(value)} key={name} >{name}</button>
           ))}
         </header>
 
