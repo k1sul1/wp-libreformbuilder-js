@@ -17,6 +17,7 @@ select[readonly] {
 
 .ReactModal__Overlay--after-open {
   z-index: 99999;
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .modal-header {
