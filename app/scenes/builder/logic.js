@@ -273,6 +273,9 @@ export default kea({
   },
 
   takeEvery: ({ actions, workers }) => ({
+    '*': function * ({ payload }) {
+      // implement undo/redo
+    },
     [actions.import]: function * ({ payload }) {
       try {
         const newState = JSON.parse(payload)
