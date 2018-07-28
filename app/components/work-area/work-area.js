@@ -231,10 +231,14 @@ export default class WorkArea extends Component {
 
     return (
       <div className="controls">
-        {modes[mode] === modes.insert && (
+        {modes[mode] === modes.insert && key !== 'builder' ? (
           <Fragment>
             <button onClick={(e) => e.preventDefault() || this.addField(key, index)}>Add field</button>
             <button onClick={(e) => e.preventDefault() || this.deleteField(key)}>Delete</button>
+          </Fragment>
+        ) : (
+          <Fragment>
+            <button onClick={(e) => e.preventDefault() || this.addField(key, index)}>Add field</button>
           </Fragment>
         )}
         {modes[mode] === modes.move && (
