@@ -297,7 +297,6 @@ export default class WorkArea extends Component {
             </label>
           ) : element}
         </section>
-        {this.renderModal()}
       </article>
     )
   }
@@ -313,6 +312,7 @@ export default class WorkArea extends Component {
         {data
           .map(([id, data], i) => this.renderField([id, data], i))
         }
+        {this.renderModal()}
       </Fragment>
     )
   }
