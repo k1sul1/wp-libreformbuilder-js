@@ -6,6 +6,7 @@ import Modal from 'react-modal'
 import { connect } from 'kea'
 import HTML from '../HTML/HTML'
 import builderLogic from '../../scenes/builder/logic'
+import Button from '../button/Button'
 // import { renderTree } from '../preview/preview'
 
 Modal.setAppElement('#wplfb_buildarea')
@@ -172,7 +173,7 @@ export default class WorkArea extends Component {
         contentlabel={'Add field'}>
         <header className="modal-header">
           <h2>Add field</h2>
-          <button type="button" onClick={e => e.preventDefault() || this.closeModal()}>&times;</button>
+          <Button type="Button" onClick={e => e.preventDefault() || this.closeModal()}>&times;</Button>
         </header>
 
         <form className="modal-content" ref={n => { this.modalForm = n }} onSubmit={this.handleSubmit}>
@@ -181,7 +182,7 @@ export default class WorkArea extends Component {
               <h3>Select field</h3>
 
               {Object.entries(fields).map(([key, data]) => (
-                <button type="button" onClick={(e) => e.preventDefault() || this.selectField(key)} key={key}>{key}</button>
+                <Button type="Button" onClick={(e) => e.preventDefault() || this.selectField(key)} key={key}>{key}</Button>
               ))}
             </label>
           </section>
@@ -220,7 +221,7 @@ export default class WorkArea extends Component {
             {controls || <p>Select field first.</p>}
           </section>
 
-          {controls && <button onClick={this.handleSubmit}>Add</button>}
+          {controls && <Button onClick={this.handleSubmit}>Add</Button>}
         </form>
       </Modal>
     )
@@ -233,20 +234,20 @@ export default class WorkArea extends Component {
       <div className="controls">
         {modes[mode] === modes.insert && key !== 'builder' ? (
           <Fragment>
-            <button onClick={(e) => e.preventDefault() || this.addField(key, index)}>Add field</button>
-            <button onClick={(e) => e.preventDefault() || this.deleteField(key)}>Delete</button>
+            <Button onClick={(e) => e.preventDefault() || this.addField(key, index)}>Add field</Button>
+            <Button onClick={(e) => e.preventDefault() || this.deleteField(key)}>Delete</Button>
           </Fragment>
         ) : (
           <Fragment>
-            <button onClick={(e) => e.preventDefault() || this.addField(key, index)}>Add field</button>
+            <Button onClick={(e) => e.preventDefault() || this.addField(key, index)}>Add field</Button>
           </Fragment>
         )}
         {modes[mode] === modes.move && key !== 'builder' && (
           <Fragment>
-            <button onClick={(e) => e.preventDefault() || this.moveToTop(key)}>Move to top</button>
-            <button onClick={(e) => e.preventDefault() || this.moveUp(key, index)}>Move up</button>
-            <button onClick={(e) => e.preventDefault() || this.moveDown(key, index)}>Move down</button>
-            <button onClick={(e) => e.preventDefault() || this.moveToBottom(key)}>Move to bottom</button>
+            <Button onClick={(e) => e.preventDefault() || this.moveToTop(key)}>Move to top</Button>
+            <Button onClick={(e) => e.preventDefault() || this.moveUp(key, index)}>Move up</Button>
+            <Button onClick={(e) => e.preventDefault() || this.moveDown(key, index)}>Move down</Button>
+            <Button onClick={(e) => e.preventDefault() || this.moveToBottom(key)}>Move to bottom</Button>
             <label>Move under
               <select onChange={(e) => this.moveUnder(key, e)}>
                 <option default>---</option>
@@ -258,7 +259,7 @@ export default class WorkArea extends Component {
                   ))}
               </select>
             </label>
-            <button onClick={(e) => e.preventDefault() || this.deleteField(key)}>Delete</button>
+            <Button onClick={(e) => e.preventDefault() || this.deleteField(key)}>Delete</Button>
           </Fragment>
         )}
       </div>
@@ -267,7 +268,7 @@ export default class WorkArea extends Component {
 
   renderField ([key, data], index = 0) {
     const { builderTree } = this.props
-    const { tag: Tag, attributes, children, template, label } = data
+    const { tag: Tag, attributes, children, template, label, field } = data
     const textContent = attributes['data-text']
     let element = children ? (
       <Tag {...attributes}>
@@ -281,14 +282,16 @@ export default class WorkArea extends Component {
       <Tag {...attributes} />
     )
 
+    console.log(data)
+
     if (template) {
       element = <HTML element={element}>{template}</HTML>
     }
 
     return (
-      <article key={key} data-key={key}>
+      <article key={key} data-key={key} className="wplf-field">
         <header>
-          <h4>{key}</h4>
+          <h4>{field}: {key}</h4>
           {this.renderControls(key, index)}
         </header>
         <section>

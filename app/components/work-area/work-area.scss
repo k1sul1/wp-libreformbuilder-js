@@ -7,9 +7,37 @@
   padding: 1rem;
 }
 
+.wplf-field {
+  border: 1px solid whiteSmoke;
+  margin-top: 1rem;
+
+  header {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: center;
+    background: #222;
+    color: #f1f1f1;
+    padding: 0.5rem;
+
+    h4 {
+      margin: 0;
+    }
+  }
+
+  section {
+    padding: 0.5rem;
+  }
+}
+
 .child-container {
   padding: 50px;
   background: rgba(0, 0, 0, 0.5);
+
+  &:before {
+    content: 'Child fields will be placed here!';
+    color: #f1f1f1;
+  }
 }
 
 .attribute-customization {
