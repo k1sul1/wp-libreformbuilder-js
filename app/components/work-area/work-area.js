@@ -241,7 +241,7 @@ export default class WorkArea extends Component {
             <button onClick={(e) => e.preventDefault() || this.addField(key, index)}>Add field</button>
           </Fragment>
         )}
-        {modes[mode] === modes.move && (
+        {modes[mode] === modes.move && key !== 'builder' && (
           <Fragment>
             <button onClick={(e) => e.preventDefault() || this.moveToTop(key)}>Move to top</button>
             <button onClick={(e) => e.preventDefault() || this.moveUp(key, index)}>Move up</button>
