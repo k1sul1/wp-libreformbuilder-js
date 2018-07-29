@@ -1,0 +1,39 @@
+.builder-header {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 3px;
+  margin-bottom: 1rem;
+
+  &.mode-insert {
+    background: #008ec2;
+    color: #fff;
+  }
+
+  &.mode-move {
+    background: #dc3232;
+    color: #fff;
+  }
+
+  &.mode-preview {
+    background: #ffb900;
+    color: #000;
+  }
+
+  &__mode {
+    text-transform: uppercase;
+  }
+
+  &__buttons {
+    // float: right;
+
+    button {
+      margin-right: 0.5rem;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import './styles.scss'
+import './work-area.scss'
 
 import React, { Component, Fragment } from 'react'
 // import HTML from 'html-react-parser'
@@ -311,13 +311,13 @@ export default class WorkArea extends Component {
       .map(id => [id, builderTree[id]])
 
     return (
-      <Fragment>
+      <div className="work-area">
         {this.renderControls('builder', 0)}
         {data
           .map(([id, data], i) => this.renderField([id, data], i))
         }
         {this.renderModal()}
-      </Fragment>
+      </div>
     )
   }
 }

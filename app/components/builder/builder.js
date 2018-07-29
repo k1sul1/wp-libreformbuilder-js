@@ -6,6 +6,8 @@ import Preview from '../preview/preview'
 import { connect } from 'kea'
 import builderLogic from '../../scenes/builder/logic'
 
+import './builder.scss'
+
 @connect({
   actions: [
     builderLogic, [
@@ -28,15 +30,22 @@ export default class Builder extends Component {
 
     return (
       <div id="builder">
-        <header className="builder-header">
-          <span className="builder-header__mode">
-            <strong>MODE</strong>
+        <header className={`builder-header mode-${textMode}`}>
+          <span className={`builder-header__mode`}>
             {textMode}
           </span>
 
-          {Object.entries(modes).map(([name, value]) => (
-            <button onClick={(e) => e.preventDefault() || setMode(value)} key={name} >{name}</button>
-          ))}
+          <div className="builder-header__buttons">
+            {Object.entries(modes).map(([name, value]) => (
+              <button
+                onClick={(e) => e.preventDefault() || setMode(value)}
+                key={name}
+                className="button"
+              >
+                {name}
+              </button>
+            ))}
+          </div>
         </header>
 
         {(modes[textMode] === modes.insert || modes[textMode] === modes.move) && (
