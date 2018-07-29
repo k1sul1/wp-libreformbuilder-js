@@ -66,9 +66,16 @@ export default class Preview extends Component {
 
     return (
       <Fragment>
+        <p>Please note that this preview is subject to admin area styles,
+          and the frontend probably looks different.</p>
+
+        <h2>Form preview</h2>
+
         <div className="preview" ref={n => { this.result = n }}>
           {renderTree(builderTree)}
         </div>
+
+        <h2>HTML preview</h2>
 
         <textarea className="result-html" value={previewHTML} />
       </Fragment>
