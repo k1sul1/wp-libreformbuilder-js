@@ -148,6 +148,7 @@ export default kea({
       toIndex: toFieldIndex,
       data: fieldData,
     }),
+    editField: (fieldKey, data) => ({ field: fieldKey, data }),
     moveField: (startFieldKey, toFieldKey, toFieldIndex) => logReturn(({
       from: startFieldKey,
       to: toFieldKey,
@@ -202,6 +203,20 @@ export default kea({
             children
           },
           [id]: rest,
+        }
+      },
+      [actions.editField]: (state, payload) => {
+        const { field, data } = payload
+
+        if (!state[field]) {
+          throw new Error(`Can't edit non-existent field ${field}`)
+        }
+
+        return {
+          ...state,
+          ...{
+            [field]: data,
+          },
         }
       },
 
