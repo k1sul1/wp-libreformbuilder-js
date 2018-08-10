@@ -173,7 +173,7 @@ export default class WorkArea extends Component {
         contentlabel={'Add field'}>
         <header className="modal-header">
           <h2>Add field</h2>
-          <Button type="Button" onClick={e => e.preventDefault() || this.closeModal()}>&times;</Button>
+          <Button className="bg-red" type="button" onClick={e => e.preventDefault() || this.closeModal()}>&times;</Button>
         </header>
 
         <form className="modal-content" ref={n => { this.modalForm = n }} onSubmit={this.handleSubmit}>
@@ -181,9 +181,11 @@ export default class WorkArea extends Component {
             <label>
               <h3>Select field</h3>
 
-              {Object.entries(fields).map(([key, data]) => (
-                <Button type="Button" onClick={(e) => e.preventDefault() || this.selectField(key)} key={key}>{key}</Button>
-              ))}
+              <div className="wplfb-button-group">
+                {Object.entries(fields).map(([key, data]) => (
+                  <Button type="button" onClick={(e) => e.preventDefault() || this.selectField(key)} key={key}>{key}</Button>
+                ))}
+              </div>
             </label>
           </section>
 
@@ -230,40 +232,45 @@ export default class WorkArea extends Component {
   renderControls (key, index) {
     const { builderTree, mode, modes } = this.props
 
-    return (
-      <div className="controls">
-        {modes[mode] === modes.insert && key !== 'builder' ? (
-          <Fragment>
+    if (key === 'builder') {
+      return (
+        <div className="controls wplfb-button-group">
+          <Button className="bg-blue only-item" onClick={(e) => e.preventDefault() || this.addField(key, index)}>Add field</Button>
+        </div>
+      )
+    } else {
+      if (modes[mode] === modes.insert) {
+        return (
+          <div className="controls wplfb-button-group">
             <Button onClick={(e) => e.preventDefault() || this.addField(key, index)}>Add field</Button>
-            <Button onClick={(e) => e.preventDefault() || this.deleteField(key)}>Delete</Button>
-          </Fragment>
-        ) : (
-          <Fragment>
-            <Button onClick={(e) => e.preventDefault() || this.addField(key, index)}>Add field</Button>
-          </Fragment>
-        )}
-        {modes[mode] === modes.move && key !== 'builder' && (
-          <Fragment>
-            <Button onClick={(e) => e.preventDefault() || this.moveToTop(key)}>Move to top</Button>
-            <Button onClick={(e) => e.preventDefault() || this.moveUp(key, index)}>Move up</Button>
-            <Button onClick={(e) => e.preventDefault() || this.moveDown(key, index)}>Move down</Button>
-            <Button onClick={(e) => e.preventDefault() || this.moveToBottom(key)}>Move to bottom</Button>
-            <label>Move under
-              <select onChange={(e) => this.moveUnder(key, e)}>
-                <option default>---</option>
+            <Button className="bg-red" onClick={(e) => e.preventDefault() || this.deleteField(key)}>Delete</Button>
+          </div>
+        )
+      } else {
+        return (
+          <div className="controls wplfb-button-group">
+            <Button className="bg-gray" onClick={(e) => e.preventDefault() || this.moveToTop(key)}>Move to top</Button>
+            <Button className="bg-gray" onClick={(e) => e.preventDefault() || this.moveUp(key, index)}>Move up</Button>
+            <Button className="bg-gray" onClick={(e) => e.preventDefault() || this.moveDown(key, index)}>Move down</Button>
+            <Button className="bg-gray" onClick={(e) => e.preventDefault() || this.moveToBottom(key)}>Move to bottom</Button>
+            <Button className="bg-gray">
+              <label>Move under
+                <select onChange={(e) => this.moveUnder(key, e)}>
+                  <option default>---</option>
 
-                {Object.entries(builderTree)
-                  .filter(([k, { children }]) => k !== key && children)
-                  .map(([key, data]) => (
-                    <option value={key} key={key}>{key}</option>
-                  ))}
-              </select>
-            </label>
-            <Button onClick={(e) => e.preventDefault() || this.deleteField(key)}>Delete</Button>
-          </Fragment>
-        )}
-      </div>
-    )
+                  {Object.entries(builderTree)
+                    .filter(([k, { children }]) => k !== key && children)
+                    .map(([key, data]) => (
+                      <option value={key} key={key}>{key}</option>
+                    ))}
+                </select>
+              </label>
+            </Button>
+            <Button className="bg-red" onClick={(e) => e.preventDefault() || this.deleteField(key)}>Delete</Button>
+          </div>
+        )
+      }
+    }
   }
 
   renderField ([key, data], index = 0) {
@@ -282,7 +289,7 @@ export default class WorkArea extends Component {
       <Tag {...attributes} />
     )
 
-    console.log(data)
+    // console.log(data)
 
     if (template) {
       element = <HTML element={element}>{template}</HTML>

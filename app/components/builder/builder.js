@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 // import WorkArea from '../field/field'
 import WorkArea from '../work-area/work-area'
 import Preview from '../preview/preview'
+import Button from '../button/Button'
 
 import { connect } from 'kea'
 import builderLogic from '../../scenes/builder/logic'
@@ -35,15 +36,14 @@ export default class Builder extends Component {
             {textMode}
           </span>
 
-          <div className="builder-header__buttons">
+          <div className="builder-header__buttons wplfb-button-group">
             {Object.entries(modes).map(([name, value]) => (
-              <button
+              <Button
                 onClick={(e) => e.preventDefault() || setMode(value)}
                 key={name}
-                className="button"
               >
                 {name}
-              </button>
+              </Button>
             ))}
           </div>
         </header>

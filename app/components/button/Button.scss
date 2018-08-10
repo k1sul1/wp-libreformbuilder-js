@@ -1,5 +1,44 @@
 .wplfb-button {
-  padding: 0.5rem 0.25rem;
+  padding: 0.5rem 1rem;
   line-height: 1.2;
+  min-height: 40px;
   font-size: 0.75rem;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 0.25rem;
+  transition: 0.3s ease;
+  display: inline-block;
+
+  &:hover, &:active, &.active {
+    opacity: 0.7;
+  }
+
+  &-group {
+    display: flex;
+
+    .wplfb-button {
+      margin: 0;
+      border-radius: 0;
+
+      &:nth-child(odd) {
+        border-right: 1px solid #222;
+        border-left: 1px solid #222;
+      }
+
+      &:first-child {
+        border-radius: 0.25rem 0 0 0.25rem;
+        border-left: 0;
+      }
+
+      &:last-child {
+        border-radius: 0 0.25rem 0.25rem 0;
+        border-right: 0;
+      }
+
+      &.only-item {
+        border-radius: 0.25rem;
+      }
+
+    }
+  }
 }
