@@ -37,9 +37,10 @@ export default class Builder extends Component {
           </span>
 
           <div className="builder-header__buttons wplfb-button-group">
-            {Object.entries(modes).map(([name, value]) => (
+            {Object.entries(modes).map(([name, value]) => console.log(name) || (
               <Button
                 onClick={(e) => e.preventDefault() || setMode(value)}
+                className={name === textMode ? 'active' : ''}
                 key={name}
               >
                 {name}
