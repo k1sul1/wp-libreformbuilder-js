@@ -276,6 +276,7 @@ export default class WorkArea extends Component {
   renderField ([key, data], index = 0) {
     const { builderTree } = this.props
     const { tag: Tag, attributes, children, template, label, field } = data
+    const { name } = attributes
     const textContent = attributes['data-text']
     let element = children ? (
       <Tag {...attributes}>
@@ -295,10 +296,12 @@ export default class WorkArea extends Component {
       element = <HTML element={element}>{template}</HTML>
     }
 
+    const heading = name ? `${field}: ${name}` : field
+
     return (
       <article key={key} data-key={key} className="wplf-field">
         <header>
-          <h4>{field}: {key}</h4>
+          <h4>{heading}</h4>
           {this.renderControls(key, index)}
         </header>
         <section>

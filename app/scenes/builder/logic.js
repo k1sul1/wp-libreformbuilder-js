@@ -65,6 +65,7 @@ const defaultFields = {
     attributes: {
       type: 'text',
       placeholder: 'Test',
+      name: 'text-input',
     }
   },
 }

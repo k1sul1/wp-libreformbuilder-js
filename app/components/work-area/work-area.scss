@@ -33,11 +33,14 @@
 
 .child-container {
   padding: 50px;
-  background: rgba(0, 0, 0, 0.5);
+  // background: rgba(0, 0, 0, 0.5);
+  background-color: #f7f7f7;
+  color: #222;
+
 
   &:before {
     content: 'Child fields will be placed here!';
-    color: #f1f1f1;
+    color: #222;
   }
 }
 
