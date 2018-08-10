@@ -65,21 +65,20 @@ export default class Preview extends Component {
     const { builderTree, previewHTML } = this.props
 
     return (
-      <Fragment>
+      <div className="wplfb-preview">
         <p>Please note that this preview is subject to admin area styles,
           and the frontend probably looks different.</p>
 
         <h2>Form preview</h2>
 
-        <div className="preview" ref={n => { this.result = n }}>
+        <div className="wplfb-preview-render" ref={n => { this.result = n }}>
           {renderTree(builderTree)}
         </div>
 
         <h2>HTML preview</h2>
 
-        <textarea className="result-html" value={previewHTML} />
-      </Fragment>
-
+        <textarea className="wplfb-preview-html" value={previewHTML} />
+      </div>
     )
   }
 }

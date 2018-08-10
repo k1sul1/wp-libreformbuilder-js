@@ -1,11 +1,12 @@
-.preview {
-  .child-container {
-    background: none;
+.wplfb-preview {
+  padding: 1rem;
+
+  &-html {
+    width: 100%;
+    min-height: 250px;
+  }
+
+  &-render {
+
   }
 }
-
-.result-html {
-  width: 100%;
-  min-height: 250px;
-}
-
