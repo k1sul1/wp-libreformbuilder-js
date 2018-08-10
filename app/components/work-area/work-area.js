@@ -196,7 +196,7 @@ export default class WorkArea extends Component {
           contentlabel={'Edit field'}>
           <header className="modal-header">
             <h2>Edit field</h2>
-            <Button className="bg-red" type="button" onClick={e => e.preventDefault() || this.closeModal()}>&times;</Button>
+            <Button className="bg-red" type="button" onClick={e => this.closeModal()}>&times;</Button>
           </header>
 
           <form className="modal-content" ref={n => { this.modalForm = n }} onSubmit={this.handleSubmit}>
@@ -209,7 +209,7 @@ export default class WorkArea extends Component {
                     <Button
                       type="button"
                       className={edit ? currentFieldData.field === key && 'active bg-blue' : ''}
-                      onClick={(e) => e.preventDefault() || this.selectField(key)}
+                      onClick={(e) => this.selectField(key)}
                       key={key}
                     >
                     {key}
@@ -242,7 +242,7 @@ export default class WorkArea extends Component {
           contentlabel={'Add field'}>
           <header className="modal-header">
             <h2>{edit ? 'Edit field' : 'Add field'}</h2>
-            <Button className="bg-red" type="button" onClick={e => e.preventDefault() || this.closeModal()}>&times;</Button>
+            <Button className="bg-red" type="button" onClick={e => this.closeModal()}>&times;</Button>
           </header>
 
           <form className="modal-content" ref={n => { this.modalForm = n }} onSubmit={this.handleSubmit}>
@@ -254,7 +254,7 @@ export default class WorkArea extends Component {
                   {Object.entries(fields).map(([key, data]) => (
                     <Button
                       type="button"
-                      onClick={(e) => e.preventDefault() || this.selectField(key)}
+                      onClick={(e) => this.selectField(key)}
                       key={key}
                     >
                     {key}
@@ -314,26 +314,26 @@ export default class WorkArea extends Component {
     if (key === 'builder') {
       return (
         <div className="controls wplfb-button-group">
-          <Button className="bg-blue only-item" onClick={(e) => e.preventDefault() || this.addField(key, index)}>Add field</Button>
+          <Button className="bg-blue only-item" onClick={(e) => this.addField(key, index)}>Add field</Button>
         </div>
       )
     } else {
       if (modes[mode] === modes.insert) {
         return (
           <div className="controls wplfb-button-group">
-            <Button onClick={(e) => e.preventDefault() || this.addField(key, index)}>Add field</Button>
-            <Button onClick={(e) => e.preventDefault() || this.editField(key, index)}>Edit field</Button>
-            <Button className="bg-red" onClick={(e) => e.preventDefault() || this.deleteField(key)}>Delete</Button>
+            <Button onClick={(e) => this.addField(key, index)}>Add field</Button>
+            <Button onClick={(e) => this.editField(key, index)}>Edit field</Button>
+            <Button className="bg-red" onClick={(e) => this.deleteField(key)}>Delete</Button>
           </div>
         )
       } else {
         return (
           <div className="controls wplfb-button-group">
-            <Button className="bg-gray" onClick={(e) => e.preventDefault() || this.moveToTop(key)}>Move to top</Button>
-            <Button className="bg-gray" onClick={(e) => e.preventDefault() || this.moveUp(key, index)}>Move up</Button>
-            <Button className="bg-gray" onClick={(e) => e.preventDefault() || this.moveDown(key, index)}>Move down</Button>
-            <Button className="bg-gray" onClick={(e) => e.preventDefault() || this.moveToBottom(key)}>Move to bottom</Button>
-            <Button className="bg-gray">
+            <Button className="bg-gray" onClick={(e) => this.moveToTop(key)}>Move to top</Button>
+            <Button className="bg-gray" onClick={(e) => this.moveUp(key, index)}>Move up</Button>
+            <Button className="bg-gray" onClick={(e) => this.moveDown(key, index)}>Move down</Button>
+            <Button className="bg-gray" onClick={(e) => this.moveToBottom(key)}>Move to bottom</Button>
+            <Button className="bg-gray" element="div">
               <label>Move under
                 <select onChange={(e) => this.moveUnder(key, e)}>
                   <option default>---</option>
@@ -346,7 +346,7 @@ export default class WorkArea extends Component {
                 </select>
               </label>
             </Button>
-            <Button className="bg-red" onClick={(e) => e.preventDefault() || this.deleteField(key)}>Delete</Button>
+            <Button className="bg-red" onClick={(e) => this.deleteField(key)}>Delete</Button>
           </div>
         )
       }
