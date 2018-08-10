@@ -5,6 +5,18 @@
 
 .work-area {
   padding: 1rem;
+
+  .child-container {
+    padding: 20px;
+    background-color: #f7f7f7;
+    color: #222;
+
+
+    &:before {
+      content: 'Child fields will be placed here!';
+      color: #222;
+    }
+  }
 }
 
 .wplf-field {
@@ -28,19 +40,6 @@
   section {
     padding: 0.5rem;
     background: #f1f1f1;
-  }
-}
-
-.child-container {
-  padding: 50px;
-  // background: rgba(0, 0, 0, 0.5);
-  background-color: #f7f7f7;
-  color: #222;
-
-
-  &:before {
-    content: 'Child fields will be placed here!';
-    color: #222;
   }
 }
 
