@@ -282,7 +282,10 @@ export default kea({
     const fields = Object.entries(data.fields)
 
     for (let i = 0; i < fields.length; i++) {
-      yield put(actions.addAvailableField(...fields[i]))
+      const [index, data] = fields[i]
+      const key = `${data.name}-${index}`
+
+      yield put(actions.addAvailableField(key, data))
     }
 
     // console.log(fields)
