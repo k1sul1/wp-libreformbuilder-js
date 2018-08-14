@@ -205,15 +205,15 @@ export default class WorkArea extends Component {
                 <h3>Select field</h3>
 
                 <div className="wplfb-button-group">
-                  {Object.entries(fields).map(([key, data]) => (
+                  {Object.entries(fields).map(([key, data]) => console.log(key, data) || (
                     <Button
                       type="button"
                       className={edit ? currentFieldData.field === key && 'active bg-blue' : ''}
                       onClick={(e) => this.selectField(key)}
                       key={key}
                     >
-                    {key}
-                  </Button>
+                      {data.name || key}
+                    </Button>
                   ))}
                 </div>
               </label>
@@ -257,8 +257,8 @@ export default class WorkArea extends Component {
                       onClick={(e) => this.selectField(key)}
                       key={key}
                     >
-                    {key}
-                  </Button>
+                      {data.name || key}
+                    </Button>
                   ))}
                 </div>
               </label>
