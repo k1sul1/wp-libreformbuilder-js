@@ -381,7 +381,7 @@ export default class WorkArea extends Component {
     return (
       <article key={key} data-key={key} className="wplf-field">
         <header>
-          <h4>{heading}</h4>
+          <h4>{heading} <span>({key})</span></h4>
           {this.renderControls(key, index)}
         </header>
         <section>
