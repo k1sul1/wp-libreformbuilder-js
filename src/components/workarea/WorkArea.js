@@ -1,3 +1,7 @@
+// eslint is being stupid and keeps complaining even though all of it's needs are fulfilled
+// Maybe some day this will support labels that are not nested
+/* eslint-disable jsx-a11y/label-has-for */
+
 import './WorkArea.scss'
 
 import React, { Component } from 'react'
@@ -38,6 +42,8 @@ export default class WorkArea extends Component {
     getPopulatedField: PropTypes.func.isRequired,
     builderTree: PropTypes.object.isRequired,
     fields: PropTypes.object.isRequired,
+    mode: PropTypes.string.isRequired,
+    modes: PropTypes.object.isRequired,
   }
 
   constructor () {
@@ -166,10 +172,10 @@ export default class WorkArea extends Component {
         {attributes ? (
           Object.entries(attributes).map(([name, value]) => {
             return (
-              <label key={`${name}-${value}`}>
+              <label key={`${name}-${value}`} htmlFor={`control-${name}`}>
                 {name}
 
-                <input type="text" name={name} defaultValue={value} />
+                <input type="text" name={name} id={`control-${name}`} defaultValue={value} />
               </label>
             )
           })
@@ -178,13 +184,13 @@ export default class WorkArea extends Component {
         )}
 
         {label ? (
-          <label>
+          <label htmlFor="control-label">
             Field label
 
-            <input type="text" name="label" defaultValue={label} />
+            <input type="text" name="label" id="control-label" defaultValue={label} />
           </label>
         ) : (
-          <p>Field doesn't take a label.</p>
+          <p>{`Field doesn't take a label.`}</p>
         )}
       </div>
     )
@@ -210,22 +216,20 @@ export default class WorkArea extends Component {
 
           <form className="modal-content" ref={n => { this.modalForm = n }} onSubmit={this.handleSubmit}>
             <section className="field-select">
-              <label>
-                <h3>Select field</h3>
+              <h3>Select field</h3>
 
-                <div className="wplfb-button-group">
-                  {Object.entries(fields).map(([key, data]) => console.log(key, data) || (
-                    <Button
-                      type="button"
-                      className={edit ? currentFieldData.field === key && 'active bg-blue' : ''}
-                      onClick={(e) => this.selectField(key)}
-                      key={key}
-                    >
-                      {data.name || key}
-                    </Button>
-                  ))}
-                </div>
-              </label>
+              <div className="wplfb-button-group">
+                {Object.entries(fields).map(([key, data]) => console.log(key, data) || (
+                  <Button
+                    type="button"
+                    className={edit ? currentFieldData.field === key && 'active bg-blue' : ''}
+                    onClick={(e) => this.selectField(key)}
+                    key={key}
+                  >
+                    {data.name || key}
+                  </Button>
+                ))}
+              </div>
             </section>
 
             <section className="field-attributes">
@@ -250,36 +254,34 @@ export default class WorkArea extends Component {
           customStyles={{zIndex: 999999999}}
           contentlabel={'Add field'}>
           <header className="modal-header">
-            <h2>{edit ? 'Edit field' : 'Add field'}</h2>
+            <h2>Add field</h2>
             <Button className="bg-red" type="button" onClick={e => this.closeModal()}>&times;</Button>
           </header>
 
           <form className="modal-content" ref={n => { this.modalForm = n }} onSubmit={this.handleSubmit}>
             <section className="field-select">
-              <label>
-                <h3>Select field</h3>
+              <h3>Select field</h3>
 
-                <div className="wplfb-button-group">
-                  {Object.entries(fields).map(([key, data]) => (
-                    <Button
-                      type="button"
-                      onClick={(e) => this.selectField(key)}
-                      key={key}
-                    >
-                      {data.name || key}
-                    </Button>
-                  ))}
-                </div>
-              </label>
+              <div className="wplfb-button-group">
+                {Object.entries(fields).map(([key, data]) => (
+                  <Button
+                    type="button"
+                    onClick={(e) => this.selectField(key)}
+                    key={key}
+                  >
+                    {data.name || key}
+                  </Button>
+                ))}
+              </div>
             </section>
 
             <section className="field-target">
               <h3>Target</h3>
 
-              <label>
+              <label htmlFor="wplfb-field-target">
                 <h4>Parent</h4>
 
-                <select name="target" readOnly defaultValue={addFieldTarget}>
+                <select name="target" id={'wplfb-field-target'} readOnly defaultValue={addFieldTarget}>
                   {Object.entries(builderTree)
                     .filter(([k, { children }]) => children)
                     .map(([key, data]) => (
@@ -289,10 +291,10 @@ export default class WorkArea extends Component {
               </label>
 
               {addUnder && (
-                <label>
+                <label htmlFor={'wplfb-field-target-under'}>
                   <h4>Child to add under</h4>
 
-                  <select name="targetIndex" defaultValue={addFieldIndex}>
+                  <select name="targetIndex" id={'wplfb-field-target-under'} defaultValue={addFieldIndex}>
                     {targetChildren
                       .map((key, index) => (
                         <option value={index} key={key}>{key}</option>
@@ -343,8 +345,9 @@ export default class WorkArea extends Component {
             <Button className="bg-gray" onClick={(e) => this.moveDown(key, index)}>Move down</Button>
             <Button className="bg-gray" onClick={(e) => this.moveToBottom(key)}>Move to bottom</Button>
             <Button className="bg-gray" element="div">
-              <label>Move under
-                <select onChange={(e) => this.moveUnder(key, e)}>
+              <label htmlFor={`wplfb-move-field-${key}`}>
+                Move under
+                <select onBlur={(e) => this.moveUnder(key, e)} id={`wplfb-move-field-${key}`}>
                   <option default>---</option>
 
                   {Object.entries(builderTree)
@@ -378,8 +381,6 @@ export default class WorkArea extends Component {
     ) : (
       <Tag {...attributes} />
     )
-
-    // console.log(data)
 
     if (template) {
       element = <HTML element={element}>{template}</HTML>
