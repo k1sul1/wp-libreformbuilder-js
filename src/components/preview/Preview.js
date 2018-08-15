@@ -3,24 +3,26 @@ import './Preview.scss'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'kea'
+import shortid from 'shortid'
 import builderLogic from '../../logic/app-logic'
 import HTML from '../HTML/HTML'
 
 const renderTree = (tree) => {
   const nodeGenerator = ({ tag: Tag, attributes, children, key, template, label }) => {
+    const id = attributes.id || shortid.generate()
     const textContent = attributes['data-text']
     let element = children ? (
-      <Tag {...attributes} key={`${key}-tag`}>
+      <Tag id={id} {...attributes} key={`${key}-tag`}>
         {textContent}
         {children.map(key => nodeGenerator({ ...tree[key], key }))}
       </Tag>
     ) : (
-      <Tag {...attributes} key={`${key}-tag`} />
+      <Tag id={id} {...attributes} key={`${key}-tag`} />
     )
 
     if (label) {
       element = ( // eslint-disable-next-line jsx-a11y/label-has-for
-        <label key={`${key}-label`}>
+        <label key={`${key}-label`} htmlFor={id}>
           <span className="wplf-label">{label}</span>
           {element}
         </label>
