@@ -1,6 +1,7 @@
 import './Preview.scss'
 
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'kea'
 import builderLogic from '../../logic/app-logic'
 import HTML from '../HTML/HTML'
@@ -57,6 +58,11 @@ const renderTree = (tree) => {
   ]
 })
 export default class Preview extends Component {
+  static propTypes = {
+    builderTree: PropTypes.object.isRequired,
+    previewHTML: PropTypes.string,
+  }
+
   componentDidMount () {
     this.actions.setHTML(this.result.querySelector('form').innerHTML)
   }

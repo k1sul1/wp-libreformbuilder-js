@@ -1,8 +1,9 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import './Button.scss'
 
-export default ({ children, className, onClick, element: Element = 'button', ...props }) => (
+const Button = ({ children, className, onClick, element: Element = 'button', ...props }) => (
   <Element
     className={`wplfb-button ${className || ''}`}
     onClick={(e) => {
@@ -17,3 +18,12 @@ export default ({ children, className, onClick, element: Element = 'button', ...
     {children}
   </Element>
 )
+
+Button.propTypes = {
+  children: PropTypes.node.isRequired,
+  className: PropTypes.string,
+  onClick: PropTypes.func,
+  element: PropTypes.string,
+}
+
+export default Button

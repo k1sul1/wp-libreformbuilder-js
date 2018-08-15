@@ -1,6 +1,7 @@
 import './WorkArea.scss'
 
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 // import HTML from 'html-react-parser'
 import Modal from 'react-modal'
 import { connect } from 'kea'
@@ -31,6 +32,14 @@ Modal.setAppElement('#wplfb_buildarea')
   ]
 })
 export default class WorkArea extends Component {
+  static propTypes = {
+    getFieldParent: PropTypes.func.isRequired,
+    getAbilityToHaveChildren: PropTypes.func.isRequired,
+    getPopulatedField: PropTypes.func.isRequired,
+    builderTree: PropTypes.object.isRequired,
+    fields: PropTypes.object.isRequired,
+  }
+
   constructor () {
     super()
     this.state = {

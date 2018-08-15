@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react'
+import PropTypes from 'prop-types'
 import parser from 'html-react-parser'
 
 const options = (element) => ({
@@ -14,5 +15,9 @@ const options = (element) => ({
 })
 
 const HTML = ({ children, element }) => <Fragment>{parser(children, options(element))}</Fragment>
+HTML.propTypes = {
+  children: PropTypes.node.isRequired,
+  element: PropTypes.node,
+}
 
 export default HTML

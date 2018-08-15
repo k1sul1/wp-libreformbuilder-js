@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import WorkArea from '../workarea/WorkArea'
 import Preview from '../preview/Preview'
 import Button from '../button/Button'
@@ -24,6 +25,11 @@ import './Builder.scss'
   ]
 })
 export default class Builder extends Component {
+  static propTypes = {
+    builderTree: PropTypes.object.isRequired,
+    modes: PropTypes.object.isRequired,
+    textMode: PropTypes.string.isRequired,
+  }
   render () {
     const { setMode } = this.actions
     const { builderTree, modes, textMode } = this.props

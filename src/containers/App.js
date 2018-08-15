@@ -1,6 +1,7 @@
 import './App.scss'
 
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'kea'
 import builderLogic from '../logic/app-logic'
 import Builder from '../components/builder/Builder'
@@ -20,6 +21,10 @@ import Builder from '../components/builder/Builder'
   ],
 })
 export default class App extends Component {
+  static propTypes = {
+    modes: PropTypes.object.isRequired,
+  }
+
   state = {
     contentEl: null,
     stateInput: null,
