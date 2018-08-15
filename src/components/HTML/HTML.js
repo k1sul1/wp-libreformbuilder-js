@@ -7,14 +7,18 @@ const options = (element) => ({
     if (!node.attribs) return
 
     if (node.attribs.class) {
-      if (node.attribs.class.includes('field-container')) {
+      // Replace template placeholder, if it exists
+      if (node.attribs.class.includes('wplfb-field-container')) {
         return element
       }
     }
   },
 })
 
-const HTML = ({ children, element }) => <Fragment>{parser(children, options(element))}</Fragment>
+const HTML = ({ children, element }) => (
+  <Fragment>{parser(children, options(element))}</Fragment>
+)
+
 HTML.propTypes = {
   children: PropTypes.node.isRequired,
   element: PropTypes.node,

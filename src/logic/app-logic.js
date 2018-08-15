@@ -46,7 +46,7 @@ const defaultFields = {
     // the actual values.
     template: `<div class="outer">
     <h1>Heading</h1>
-    <div class="field-container">
+    <div class="wplfb-field-container">
     </div>
     <h2>Under container</h2>
     </div>`,
@@ -54,12 +54,12 @@ const defaultFields = {
     tag: 'div',
     attributes: {
       'data-test': 'Test 2',
-      className: 'child-container',
+      className: 'wplfb-child-container',
     }
   },
   text: {
     children: false,
-    template: `<div class="field-container"></div>`,
+    template: `<div><h2>PERKELE</h2><div class="wplfb-field-container"></div></div>`,
     label: 'Text field label',
     tag: 'input',
     attributes: {
@@ -75,30 +75,20 @@ const defaultBuilderTree = {
   },
   test1: {
     field: 'wrapper',
-    children: ['test2', 'test3'],
+    children: ['test2'],
     template: `<div class="outer">
     <h1>Heading</h1>
-    <div class="field-container">
+    <div class="wplfb-field-container">
     </div>
     <h2>Under container</h2>
     </div>`,
     label: false,
     tag: 'div',
     attributes: {
-      className: 'child-container',
+      className: 'wplfb-child-container',
     }
   },
   test2: {
-    field: 'text',
-    children: false,
-    template: `<div class="field-container"></div>`,
-    label: 'Text field label',
-    tag: 'input',
-    attributes: {
-      placeholder: 'Dog',
-    }
-  },
-  test3: {
     field: 'text',
     children: false,
     label: 'Text field label',
@@ -167,9 +157,11 @@ export default kea({
         const { field, ...filtered } = data
         const [tag, attributes] = dirtyParser(field)
 
+        // If field contains a string "wplfb-child-container", allow putting children inside this field.
+        const children = data.field.indexOf('wplfb-child-container') !== -1 ? [] : false
         const fieldObj = {
           [key]: {
-            children: data.field.indexOf('child-container') !== -1 ? [] : false,
+            children,
             tag,
             attributes,
             ...filtered,
