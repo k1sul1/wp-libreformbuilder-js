@@ -389,7 +389,7 @@ export default class WorkArea extends Component {
     const heading = name ? `${field}: ${name}` : field
 
     return (
-      <article key={key} data-key={key} className="wplf-field">
+      <article key={key} data-key={key} className="wplfb-field">
         <header>
           <h4>{heading} <span>({key})</span></h4>
           {this.renderControls(key, index)}
@@ -397,7 +397,7 @@ export default class WorkArea extends Component {
         <section>
           {label ? (
             <label>
-              <span className="wplf-label">
+              <span className="wplfb-label">
                 {label}
               </span>
               {element}

@@ -23,7 +23,7 @@ const renderTree = (tree) => {
     if (label) {
       element = ( // eslint-disable-next-line jsx-a11y/label-has-for
         <label key={`${key}-label`} htmlFor={id}>
-          <span className="wplf-label">{label}</span>
+          <span className="wplfb-label">{label}</span>
           {element}
         </label>
       )
