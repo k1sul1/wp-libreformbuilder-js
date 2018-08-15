@@ -1,24 +1,17 @@
 {
   "name": "libreformbuilder",
   "version": "0.0.1",
-  "description": "Kea example app",
+  "description": "React frontend for WP Libre Formbuilder",
   "main": "index.js",
   "scripts": {
     "start": "node ./node_modules/react-app-rewired/bin/index.js start",
-    "build": "react-app-rewired build",
+    "build": "node ./node_modules/react-app-rewired/bin/index.js build",
     "test": "react-app-rewrired --env=jsdom",
     "eject": "react-app-rewrired eject",
     "postinstall": "npm install react-app-rewire-css-modules --ignore-scripts"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/keajs/kea-example.git"
-  },
-  "author": "Write your name here",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/keajs/kea-example/issues"
-  },
+  "author": "Christian Nikkanen",
+  "license": "GPL-2.0",
   "browserslist": {
     "development": [
       "last 2 chrome versions",
@@ -31,7 +24,6 @@
       "ie 11"
     ]
   },
-  "homepage": "https://github.com/keajs/kea-example#readme",
   "jest": {
     "moduleNameMapper": {
       "^~": "<rootDir>/app",
