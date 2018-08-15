@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
-// import WorkArea from '../field/field'
-import WorkArea from '../work-area/work-area'
-import Preview from '../preview/preview'
+import WorkArea from '../workarea/WorkArea'
+import Preview from '../preview/Preview'
 import Button from '../button/Button'
 
 import { connect } from 'kea'
-import builderLogic from '../../scenes/builder/logic'
+import builderLogic from '../../logic/app-logic'
 
-import './builder.scss'
+import './Builder.scss'
 
 @connect({
   actions: [

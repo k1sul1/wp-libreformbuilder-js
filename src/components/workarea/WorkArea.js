@@ -1,11 +1,11 @@
-import './work-area.scss'
+import './WorkArea.scss'
 
 import React, { Component } from 'react'
 // import HTML from 'html-react-parser'
 import Modal from 'react-modal'
 import { connect } from 'kea'
 import HTML from '../HTML/HTML'
-import builderLogic from '../../scenes/builder/logic'
+import builderLogic from '../../logic/app-logic'
 import Button from '../button/Button'
 // import { renderTree } from '../preview/preview'
 
@@ -131,7 +131,7 @@ export default class WorkArea extends Component {
     } else {
       addField(
         target,
-        parseInt(targetIndex) + 1,
+        parseInt(targetIndex, 10) + 1,
         getPopulatedField(selectedField, { attributes, label })
       )
     }

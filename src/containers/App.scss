@@ -1,0 +1,27 @@
+#builder {
+  background: #ccc;
+  min-height: 200px;
+  width: 100%;
+
+  .bg {
+    &-blue {
+      background-color: #0085ba;
+    }
+
+    &-gray {
+      background-color: #f7f7f7;
+    }
+
+    &-green {
+      background-color: #46b450;
+    }
+
+    &-yellow {
+      background-color: #ffb900;
+    }
+
+    &-red {
+      background-color: #dc3232;
+    }
+  }
+}

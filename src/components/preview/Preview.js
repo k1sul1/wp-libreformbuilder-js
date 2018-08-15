@@ -1,8 +1,8 @@
-import './styles.scss'
+import './Preview.scss'
 
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { connect } from 'kea'
-import builderLogic from '../../scenes/builder/logic'
+import builderLogic from '../../logic/app-logic'
 import HTML from '../HTML/HTML'
 
 const renderTree = (tree) => {

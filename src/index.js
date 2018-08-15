@@ -2,15 +2,12 @@ import { Provider } from 'react-redux'
 import ReactDOM from 'react-dom'
 import React from 'react'
 import { ConnectedRouter } from 'react-router-redux'
+import * as serviceWorker from './serviceWorker'
 
 import 'kea-saga'
 
 import { store, history } from './store'
-import App from './scenes/index'
-
-import './index.html'
-
-import bundles from './scenes/bundles'
+import App from './containers/App'
 
 const runAppInAdmin = () => {
   document.querySelector('#postdivrich').style.display = 'none'
@@ -33,7 +30,7 @@ if (window.wplfb && window.wplfb.active) {
   formbuilderBtn.addEventListener('click', runAppInAdmin)
 }
 
-function render () {
+function main () {
   ReactDOM.render(
     <Provider store={store}>
       <ConnectedRouter history={history}>
@@ -42,11 +39,11 @@ function render () {
     </Provider>,
     document.getElementById('wplfb_buildarea')
   )
+
+  // If you want your app to work offline and load faster, you can change
+  // unregister() to register() below. Note this comes with some pitfalls.
+  // Learn more about service workers: http://bit.ly/CRA-PWA
+  serviceWorker.unregister()
 }
 
-// do we have to preload bundles before rendering?
-if (typeof window !== 'undefined' && window.__keaPrerender) {
-  Promise.all(window.__keaPrerender.map(chunk => bundles[chunk].loadComponent())).then(render).catch(render)
-} else {
-  render()
-}
+main()

@@ -3,7 +3,7 @@ import { put } from 'redux-saga/effects'
 import { merge } from 'lodash'
 import shortid from 'shortid'
 import PropTypes from 'prop-types'
-import req from '../../utils/req'
+import req from '../utils/req'
 
 const dirtyParser = (html) => {
   let el = document.createElement('div')

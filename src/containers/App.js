@@ -1,9 +1,9 @@
-import './styles.scss'
+import './App.scss'
 
 import React, { Component } from 'react'
 import { connect } from 'kea'
-import builderLogic from '../../scenes/builder/logic'
-import Builder from '../../components/builder/builder'
+import builderLogic from '../logic/app-logic'
+import Builder from '../components/builder/Builder'
 
 @connect({
   actions: [
@@ -19,7 +19,7 @@ import Builder from '../../components/builder/builder'
     ]
   ],
 })
-export default class BuilderScene extends Component {
+export default class App extends Component {
   state = {
     contentEl: null,
     stateInput: null,
