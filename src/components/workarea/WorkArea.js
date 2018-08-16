@@ -292,7 +292,9 @@ export default class WorkArea extends Component {
                   {Object.entries(builderTree)
                     .filter(([k, { children }]) => children)
                     .map(([key, data]) => (
-                      <option value={key} key={key}>{key}</option>
+                      <option value={key} key={key}>
+                        {key}
+                      </option>
                     ))}
                 </select>
               </label>
@@ -307,9 +309,24 @@ export default class WorkArea extends Component {
                     defaultValue={[...targetChildren].reverse()[addFieldIndex]}
                   >
                     {targetChildren
-                      .map((key, index) => (
-                        <option value={key} key={key}>{key}</option>
-                      ))}
+                      .map((key, index) => {
+                        const field = builderTree[key]
+                        const { attributes } = field
+
+                        let text = `${field.field}`
+
+                        if (attributes && attributes.name) {
+                          text += ` - ${attributes.name}`
+                        }
+
+                        text += `: ${key}`
+
+                        return (
+                          <option value={key} key={key}>
+                            {text}
+                          </option>
+                        )
+                      })}
                   </select>
                 </label>
               )}
