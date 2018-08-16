@@ -125,11 +125,11 @@ export default class WorkArea extends Component {
   }
 
   moveToTop = (key) => {
-    this.actions.moveField(key, 'builder', 0)
+    this.actions.moveField(key, 'Root', 0)
   }
 
   moveToBottom = (key) => {
-    this.actions.moveField(key, 'builder', Number.MAX_SAFE_INTEGER)
+    this.actions.moveField(key, 'Root', Number.MAX_SAFE_INTEGER)
   }
 
   deleteField = (key) => {
