@@ -85,7 +85,7 @@ export default class Preview extends Component {
 
         <h2>HTML preview</h2>
 
-        <textarea className="wplfb-preview-html" value={previewHTML} />
+        <textarea className="wplfb-preview-html" value={previewHTML} readOnly />
       </div>
     )
   }

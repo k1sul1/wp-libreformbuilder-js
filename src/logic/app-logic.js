@@ -1,6 +1,7 @@
 import { kea } from 'kea'
 import { put } from 'redux-saga/effects'
 import { merge } from 'lodash'
+import pretty from 'pretty'
 import shortid from 'shortid'
 import PropTypes from 'prop-types'
 import req from '../utils/req'
@@ -141,7 +142,7 @@ export default kea({
     }],
 
     previewHTML: ['', PropTypes.string, {
-      [actions.setHTML]: (state, payload) => payload,
+      [actions.setHTML]: (state, payload) => pretty(payload),
     }],
 
     builderTree: [defaultBuilderTree, PropTypes.object, { persist: true }, {
