@@ -229,7 +229,7 @@ export default class WorkArea extends Component {
                 {Object.entries(fields).map(([key, data]) => (
                   <Button
                     type="button"
-                    className={edit ? currentFieldData.field === key && 'active bg-blue' : ''}
+                    className={edit ? currentFieldData.field === key ? 'active bg-blue' : '' : ''}
                     onClick={(e) => this.selectField(key)}
                     key={key}
                   >
