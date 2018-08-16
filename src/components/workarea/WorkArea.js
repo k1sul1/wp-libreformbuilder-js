@@ -9,6 +9,7 @@ import PropTypes from 'prop-types'
 // import HTML from 'html-react-parser'
 import Modal from 'react-modal'
 import { connect } from 'kea'
+import { get } from 'lodash'
 import HTML from '../HTML/HTML'
 import builderLogic from '../../logic/app-logic'
 import Button from '../button/Button'
@@ -146,7 +147,8 @@ export default class WorkArea extends Component {
       .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {})
     const { target, addUnderField, label, ...attributes } = entries
 
-    const targetIndex = builderTree[addFieldTarget].children.indexOf(addUnderField)
+    const temp = get(builderTree, `${addFieldTarget}.children`, [])
+    const targetIndex = temp.length ? temp.indexOf(addUnderField) : 0
 
     if (edit) {
       editField(addFieldTarget, getPopulatedField(selectedField, { attributes, label }))
@@ -210,47 +212,58 @@ export default class WorkArea extends Component {
     if (edit) {
       const currentFieldData = edit ? builderTree[addFieldTarget] : null
 
+      // If field has children, disallow changing field
+      const disabled = Boolean(currentFieldData.children && currentFieldData.children.length)
+
       return (
         <Modal
           isOpen={open}
           onRequestClose={this.closeModal}
           customStyles={{zIndex: 999999999}}
-          contentlabel={'Edit field'}>
-          <header className="modal-header">
-            <h2>Edit field</h2>
-            <Button className="bg-red" type="button" onClick={e => this.closeModal()}>&times;</Button>
-          </header>
+          contentlabel={'Edit field'}
+        >
+          <div className="wplfb">
+            <header className="modal-header">
+              <h2>Edit field</h2>
+              <Button className="bg-red" type="button" onClick={e => this.closeModal()}>&times;</Button>
+            </header>
 
-          <form className="modal-content" ref={n => { this.modalForm = n }} onSubmit={this.handleSubmit}>
-            <section className="field-select">
-              <h3>Select field</h3>
+            <form className="modal-content" ref={n => { this.modalForm = n }} onSubmit={this.handleSubmit}>
+              <section className="field-select">
+                <h3>Select field</h3>
 
-              <div className="wplfb-button-group">
-                {Object.entries(fields).map(([key, data]) => (
-                  <Button
-                    type="button"
-                    className={edit ? currentFieldData.field === key ? 'active bg-blue' : '' : ''}
-                    onClick={(e) => this.selectField(key)}
-                    key={key}
-                  >
-                    {data.name || key}
-                  </Button>
-                ))}
-              </div>
-            </section>
+                <div className="wplfb-button-group">
+                  {Object.entries(fields).map(([key, data]) => (
+                    <Button
+                      type="button"
+                      className={selectedField === key ? 'active bg-blue' : ''}
+                      disabled={disabled}
+                      onClick={(e) => this.actions.editField(addFieldTarget, {
+                        ...getPopulatedField(key),
+                      }) && this.selectField(key)}
+                      key={key}
+                    >
+                      {data.name || key}
+                    </Button>
+                  ))}
+                </div>
 
-            <section className="field-attributes">
-              <h3>Attributes</h3>
-              {selectedField
-                ? controls({
-                  ...getPopulatedField(selectedField),
-                  ...currentFieldData,
-                }) : <p>Select field first.</p>
-              }
-            </section>
+                {disabled && <p>{`Fields that have children can't change field type.`}</p>}
+              </section>
 
-            {selectedField && <Button onClick={this.handleSubmit}>Save</Button>}
-          </form>
+              <section className="field-attributes">
+                <h3>Attributes</h3>
+                {selectedField
+                  ? controls({
+                    ...getPopulatedField(selectedField),
+                    ...currentFieldData,
+                  }) : <p>Select field first.</p>
+                }
+              </section>
+
+              {selectedField && <Button onClick={this.handleSubmit}>Save</Button>}
+            </form>
+          </div>
         </Modal>
       )
     } else {
@@ -260,88 +273,91 @@ export default class WorkArea extends Component {
           onRequestClose={this.closeModal}
           customStyles={{zIndex: 999999999}}
           contentlabel={'Add field'}>
-          <header className="modal-header">
-            <h2>Add field</h2>
-            <Button className="bg-red" type="button" onClick={e => this.closeModal()}>&times;</Button>
-          </header>
+          <div className="wplfb">
+            <header className="modal-header">
+              <h2>Add field</h2>
+              <Button className="bg-red" type="button" onClick={e => this.closeModal()}>&times;</Button>
+            </header>
 
-          <form className="modal-content" ref={n => { this.modalForm = n }} onSubmit={this.handleSubmit}>
-            <section className="field-select">
-              <h3>Select field</h3>
+            <form className="modal-content" ref={n => { this.modalForm = n }} onSubmit={this.handleSubmit}>
+              <section className="field-select">
+                <h3>Select field</h3>
 
-              <div className="wplfb-button-group">
-                {Object.entries(fields).map(([key, data]) => (
-                  <Button
-                    type="button"
-                    onClick={(e) => this.selectField(key)}
-                    key={key}
-                  >
-                    {data.name || key}
-                  </Button>
-                ))}
-              </div>
-            </section>
+                <div className="wplfb-button-group">
+                  {Object.entries(fields).map(([key, data]) => (
+                    <Button
+                      type="button"
+                      onClick={(e) => this.selectField(key)}
+                      className={selectedField === key ? 'active bg-blue' : ''}
+                      key={key}
+                    >
+                      {data.name || key}
+                    </Button>
+                  ))}
+                </div>
+              </section>
 
-            <section className="field-target">
-              <h3>Target</h3>
+              <section className="field-target">
+                <h3>Target</h3>
 
-              <label htmlFor="wplfb-field-target">
-                <h4>Parent</h4>
+                <label htmlFor="wplfb-field-target">
+                  <h4>Parent</h4>
 
-                <select name="target" id={'wplfb-field-target'} readOnly defaultValue={addFieldTarget}>
-                  {Object.entries(builderTree)
-                    .filter(([k, { children }]) => children)
-                    .map(([key, data]) => (
-                      <option value={key} key={key}>
-                        {key}
-                      </option>
-                    ))}
-                </select>
-              </label>
-
-              {addUnder && (
-                <label htmlFor={'wplfb-field-target-under'}>
-                  <h4>Child to add under</h4>
-
-                  <select
-                    name="addUnderField"
-                    id={'wplfb-field-target-under'}
-                    defaultValue={[...targetChildren].reverse()[addFieldIndex]}
-                  >
-                    {targetChildren
-                      .map((key, index) => {
-                        const field = builderTree[key]
-                        const { attributes } = field
-
-                        let text = `${field.field}`
-
-                        if (attributes && attributes.name) {
-                          text += ` - ${attributes.name}`
-                        }
-
-                        text += `: ${key}`
-
-                        return (
-                          <option value={key} key={key}>
-                            {text}
-                          </option>
-                        )
-                      })}
+                  <select name="target" id={'wplfb-field-target'} readOnly defaultValue={addFieldTarget}>
+                    {Object.entries(builderTree)
+                      .filter(([k, { children }]) => children)
+                      .map(([key, data]) => (
+                        <option value={key} key={key}>
+                          {key}
+                        </option>
+                      ))}
                   </select>
                 </label>
-              )}
-            </section>
 
-            <section className="field-attributes">
-              <h3>Attributes</h3>
-              {selectedField
-                ? controls(getPopulatedField(selectedField))
-                : <p>Select field first.</p>
-              }
-            </section>
+                {addUnder && (
+                  <label htmlFor={'wplfb-field-target-under'}>
+                    <h4>Child to add under</h4>
 
-            {selectedField && <Button onClick={this.handleSubmit}>Add</Button>}
-          </form>
+                    <select
+                      name="addUnderField"
+                      id={'wplfb-field-target-under'}
+                      defaultValue={[...targetChildren].reverse()[addFieldIndex]}
+                    >
+                      {targetChildren
+                        .map((key, index) => {
+                          const field = builderTree[key]
+                          const { attributes } = field
+
+                          let text = `${field.field}`
+
+                          if (attributes && attributes.name) {
+                            text += ` - ${attributes.name}`
+                          }
+
+                          text += `: ${key}`
+
+                          return (
+                            <option value={key} key={key}>
+                              {text}
+                            </option>
+                          )
+                        })}
+                    </select>
+                  </label>
+                )}
+              </section>
+
+              <section className="field-attributes">
+                <h3>Attributes</h3>
+                {selectedField
+                  ? controls(getPopulatedField(selectedField))
+                  : <p>Select field first.</p>
+                }
+              </section>
+
+              {selectedField && <Button onClick={this.handleSubmit}>Add</Button>}
+            </form>
+          </div>
         </Modal>
       )
     }
