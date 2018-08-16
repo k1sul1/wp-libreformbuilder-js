@@ -12,6 +12,7 @@ import { connect } from 'kea'
 import HTML from '../HTML/HTML'
 import builderLogic from '../../logic/app-logic'
 import Button from '../button/Button'
+import Icon from '../icon/Icon'
 // import { renderTree } from '../preview/preview'
 
 Modal.setAppElement('#wplfb_buildarea')
@@ -219,7 +220,7 @@ export default class WorkArea extends Component {
               <h3>Select field</h3>
 
               <div className="wplfb-button-group">
-                {Object.entries(fields).map(([key, data]) => console.log(key, data) || (
+                {Object.entries(fields).map(([key, data]) => (
                   <Button
                     type="button"
                     className={edit ? currentFieldData.field === key && 'active bg-blue' : ''}
@@ -325,28 +326,41 @@ export default class WorkArea extends Component {
     if (key === 'builder') {
       return (
         <div className="controls wplfb-button-group">
-          <Button className="bg-blue only-item" onClick={(e) => this.addField(key, index)}>Add field</Button>
+          <Button title="Add field to bottom" className="bg-blue only-item" onClick={(e) => this.addField(key, index)}>
+            <Icon icon="plus" srtext="Add field to bottom" />
+          </Button>
         </div>
       )
     } else {
       if (modes[mode] === modes.insert) {
         return (
           <div className="controls wplfb-button-group">
-            <Button onClick={(e) => this.addField(key, index)}>Add field</Button>
-            <Button onClick={(e) => this.editField(key, index)}>Edit field</Button>
-            <Button className="bg-red" onClick={(e) => this.deleteField(key)}>Delete</Button>
+            <Button title="Add field here" onClick={(e) => this.addField(key, index)}>
+              <Icon icon="plus" srtext="Add field here" />
+            </Button>
+            <Button title="Edit field" onClick={(e) => this.editField(key, index)}>
+              <Icon icon="edit" srtext="Edit field" />
+            </Button>
+            <Button title="Delete" className="bg-red" onClick={(e) => this.deleteField(key)}>
+              <Icon icon="trash-alt" srtext="Delete" />
+            </Button>
           </div>
         )
       } else {
         return (
-          <div className="controls wplfb-button-group">
-            <Button className="bg-gray" onClick={(e) => this.moveToTop(key)}>Move to top</Button>
-            <Button className="bg-gray" onClick={(e) => this.moveUp(key, index)}>Move up</Button>
-            <Button className="bg-gray" onClick={(e) => this.moveDown(key, index)}>Move down</Button>
-            <Button className="bg-gray" onClick={(e) => this.moveToBottom(key)}>Move to bottom</Button>
-            <Button className="bg-gray" element="div">
+          <div className="controls">
+            <div className="wplfb-button-group">
+              <Button title="Move upwards" className="bg-gray" onClick={(e) => this.moveUp(key, index)}>
+                <Icon icon="arrow-up" srtext="Move upwards" />
+              </Button>
+              <Button title="Move downwards" className="bg-gray" onClick={(e) => this.moveDown(key, index)}>
+                <Icon icon="arrow-down" srtext="Move downwards" />
+              </Button>
+            </div>
+
+            <div className="bg-gray move-under" title="Move to field">
               <label htmlFor={`wplfb-move-field-${key}`}>
-                Move under
+                <Icon icon="plane" srtext="Move to field" />
                 <select onBlur={(e) => this.moveUnder(key, e)} id={`wplfb-move-field-${key}`}>
                   <option default>---</option>
 
@@ -357,8 +371,21 @@ export default class WorkArea extends Component {
                     ))}
                 </select>
               </label>
+            </div>
+
+            <div className="wplfb-button-group">
+              <Button title="Move to top" className="bg-gray" onClick={(e) => this.moveToTop(key)}>
+                <Icon icon="angle-double-up" srtext="Move to top" />
+              </Button>
+
+              <Button title="Move to bottom" className="bg-gray" onClick={(e) => this.moveToBottom(key)}>
+                <Icon icon="angle-double-down" srtext="Move to bottom" />
+              </Button>
+            </div>
+
+            <Button className="bg-red" onClick={(e) => this.deleteField(key)}>
+              <Icon icon="trash-alt" srtext="Delete" />
             </Button>
-            <Button className="bg-red" onClick={(e) => this.deleteField(key)}>Delete</Button>
           </div>
         )
       }
@@ -371,7 +398,7 @@ export default class WorkArea extends Component {
     const { name } = attributes
     const textContent = attributes['data-text']
     let element = children ? (
-      <Tag {...attributes}>
+      <Tag {...attributes} readOnly>
         {textContent}
         {children
           .map(id => [id, builderTree[id]])
@@ -379,7 +406,7 @@ export default class WorkArea extends Component {
         }
       </Tag>
     ) : (
-      <Tag {...attributes} />
+      <Tag {...attributes} readOnly />
     )
 
     if (template) {
@@ -390,10 +417,6 @@ export default class WorkArea extends Component {
 
     return (
       <article key={key} data-key={key} className="wplfb-field">
-        <header>
-          <h4>{heading} <span>({key})</span></h4>
-          {this.renderControls(key, index)}
-        </header>
         <section>
           {label ? (
             <label>
@@ -404,6 +427,11 @@ export default class WorkArea extends Component {
             </label>
           ) : element}
         </section>
+
+        <footer>
+          <h4>{heading} <span>({key})</span></h4>
+          {this.renderControls(key, index)}
+        </footer>
       </article>
     )
   }
@@ -415,10 +443,11 @@ export default class WorkArea extends Component {
 
     return (
       <div className="work-area">
-        {this.renderControls('builder', 0)}
         {data
           .map(([id, data], i) => this.renderField([id, data], i))
         }
+        <hr />
+        {this.renderControls('builder', 0)}
         {this.renderModal()}
       </div>
     )

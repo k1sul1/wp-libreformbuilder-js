@@ -4,7 +4,7 @@
 }
 
 .work-area {
-  padding: 1rem;
+  padding: 1.5rem 1rem;
 
   .child-container {
     padding: 20px;
@@ -17,20 +17,42 @@
       color: #222;
     }
   }
+
+  .controls {
+    display: flex;
+
+    .wplfb-button-group {
+      margin-right: 1rem;
+    }
+
+    .move-under {
+      border-radius: 0.25rem;
+      margin-right: 1rem;
+      line-height: 30px;
+      height: 30px;
+      color: #222;
+      padding: 0 12px 2px;
+    }
+  }
 }
 
 .wplfb-field {
-  border: 1px solid whiteSmoke;
+  border: 1px solid #222;
   margin-top: 1rem;
 
-  header {
+  &:first-child {
+    margin-top: 0;
+  }
+
+  footer {
     display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
     align-items: center;
     background: #222;
     color: #f1f1f1;
-    padding: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    padding: 6px 4px;
 
     h4 {
       margin: 0;
