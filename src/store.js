@@ -1,3 +1,4 @@
+import WP from './utils/WP'
 import { getStore } from 'kea'
 
 import createHistory from 'history/createBrowserHistory'
@@ -15,10 +16,12 @@ export const store = getStore({
   reducers: {
     router: routerReducer
   },
-  plugins: [
-    sagaPlugin,
-    localStoragePlugin
-  ]
+  plugins: WP.isAdmin()
+    ? [sagaPlugin]
+    : [
+      sagaPlugin,
+      localStoragePlugin
+    ]
 })
 
 export const routeSelector = (state) => state.router.location
