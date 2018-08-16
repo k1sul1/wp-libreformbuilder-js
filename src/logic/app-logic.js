@@ -62,7 +62,7 @@ const defaultFields = {
   }, */
 }
 const defaultBuilderTree = {
-  builder: {
+  Root: {
     children: [],
   },
 }
@@ -308,7 +308,7 @@ export default kea({
         .filter(([key, { children }]) => children !== false)
         .reduce((acc, [key, { children }]) => [...acc, ...children], [])
       const notAnywhere = entries.filter(([key]) => (
-        key !== 'builder' && allChildren.indexOf(key) === -1
+        key !== 'Root' && allChildren.indexOf(key) === -1
       )).map(([key]) => key)
 
       for (let i = 0; i < notAnywhere.length; i++) {

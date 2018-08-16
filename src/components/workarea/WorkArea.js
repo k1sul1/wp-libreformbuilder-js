@@ -366,7 +366,7 @@ export default class WorkArea extends Component {
   renderControls (key, index) {
     const { builderTree, mode, modes } = this.props
 
-    if (key === 'builder') {
+    if (key === 'Root') {
       return (
         <div className="controls wplfb-button-group">
           <Button title="Add field to bottom" className="bg-blue only-item" onClick={(e) => this.addField(key, index)}>
@@ -484,7 +484,7 @@ export default class WorkArea extends Component {
 
   render () {
     const { builderTree } = this.props
-    const data = builderTree.builder.children
+    const data = builderTree.Root.children
       .map(id => [id, builderTree[id]])
 
     return (
@@ -493,7 +493,7 @@ export default class WorkArea extends Component {
           .map(([id, data], i) => this.renderField([id, data], i))
         }
         <hr />
-        {this.renderControls('builder', 0)}
+        {this.renderControls('Root', 0)}
         {this.renderModal()}
       </div>
     )

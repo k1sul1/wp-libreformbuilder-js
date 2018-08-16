@@ -35,7 +35,7 @@ const renderTree = (tree) => {
 
     return element
   }
-  const rootNodes = tree.builder.children
+  const rootNodes = tree.Root.children
     .map(key => ({ ...tree[key], key }))
     .map(nodeGenerator)
 
