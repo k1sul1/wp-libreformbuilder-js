@@ -10,6 +10,7 @@
     "eject": "react-app-rewrired eject"
   },
   "author": "Christian Nikkanen",
+  "homepage": ".",
   "license": "GPL-2.0",
   "browserslist": {
     "development": [
