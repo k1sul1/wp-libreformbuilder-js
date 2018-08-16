@@ -1,23 +1,6 @@
 @import "~@fortawesome/fontawesome-free/css/all.min.css";
 
-#builder {
-  background: #ccc;
-  min-height: 200px;
-  width: 100%;
-
-  .screen-reader-text {
-    border: 0;
-    clip: rect(1px, 1px, 1px, 1px);
-    clip-path: inset(50%);
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    padding: 0;
-    position: absolute;
-    width: 1px;
-    word-wrap: normal !important;
-  }
-
+.wplfb {
   .bg {
     &-blue {
       background-color: #0085ba;
@@ -39,4 +22,24 @@
       background-color: #dc3232;
     }
   }
+
+  .screen-reader-text {
+    border: 0;
+    clip: rect(1px, 1px, 1px, 1px);
+    clip-path: inset(50%);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+    word-wrap: normal !important;
+  }
+
+  &#builder {
+    background: #ccc;
+    min-height: 200px;
+    width: 100%;
+  }
 }
+

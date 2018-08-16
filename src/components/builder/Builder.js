@@ -35,7 +35,7 @@ export default class Builder extends Component {
     const { builderTree, modes, textMode } = this.props
 
     return (
-      <div id="builder">
+      <div id="builder" className="wplfb">
         <header className={`builder-header mode-${textMode}`}>
           <span className={`builder-header__mode`}>
             {textMode}
