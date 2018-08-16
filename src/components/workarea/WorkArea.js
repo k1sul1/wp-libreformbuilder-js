@@ -139,19 +139,21 @@ export default class WorkArea extends Component {
 
   handleSubmit = (e) => {
     const { selectedField, edit, addFieldTarget } = this.state.modal
-    const { getPopulatedField } = this.props
+    const { getPopulatedField, builderTree } = this.props
     const { addField, editField } = this.actions
     const form = e.target.closest('form') || e.target
     const entries = Array.from(new window.FormData(form).entries())
       .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {})
-    const { target, targetIndex, label, ...attributes } = entries
+    const { target, addUnderField, label, ...attributes } = entries
+
+    const targetIndex = builderTree[addFieldTarget].children.indexOf(addUnderField)
 
     if (edit) {
       editField(addFieldTarget, getPopulatedField(selectedField, { attributes, label }))
     } else {
       addField(
         target,
-        parseInt(targetIndex, 10) + 1,
+        targetIndex + 1,
         getPopulatedField(selectedField, { attributes, label })
       )
     }
@@ -299,10 +301,14 @@ export default class WorkArea extends Component {
                 <label htmlFor={'wplfb-field-target-under'}>
                   <h4>Child to add under</h4>
 
-                  <select name="targetIndex" id={'wplfb-field-target-under'} defaultValue={addFieldIndex}>
+                  <select
+                    name="addUnderField"
+                    id={'wplfb-field-target-under'}
+                    defaultValue={[...targetChildren].reverse()[addFieldIndex]}
+                  >
                     {targetChildren
                       .map((key, index) => (
-                        <option value={index} key={key}>{key}</option>
+                        <option value={key} key={key}>{key}</option>
                       ))}
                   </select>
                 </label>
