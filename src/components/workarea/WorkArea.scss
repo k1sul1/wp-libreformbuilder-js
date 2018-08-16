@@ -64,11 +64,48 @@
 
     h4 {
       margin: 0;
+      flex-grow: 1;
+      flex-shrink: 0;
+      overflow: hidden;
+      padding-right: 0.5rem;
+    }
 
-      span {
-        opacity: 0.8;
-        font-size: 0.8em;
-        vertical-align: middle;
+
+    .wplfb-field-name, .wplfb-field-identifier, .wplfb-field-key {
+      position: relative;
+      display: inline-block;
+      padding-top: 0.75rem;
+      min-width: 8rem;
+      vertical-align: middle;
+
+      &:before {
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        font-size: 0.75rem;
+      }
+    }
+
+    .wplfb-field-name {
+      &:before {
+        content: 'Input name';
+      }
+
+    }
+
+    .wplfb-field-identifier {
+      &:before {
+        content: 'Field ID';
+      }
+    }
+
+    .wplfb-field-key {
+      opacity: 0.8;
+      float: right;
+      // font-size: 0.8em;
+
+      &:before {
+        content: 'Field key';
       }
     }
   }

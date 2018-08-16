@@ -3,7 +3,7 @@
 
 import './WorkArea.scss'
 
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 // import HTML from 'html-react-parser'
 import Modal from 'react-modal'
@@ -234,7 +234,7 @@ export default class WorkArea extends Component {
                       }) && this.selectField(key)}
                       key={key}
                     >
-                      {data.name || key}
+                      {data.name ? `${data.name}[${key}]` : key}
                     </Button>
                   ))}
                 </div>
@@ -282,7 +282,7 @@ export default class WorkArea extends Component {
                       className={selectedField === key ? 'active bg-blue' : ''}
                       key={key}
                     >
-                      {data.name || key}
+                      {data.name ? `${data.name}[${key}]` : key}
                     </Button>
                   ))}
                 </div>
@@ -450,7 +450,19 @@ export default class WorkArea extends Component {
       element = <HTML element={element}>{template}</HTML>
     }
 
-    const heading = name ? `${field}: ${name}` : field
+    const fieldIdentifier = (
+      <span className="wplfb-field-identifier">
+        {data.name}[{field}]
+      </span>
+    )
+    const heading = name
+      ? (
+        <Fragment>
+          <span className="wplfb-field-name">{name}</span>
+          {fieldIdentifier}
+        </Fragment>
+      )
+      : fieldIdentifier
 
     return (
       <article key={key} data-key={key} className="wplfb-field">
@@ -466,7 +478,7 @@ export default class WorkArea extends Component {
         </section>
 
         <footer>
-          <h4>{heading} <span>({key})</span></h4>
+          <h4>{heading} <span className="wplfb-field-key">({key})</span></h4>
           {this.renderControls(key, index)}
         </footer>
       </article>

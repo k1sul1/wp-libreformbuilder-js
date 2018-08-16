@@ -244,9 +244,8 @@ export default kea({
 
     for (let i = 0; i < fields.length; i++) {
       const [index, data] = fields[i]
-      const key = `${data.name}-${index}`
 
-      yield put(actions.addAvailableField(key, data))
+      yield put(actions.addAvailableField(index, data))
     }
   },
 

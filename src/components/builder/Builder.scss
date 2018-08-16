@@ -32,6 +32,9 @@
 
     button {
       margin-right: 0.5rem;
+      &:first-letter {
+        text-transform: uppercase;
+      }
 
       &:last-child {
         margin-right: 0;
