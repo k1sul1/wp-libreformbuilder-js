@@ -268,6 +268,7 @@ export default kea({
         }
       } catch (e) {
         console.log('No valid payload provided, skipping import')
+        console.error(e)
       }
     },
     [actions.export]: function * ({ payload }) {
