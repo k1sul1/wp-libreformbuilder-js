@@ -297,7 +297,8 @@ export default kea({
           contentEl.value = state.previewHTML
         }
       } catch (e) {
-        console.log('No valid payload provided, skipping import')
+        console.log('Something went wrong exporting')
+        console.error(e)
       }
     },
     /**
