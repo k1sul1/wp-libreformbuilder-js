@@ -118,6 +118,10 @@ export default class WorkArea extends Component {
   moveUnder = (key, e) => {
     const target = e.target.value
 
+    if (!target) {
+      return
+    }
+
     this.actions.moveField(key, target, 0)
   }
 
@@ -362,7 +366,7 @@ export default class WorkArea extends Component {
               <label htmlFor={`wplfb-move-field-${key}`}>
                 <Icon icon="plane" srtext="Move to field" />
                 <select onBlur={(e) => this.moveUnder(key, e)} id={`wplfb-move-field-${key}`}>
-                  <option default>---</option>
+                  <option value="" default>---</option>
 
                   {Object.entries(builderTree)
                     .filter(([k, { children }]) => k !== key && children)
