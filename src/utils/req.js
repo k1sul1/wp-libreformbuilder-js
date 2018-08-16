@@ -1,7 +1,8 @@
 import axios from 'axios'
+import WP from './WP'
 
 const instance = axios.create({
-  baseURL: window.WPLFB_URL || 'https://libreformbuilder.local',
+  baseURL: WP.restURL(),
 })
 
 export default instance

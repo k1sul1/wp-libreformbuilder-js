@@ -45,7 +45,7 @@ export default class Builder extends Component {
             {Object.entries(modes).map(([name, value]) => (
               <Button
                 onClick={(e) => e.preventDefault() || setMode(value)}
-                className={name === textMode ? 'active' : ''}
+                className={name === textMode ? 'active bg-blue' : ''}
                 key={name}
               >
                 {name}

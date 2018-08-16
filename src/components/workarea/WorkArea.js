@@ -1,5 +1,4 @@
 // eslint is being stupid and keeps complaining even though all of it's needs are fulfilled
-// Maybe some day this will support labels that are not nested
 /* eslint-disable jsx-a11y/label-has-for */
 
 import './WorkArea.scss'
@@ -14,7 +13,6 @@ import HTML from '../HTML/HTML'
 import builderLogic from '../../logic/app-logic'
 import Button from '../button/Button'
 import Icon from '../icon/Icon'
-// import { renderTree } from '../preview/preview'
 
 Modal.setAppElement('#wplfb_buildarea')
 
@@ -174,8 +172,6 @@ export default class WorkArea extends Component {
     const { open, addFieldTarget, addFieldIndex, selectedField, edit } = state
     const targetChildren = builderTree[addFieldTarget].children
     const addUnder = targetChildren[addFieldIndex]
-    // let controls
-
     const controls = ({ attributes, label }) => (
       <div className="attribute-customization">
         {attributes ? (
@@ -203,11 +199,6 @@ export default class WorkArea extends Component {
         )}
       </div>
     )
-
-    if (selectedField) {
-      // console.log(selectedField)
-      // const { attributes, label } = getPopulatedField(selectedField)
-    }
 
     if (edit) {
       const currentFieldData = edit ? builderTree[addFieldTarget] : null

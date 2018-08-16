@@ -238,7 +238,7 @@ export default kea({
 
   start: function * () {
     const actions = this.actions
-    const fieldReq = yield req.get('/wp-json/wplfb/fields')
+    const fieldReq = yield req.get('/wplfb/fields')
     const { data } = fieldReq
     const fields = Object.entries(data.fields)
 
@@ -248,8 +248,6 @@ export default kea({
 
       yield put(actions.addAvailableField(key, data))
     }
-
-    // console.log(fields)
   },
 
   takeEvery: ({ actions, workers }) => ({
@@ -269,8 +267,6 @@ export default kea({
             state[key] = newState[key]
           }
         }
-
-        console.log(newState, state)
       } catch (e) {
         console.log('No valid payload provided, skipping import')
       }
@@ -289,8 +285,6 @@ export default kea({
             exportObj[key] = state[key]
           }
         }
-
-        console.log(exportObj)
 
         if (stateInput && contentEl) {
           stateInput.value = JSON.stringify(exportObj)

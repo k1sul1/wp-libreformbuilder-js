@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'kea'
 import builderLogic from '../logic/app-logic'
 import Builder from '../components/builder/Builder'
+import WP from '../utils/WP'
 
 @connect({
   actions: [
@@ -33,38 +34,41 @@ export default class App extends Component {
   componentDidMount () {
     // Dirty DOM work
     const { modes } = this.props
-    const publishButton = document.querySelector('#publish')
 
-    if (publishButton) {
-      console.log('Apparently in wp-admin')
-
-      const stateInput = document.querySelector('[name="wplfb-state"]')
+    if (WP.isAdmin()) {
+      const publishButton = document.querySelector('#publish')
       const contentEl = document.querySelector('#content')
+      const stateInput = WP.stateInput()
 
-      this.actions.import(stateInput.value)
+      const state = WP.state()
+
+      if (state) {
+        const quotesRemoved = state.slice(1).slice(0, state.length - 2)
+        this.actions.import(quotesRemoved)
+      }
+
       this.setState({ contentEl, stateInput })
 
-      publishButton.addEventListener('click', (e) => { // Not intending to remove
-        console.log('I will not let you save')
+      // Add an event listener on top of publish button, that fires only once.
+      // Will not work on anything old.
+      publishButton.addEventListener('click', (e) => {
         this.actions.setMode(modes.preview)
         this.actions.export({ stateInput, contentEl })
         e.preventDefault()
         e.stopPropagation()
 
+        // After everything is done, trigger the publish button
+        // TODO: Implement a promise to check when the job is actually done
         setTimeout(() => {
-          // 1 second should be enough on all devices
           publishButton.click()
-        }, 1000)
+        }, 2000)
       }, { once: true, capture: true, passive: false })
     }
   }
 
   render () {
-    const { contentEl, stateInput } = this.state
-    const isWP = contentEl && stateInput
-
     return (
-      <Builder isWP={isWP} />
+      <Builder />
     )
   }
 }
