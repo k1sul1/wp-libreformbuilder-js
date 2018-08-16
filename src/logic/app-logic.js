@@ -139,11 +139,11 @@ export default kea({
       data: fieldData,
     }),
     editField: (fieldKey, data) => ({ field: fieldKey, data }),
-    moveField: (startFieldKey, toFieldKey, toFieldIndex) => logReturn(({
+    moveField: (startFieldKey, toFieldKey, toFieldIndex) => ({
       from: startFieldKey,
       to: toFieldKey,
       toIndex: toFieldIndex,
-    })),
+    }),
     deleteField: (fieldKey) => ({ fieldKey }),
   }),
 
