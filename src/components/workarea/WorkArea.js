@@ -370,7 +370,7 @@ export default class WorkArea extends Component {
 
                   {Object.entries(builderTree)
                     .filter(([k, { children }]) => k !== key && children)
-                    .map(([key, data]) => console.log(key, data) || (
+                    .map(([key, data]) => (
                       <option value={key} key={key}>
                         {data.field ? `${data.field}: ` : ''}
                         {key}
