@@ -40,20 +40,12 @@ const dirtyParser = (html) => {
 const logReturn = x => console.log(x) || x
 const objectFromArray = (obj, [k, v]) => ({ ...obj, [k]: v })
 const defaultFields = {
-  wrapper: {
+  /* wrapper: {
     children: [],
-    // Template is the container for the field, tag and attributes are
-    // the actual values.
-    template: `<div class="outer">
-    <h1>Heading</h1>
-    <div class="wplfb-field-container">
-    </div>
-    <h2>Under container</h2>
-    </div>`,
+    template: `<div class="outer"><h1>Heading</h1><div class="wplfb-field-container"></div></div>`,
     label: false,
     tag: 'div',
     attributes: {
-      'data-test': 'Test 2',
       className: 'wplfb-child-container',
     }
   },
@@ -67,36 +59,12 @@ const defaultFields = {
       placeholder: 'Test',
       name: 'text-input',
     }
-  },
+  }, */
 }
 const defaultBuilderTree = {
   builder: {
-    children: ['test1'],
+    children: [],
   },
-  test1: {
-    field: 'wrapper',
-    children: ['test2'],
-    template: `<div class="outer">
-    <h1>Heading</h1>
-    <div class="wplfb-field-container">
-    </div>
-    <h2>Under container</h2>
-    </div>`,
-    label: false,
-    tag: 'div',
-    attributes: {
-      className: 'wplfb-child-container',
-    }
-  },
-  test2: {
-    field: 'text',
-    children: false,
-    label: 'Text field label',
-    tag: 'input',
-    attributes: {
-      placeholder: 'Cat',
-    }
-  }
 }
 
 const MODE_INSERT = 0
