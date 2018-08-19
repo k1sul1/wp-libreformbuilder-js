@@ -20,7 +20,6 @@ import './Builder.scss'
       'builderTree',
       'mode',
       'modes',
-      'textMode',
     ]
   ]
 })
@@ -28,40 +27,47 @@ export default class Builder extends Component {
   static propTypes = {
     builderTree: PropTypes.object.isRequired,
     modes: PropTypes.object.isRequired,
-    textMode: PropTypes.string.isRequired,
+    mode: PropTypes.object.isRequired,
   }
   render () {
     const { setMode } = this.actions
-    const { builderTree, modes, textMode } = this.props
+    const { builderTree, modes, mode } = this.props
+
+    // Submodes don't count at this level
+    const activeMode = mode.submode
+      ? Object.values(modes).find(m => m.id === mode.submode)
+      : mode
 
     return (
       <div id="builder" className="wplfb">
-        <header className={`builder-header mode-${textMode}`}>
+        <header className={`builder-header mode-${activeMode.name}`}>
           <span className={`builder-header__mode`}>
-            {textMode}
+            {mode.name}
           </span>
 
           <div className="builder-header__buttons wplfb-button-group">
-            {Object.entries(modes).map(([name, value]) => (
-              <Button
-                onClick={(e) => e.preventDefault() || setMode(value)}
-                className={name === textMode ? 'active bg-blue' : ''}
-                key={name}
-              >
-                {name}
-              </Button>
-            ))}
+            {Object.entries(modes)
+              .filter(([, mode]) => !mode.submode)
+              .map(([, mode]) => (
+                <Button
+                  onClick={() => setMode(mode)}
+                  className={mode.name === activeMode.name ? 'active bg-blue' : ''}
+                  key={mode.id}
+                >
+                  {mode.name}
+                </Button>
+              ))}
           </div>
         </header>
 
-        {(modes[textMode] === modes.insert || modes[textMode] === modes.move) && (
+        {(activeMode === modes.insert || activeMode === modes.move) && (
           <WorkArea
-            mode={textMode}
+            mode={mode}
             modes={modes}
           />
         )}
 
-        {modes[textMode] === modes.preview && (
+        {activeMode === modes.preview && (
           <Preview tree={builderTree} />
         )}
       </div>

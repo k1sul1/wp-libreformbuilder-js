@@ -23,6 +23,7 @@ Modal.setAppElement('#wplfb_buildarea')
       'editField',
       'moveField',
       'deleteField',
+      'setMode',
     ]
   ],
   props: [
@@ -42,7 +43,7 @@ export default class WorkArea extends Component {
     getPopulatedField: PropTypes.func.isRequired,
     builderTree: PropTypes.object.isRequired,
     fields: PropTypes.object.isRequired,
-    mode: PropTypes.string.isRequired,
+    mode: PropTypes.object.isRequired,
     modes: PropTypes.object.isRequired,
   }
 
@@ -56,6 +57,11 @@ export default class WorkArea extends Component {
         addFieldIndex: null,
         edit: false,
       },
+      moveAnywhere: {
+        fieldKey: null,
+        targetFieldKey: null, // needed in state for transition (maybe)
+        targetChildToAddAfter: null,
+      }
     }
 
     this.renderField = this.renderField.bind(this)
@@ -122,6 +128,51 @@ export default class WorkArea extends Component {
     }
 
     this.actions.moveField(key, target, 0)
+  }
+
+  startMoveAnywhere = (key) => {
+    const { modes } = this.props
+    const { setMode } = this.actions
+
+    setMode(modes.moveAnywhere)
+
+    this.setState({
+      moveAnywhere: {
+        ...this.state.moveAnywhere,
+        fieldKey: key,
+      }
+    })
+  }
+
+  async completeMoveAnywhere (parent, childToAddAfter) {
+    await new Promise(resolve => {
+      this.setState({
+        moveAnywhere: {
+          ...this.state.moveAnywhere,
+          targetFieldKey: parent,
+          targetChildToAddAfter: childToAddAfter,
+        }
+      }, resolve)
+    })
+
+    const { moveAnywhere } = this.state
+    const { fieldKey, targetFieldKey, targetChildToAddAfter } = moveAnywhere
+    const { builderTree, modes } = this.props
+    const { setMode, moveField } = this.actions
+    const target = builderTree[targetFieldKey]
+    const preciseTarget = target.children.indexOf(targetChildToAddAfter) + 1
+
+    // await new Promise(resolve => setTimeout(resolve, 300))
+    moveField(fieldKey, targetFieldKey, preciseTarget)
+    setMode(modes.move)
+
+    this.setState({
+      moveAnywhere: {
+        fieldKey: null,
+        targetFieldKey: null,
+        targetChildToAddAfter: null,
+      }
+    })
   }
 
   moveToTop = (key) => {
@@ -376,7 +427,7 @@ export default class WorkArea extends Component {
         </div>
       )
     } else {
-      if (modes[mode] === modes.insert) {
+      if (mode === modes.insert) {
         return (
           <div className="controls wplfb-button-group">
             <Button title="Add field here" onClick={(e) => this.addField(key, index)}>
@@ -394,11 +445,14 @@ export default class WorkArea extends Component {
         return (
           <div className="controls">
             <div className="wplfb-button-group">
-              <Button title="Move upwards" className="bg-gray" onClick={(e) => this.moveUp(key, index)}>
+              <Button title="Move upwards" className="bg-gray" onClick={() => this.moveUp(key, index)}>
                 <Icon icon="arrow-up" srtext="Move upwards" />
               </Button>
-              <Button title="Move downwards" className="bg-gray" onClick={(e) => this.moveDown(key, index)}>
+              <Button title="Move downwards" className="bg-gray" onClick={() => this.moveDown(key, index)}>
                 <Icon icon="arrow-down" srtext="Move downwards" />
+              </Button>
+              <Button title="Move anywhere" className="bg-gray" onClick={() => this.startMoveAnywhere(key)}>
+                <Icon icon="arrows-alt" srtext="Move anywhere" />
               </Button>
             </div>
 
@@ -439,17 +493,26 @@ export default class WorkArea extends Component {
     }
   }
 
-  renderField ([key, data], index = 0) {
-    const { builderTree } = this.props
+  renderField ([key, data], index = 0, parent = 'Root') {
+    const { builderTree, mode, modes } = this.props
     const { tag: Tag, attributes, children, template, label, field } = data
     const { name } = attributes
-    const textContent = attributes['data-text']
+    const isMoveAnywhere = mode === modes.moveAnywhere
+    const isBeingMoved = isMoveAnywhere && this.state.moveAnywhere.fieldKey === key
+    const isBeingMovedInto = isMoveAnywhere && this.state.moveAnywhere.targetFieldKey === key
     let element = children ? (
       <Tag {...attributes} readOnly>
-        {textContent}
+        {isMoveAnywhere && (
+          <Button
+            className="wplfb-ma-move-here-wrapper bg-blue"
+            onClick={() => this.completeMoveAnywhere(key, null)}
+          >
+            Move field here
+          </Button>
+        )}
         {children
           .map(id => [id, builderTree[id]])
-          .map(([id, data], i) => this.renderField([id, data], i))
+          .map(([id, data], i) => this.renderField([id, data], i, key))
         }
       </Tag>
     ) : (
@@ -474,17 +537,27 @@ export default class WorkArea extends Component {
       )
       : fieldIdentifier
 
-    return (
-      <article key={key} data-key={key} className="wplfb-field">
+    const cn = [
+      'wplfb-field',
+      isMoveAnywhere ? 'wplfb-ma-show-controls' : '',
+      isBeingMoved ? 'wplfb-ma-movesource' : '',
+      isBeingMovedInto ? 'wplfb-ma-movetarget' : '',
+      isMoveAnywhere && children ? 'wplfb-ma-wrapper' : '',
+    ].join(' ')
+
+    const fieldNode = (
+      <article key={key} data-key={key} className={cn}>
         <section>
-          {label ? (
-            <label>
-              <span className="wplfb-label">
-                {label}
-              </span>
-              {element}
-            </label>
-          ) : element}
+          <div className="flexcenter">
+            {label ? (
+              <label>
+                <span className="wplfb-label">
+                  {label}
+                </span>
+                {element}
+              </label>
+            ) : element}
+          </div>
         </section>
 
         <footer>
@@ -493,15 +566,43 @@ export default class WorkArea extends Component {
         </footer>
       </article>
     )
+
+    if (isMoveAnywhere) {
+      return (
+        <Fragment key={`ma-${key}`}>
+          {fieldNode}
+
+          {isMoveAnywhere && (
+            <Button
+              className="wplfb-ma-move-here bg-blue"
+              onClick={() => this.completeMoveAnywhere(parent, key)}
+            >
+              Move field here
+            </Button>
+          )}
+        </Fragment>
+      )
+    } else {
+      return fieldNode
+    }
   }
 
   render () {
-    const { builderTree } = this.props
+    const { builderTree, mode, modes } = this.props
+    const isMoveAnywhere = mode === modes.moveAnywhere
     const data = builderTree.Root.children
       .map(id => [id, builderTree[id]])
 
     return (
-      <div className="work-area">
+      <div className={`work-area ${isMoveAnywhere ? 'wplfb-ma-wrapper' : ''}`}>
+        {isMoveAnywhere && (
+          <Button
+            className="wplfb-ma-move-here bg-blue"
+            onClick={() => this.completeMoveAnywhere('Root', 0)}
+          >
+            Move field here
+          </Button>
+        )}
         {data
           .map(([id, data], i) => this.renderField([id, data], i))
         }

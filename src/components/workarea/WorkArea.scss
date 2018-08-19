@@ -5,6 +5,9 @@
 
 .work-area {
   padding: 1.5rem 1rem;
+  padding-bottom: 0.5rem;
+  transition: 0.8s ease;
+  position: relative;
 
   .child-container {
     padding: 20px;
@@ -17,6 +20,43 @@
       color: #222;
     }
   }
+
+  &.wplfb-ma-wrapper {
+    .wplfb-ma-move-here:first-child {
+      margin-top: -1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .wplfb-field {
+      // margin-top: 46px;
+      margin-bottom: 0.5rem;
+      margin-top: 0.5rem;
+    }
+  }
+
+  // move anywher functionality
+  .wplfb-ma {
+    &-wrapper {
+      // padding-top: 38px;
+    }
+
+    &-move-here, &-move-here-wrapper {
+      display: block;
+      // position: absolute;
+      // margin: 1rem 0;
+      // margin-bottom: 2rem;
+      z-index: 999;
+    }
+
+    &-movesource {
+      opacity: 0.5;
+    }
+
+    &-movetarget {
+      opacity: 0.75;
+    }
+  }
+
 
   .controls {
     display: flex;
@@ -47,8 +87,14 @@
 .wplfb-field {
   border: 1px solid #222;
   margin-top: 1rem;
+  // margin-top: 46px;
+  transition: 0.8s ease;
 
-  &:first-child {
+  &.wplfb-ma-show-controls {
+    margin-top: 46px;
+  }
+
+  &:first-of-type {
     margin-top: 0;
   }
 
@@ -112,7 +158,12 @@
 
   section {
     padding: 0.5rem;
+    min-height: 3rem;
     background: #f1f1f1;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: flex-start;
+    justify-content: center;
   }
 }
 

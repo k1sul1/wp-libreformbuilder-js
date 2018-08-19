@@ -70,21 +70,48 @@ const defaultBuilderTree = {
 
 const MODE_INSERT = 0
 const MODE_MOVE = 1
+const MODE_MOVE_ANYWHERE = 3
 const MODE_PREVIEW = 2
 
 export const MODES = {
-  MODE_INSERT,
-  MODE_MOVE,
-  MODE_PREVIEW,
 }
 
 const builderModes = {
+  // available: {
+    // insert: MODES[MODE_INSERT],
+    // move: MODES[MODE_MOVE],
+    // moveAnywhere: MODES[MODE_MOVE_ANYWHERE],
+    // preview: MODES[MODE_PREVIEW],
+  // },
+  /* available: [MODE_INSERT, MODE_MOVE, MODE_MOVE_ANYWHERE, MODE_PREVIEW].reduce((obj, mode) => {
+    const modeObj = MODES[mode]
+    obj[modeObj.name] = modeObj
+
+    return obj
+  }, {}), */
   available: {
-    insert: MODE_INSERT,
-    move: MODE_MOVE,
-    preview: MODE_PREVIEW,
+    insert: {
+      name: 'Insert',
+      submode: false,
+      id: MODE_INSERT,
+    },
+    move: {
+      name: 'Move',
+      submode: false,
+      id: MODE_MOVE,
+    },
+    moveAnywhere: {
+      name: 'Move anywhere',
+      submode: MODE_MOVE,
+      id: MODE_MOVE_ANYWHERE,
+    },
+    preview: {
+      name: 'Preview',
+      submode: false,
+      id: MODE_PREVIEW,
+    },
   },
-  enabled: MODE_INSERT,
+  enabled: MODE_MOVE,
 }
 
 export default kea({
@@ -118,7 +145,7 @@ export default kea({
 
   reducers: ({ actions, constants }) => ({
     mode: [builderModes, PropTypes.object, {}, {
-      [actions.setMode]: (state, payload) => ({ ...state, enabled: payload }),
+      [actions.setMode]: (state, payload) => ({ ...state, enabled: payload.id }),
     }],
     fields: [defaultFields, PropTypes.object, {}, {
       [actions.addAvailableField]: (state, payload) => {
@@ -324,20 +351,11 @@ export default kea({
       ({ available }) => ({ ...available }),
       PropTypes.object
     ],
-    textMode: [
-      () => [selectors.mode],
-      ({ available, enabled }) => {
-        const modeIndex = Object.values(available).indexOf(enabled)
-        const modeText = Object.keys(available)[modeIndex]
-
-        return modeText
-      },
-      PropTypes.string
-    ],
     mode: [
       () => [selectors.mode],
-      ({ enabled }) => enabled,
-      PropTypes.number
+      ({ enabled, available }) => Object.values(available).find(mode => mode.id === enabled),
+      // ({ enabled, available }) => Object.values(available).find(mode => mode.id === enabled),
+      PropTypes.object
     ],
     getPopulatedField: [
       () => [selectors.fields],
