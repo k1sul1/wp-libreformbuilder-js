@@ -154,6 +154,10 @@ export default kea({
           throw new Error(`Attempted to add a new field to a nonexistent parent ${to}`)
         }
 
+        if (rest.children && rest.children.length !== 0) {
+          throw new Error(`Field can't contain children on creation!`)
+        }
+
         const children = state[to].children
         children.splice(toIndex, 0, id)
 
@@ -337,9 +341,10 @@ export default kea({
     ],
     getPopulatedField: [
       () => [selectors.fields],
-      (field) => {
+      (fields) => {
         return (key, overwriteWith) => merge(
-          field[key],
+          {}, // Mutates first param
+          fields[key],
           { id: shortid.generate(), field: key },
           overwriteWith
         )

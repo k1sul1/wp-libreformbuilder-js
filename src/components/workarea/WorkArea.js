@@ -137,28 +137,38 @@ export default class WorkArea extends Component {
   }
 
   handleSubmit = (e) => {
-    const { selectedField, edit, addFieldTarget } = this.state.modal
-    const { getPopulatedField, builderTree } = this.props
-    const { addField, editField } = this.actions
-    const form = e.target.closest('form') || e.target
-    const entries = Array.from(new window.FormData(form).entries())
-      .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {})
-    const { target, addUnderField, label, ...attributes } = entries
+    try {
+      const { selectedField, edit, addFieldTarget } = this.state.modal
+      const { getPopulatedField, builderTree } = this.props
+      const { addField, editField } = this.actions
+      const form = e.target.closest('form') || e.target
+      const entries = Array.from(new window.FormData(form).entries())
+        .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {})
+      const { target, addUnderField, label, ...attributes } = entries
 
-    const temp = get(builderTree, `${addFieldTarget}.children`, [])
-    const targetIndex = temp.length ? temp.indexOf(addUnderField) : 0
+      const temp = get(builderTree, `${addFieldTarget}.children`, [])
+      const targetIndex = temp.length ? temp.indexOf(addUnderField) : 0
 
-    if (edit) {
-      editField(addFieldTarget, getPopulatedField(selectedField, { attributes, label }))
-    } else {
-      addField(
-        target,
-        targetIndex + 1,
-        getPopulatedField(selectedField, { attributes, label })
-      )
+      const populated = getPopulatedField(selectedField, { attributes, label })
+      populated.children = Array.isArray(populated.children) ? [] : false
+      // populated.id = shortid.generate()
+      // populated.id = Date.now()
+      // console.log(target, '\n', populated, '\n', temp)
+
+      if (edit) {
+        editField(addFieldTarget, populated)
+      } else {
+        addField(
+          target,
+          targetIndex + 1,
+          populated
+        )
+      }
+      this.closeModal()
+      e.preventDefault()
+    } catch (e) {
+      console.error(e)
     }
-    this.closeModal()
-    e.preventDefault()
   }
 
   renderModal () {
