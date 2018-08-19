@@ -120,16 +120,6 @@ export default class WorkArea extends Component {
     this.actions.moveField(key, parent, index + 1)
   }
 
-  moveUnder = (key, e) => {
-    const target = e.target.value
-
-    if (!target) {
-      return
-    }
-
-    this.actions.moveField(key, target, 0)
-  }
-
   startMoveAnywhere = (key) => {
     const { modes } = this.props
     const { setMode } = this.actions
@@ -454,24 +444,6 @@ export default class WorkArea extends Component {
               <Button title="Move anywhere" className="bg-gray" onClick={() => this.startMoveAnywhere(key)}>
                 <Icon icon="arrows-alt" srtext="Move anywhere" />
               </Button>
-            </div>
-
-            <div className="bg-gray move-under" title="Move to field">
-              <label htmlFor={`wplfb-move-field-${key}`}>
-                <Icon icon="plane" srtext="Move to field" />
-                <select onBlur={(e) => this.moveUnder(key, e)} id={`wplfb-move-field-${key}`}>
-                  <option value="" default>---</option>
-
-                  {Object.entries(builderTree)
-                    .filter(([k, { children }]) => k !== key && children)
-                    .map(([key, data]) => (
-                      <option value={key} key={key}>
-                        {data.field ? `${data.field}: ` : ''}
-                        {key}
-                      </option>
-                    ))}
-                </select>
-              </label>
             </div>
 
             <div className="wplfb-button-group">
