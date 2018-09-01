@@ -111,7 +111,7 @@ const builderModes = {
       id: MODE_PREVIEW,
     },
   },
-  enabled: MODE_MOVE,
+  enabled: MODE_INSERT,
 }
 
 export default kea({
