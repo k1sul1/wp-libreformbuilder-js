@@ -242,7 +242,7 @@ export default class WorkArea extends Component {
         const defaultData = {
           type: 'text',
           readOnly: null,
-          hidden: false,
+          hidden: ['type'].indexOf(name) > -1, // Default blacklisted attributes
         }
 
         if (!attrData) {
