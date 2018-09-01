@@ -223,33 +223,107 @@ export default class WorkArea extends Component {
     const { open, addFieldTarget, addFieldIndex, selectedField, edit } = state
     const targetChildren = builderTree[addFieldTarget].children
     const addUnder = targetChildren[addFieldIndex]
-    const controls = ({ attributes, label }) => (
-      <div className="attribute-customization">
-        {attributes ? (
-          Object.entries(attributes).map(([name, value]) => {
+    const controls = ({ attributes, label }) => {
+      const getName = (name) => (({
+        className: 'class',
+      })[name] || name)
+      const { 'wplfbattributes': rawAttrData, ...attrs } = attributes
+      let attrData = {}
+
+      if (rawAttrData) {
+        try {
+          attrData = JSON.parse(rawAttrData)
+        } catch (e) {
+          console.error('Unable to parse attribute data, falling back to default', e)
+        }
+      }
+
+      const getInput = (name, value, attrData = undefined) => {
+        const defaultData = {
+          type: 'text',
+          readOnly: null,
+          hidden: false,
+        }
+
+        if (!attrData) {
+          attrData = defaultData
+        } else {
+          attrData = { ...defaultData, ...attrData }
+        }
+
+        const { type, hidden, readOnly } = attrData
+
+        if (hidden) {
+          return false
+        }
+
+        const getAttrs = (attrs = {}) => ({
+            name,
+            readOnly,
+            id: `control-${name}`,
+            defaultValue: value,
+           ...attrs,
+        })
+
+        switch (type) {
+          case 'checkbox': {
             return (
-              <label key={`${name}-${value}`} htmlFor={`control-${name}`}>
-                {name}
-
-                <input type="text" name={name} id={`control-${name}`} defaultValue={value} />
-              </label>
+              <input {...getAttrs({
+                type: 'checkbox',
+                defaultValue: value || 1
+              })} />
             )
-          })
-        ) : (
-          <p>{`Field doen't allow attribute customization`}</p>
-        )}
+          }
 
-        {label ? (
-          <label htmlFor="control-label">
-            Field label
+          case 'text': {
+            return (
+              <input {...getAttrs({ type: 'text' })} />
+            )
+          }
 
-            <input type="text" name="label" id="control-label" defaultValue={label} />
-          </label>
-        ) : (
-          <p>{`Field doesn't take a label.`}</p>
-        )}
-      </div>
-    )
+          default: {
+            console.error(`Invalid type ${attrData.type} for input ${name}, defaulting to text`)
+            return getInput(name, value)
+          }
+        }
+      }
+      const printAttributes = ([name, value]) => {
+        const saneName = getName(name)
+        const input = getInput(name, value, attrData[saneName])
+
+        if (input) {
+          return (
+            <label key={`${name}-${value}`} htmlFor={`control-${name}`}>
+              {saneName}
+
+              {input}
+            </label>
+          )
+        } else {
+          return null
+        }
+      }
+
+      return (
+        <div className="attribute-customization">
+          {attrs ? (
+            Object.entries(attrs).map(printAttributes)
+          ) : (
+            <p>{`Field doen't allow attribute customization`}</p>
+          )}
+
+          {label ? (
+            <label htmlFor="control-label">
+              Field label
+
+              <input type="text" name="label" id="control-label" defaultValue={label} />
+            </label>
+          ) : (
+            <p>{`Field doesn't take a label.`}</p>
+          )}
+        </div>
+      )
+    }
 
     if (edit) {
       const currentFieldData = edit ? builderTree[addFieldTarget] : null
