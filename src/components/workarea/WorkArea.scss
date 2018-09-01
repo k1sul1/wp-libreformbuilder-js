@@ -77,6 +77,30 @@
         margin-right: 10px;
       }
     }
+
+  }
+}
+
+.wplfb-attribute-customization {
+  label {
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  strong {
+    display: block;
+
+    &:first-letter {
+      text-transform: uppercase;
+    }
+  }
+
+  input {
+    display: block;
+
+    &[type="checkbox"] {
+      // display: inline-bl
+    }
   }
 }
 

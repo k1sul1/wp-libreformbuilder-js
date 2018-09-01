@@ -294,7 +294,7 @@ export default class WorkArea extends Component {
         if (input) {
           return (
             <label key={`${name}-${value}`} htmlFor={`control-${name}`}>
-              {saneName}
+              <strong>{saneName}</strong>
 
               {input}
             </label>
@@ -305,9 +305,9 @@ export default class WorkArea extends Component {
       }
 
       return (
-        <div className="attribute-customization">
+        <div className="wplfb-attribute-customization">
           {attrs ? (
-            Object.entries(attrs).map(printAttributes)
+            Object.entries(attrs).reverse().map(printAttributes)
           ) : (
             <p>{`Field doen't allow attribute customization`}</p>
           )}
@@ -480,7 +480,7 @@ export default class WorkArea extends Component {
   }
 
   renderControls (key, index) {
-    const { builderTree, mode, modes } = this.props
+    const { mode, modes } = this.props
 
     if (key === 'Root') {
       return (
