@@ -444,7 +444,7 @@ export default class WorkArea extends Component {
                           const field = builderTree[key]
                           const { attributes } = field
 
-                          let text = `${field.field}`
+                          let text = `${field.name}`
 
                           if (attributes && attributes.name) {
                             text += ` - ${attributes.name}`
