@@ -240,7 +240,7 @@ export default class WorkArea extends Component {
 
       const getInput = (name, value, attrData = undefined) => {
         const defaultData = {
-          type: 'text',
+          type: ['required'].indexOf(name) > -1 ? 'checkbox' : 'text', // Default checkbox attributes
           readOnly: null,
           hidden: ['type'].indexOf(name) > -1, // Default blacklisted attributes
         }
