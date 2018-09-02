@@ -233,7 +233,13 @@ select[readonly] {
     }
 
     label {
-      float: left;
+      display: block;
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+
+    select {
+      width: 100%;
     }
   }
 }
