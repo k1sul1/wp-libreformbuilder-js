@@ -545,7 +545,9 @@ export default class WorkArea extends Component {
   }
 
   renderControls (key, index) {
-    const { mode, modes } = this.props
+    const { mode, modes, builderTree } = this.props
+    const isWrapperField = Array.isArray(builderTree[key].children)
+    const parent = isWrapperField && this.props.getFieldParent(key)
 
     if (key === 'Root') {
       return (
@@ -559,8 +561,16 @@ export default class WorkArea extends Component {
       if (mode === modes.insert) {
         return (
           <div className="controls wplfb-button-group">
-            <Button title="Add field here" onClick={(e) => this.addField(key, index)}>
-              <Icon icon="plus" srtext="Add field here" />
+            {isWrapperField && (
+              <Button title="Add field inside" onClick={(e) => this.addField(key, index)}>
+                <Icon icon="plus-square" srtext="Add field inside" />
+              </Button>
+            )}
+            <Button title="Add field under" onClick={(e) => isWrapperField
+              ? this.addField(parent, index)
+              : this.addField(key, index)
+            }>
+              <Icon icon="plus" srtext="Add field under" />
             </Button>
             <Button title="Edit field" onClick={(e) => this.editField(key, index)}>
               <Icon icon="edit" srtext="Edit field" />
