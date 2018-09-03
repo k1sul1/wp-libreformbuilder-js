@@ -724,7 +724,7 @@ export default class WorkArea extends Component {
           .map(([id, data], i) => this.renderField([id, data], i))
         }
         <hr />
-        {this.renderControls('Root', 0)}
+        {this.renderControls('Root', builderTree['Root'].children.length - 1)}
         {this.renderModal()}
       </div>
     )
