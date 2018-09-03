@@ -6,7 +6,7 @@ import shortid from 'shortid'
 import PropTypes from 'prop-types'
 import req from '../utils/req'
 
-const dirtyParser = (html) => {
+const getFieldTagNameAndAttributes = (html) => {
   let el = document.createElement('div')
   el.innerHTML = html
   el = el.children[0]
@@ -114,7 +114,7 @@ export default kea({
       [actions.addAvailableField]: (state, payload) => {
         const [key, data] = Object.entries(payload)[0]
         const { field, ...filtered } = data
-        const [tag, attributes] = dirtyParser(field)
+        const [tag, attributes] = getFieldTagNameAndAttributes(field)
 
         // If field contains a string "wplfb-child-container", allow putting children inside this field.
         const children = data.field.indexOf('wplfb-child-container') !== -1 ? [] : false
