@@ -504,9 +504,8 @@ export default class WorkArea extends Component {
                 <input type="hidden" value={addFieldTarget} name="target" />
                 <input type="hidden" value={defaultValue} name="addUnderField" />
 
-                {this.renderField(!addUnderField
-                    ? [defaultValue, builderTree[defaultValue]]
-                    : [addUnderField, builderTree[addUnderField]],
+                {defaultValue && this.renderField(
+                  [defaultValue, builderTree[defaultValue]],
                   addFieldIndex,
                   addFieldTarget,
                   { renderControls: false }
