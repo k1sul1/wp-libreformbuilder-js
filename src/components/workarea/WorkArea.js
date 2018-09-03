@@ -14,6 +14,7 @@ import builderLogic from '../../logic/app-logic'
 import Button from '../button/Button'
 import Icon from '../icon/Icon'
 import { isDevelopment } from '../../utils/env'
+import { getFieldAttributeMeta } from '../../utils/field-attribute-meta'
 
 Modal.setAppElement('#wplfb_buildarea')
 
@@ -287,18 +288,7 @@ export default class WorkArea extends Component {
   }
 
   getInput = (name, value, attrData = undefined) => {
-    const defaultData = {
-      type: ['required'].indexOf(name) > -1 ? 'checkbox' : 'text', // Default checkbox attributes
-      readOnly: null,
-      hidden: ['type'].indexOf(name) > -1, // Default blacklisted attributes
-    }
-
-    if (!attrData) {
-      attrData = defaultData
-    } else {
-      attrData = { ...defaultData, ...attrData }
-    }
-
+    attrData = getFieldAttributeMeta(name, attrData)
     const { type, hidden, readOnly } = attrData
 
     if (hidden) {

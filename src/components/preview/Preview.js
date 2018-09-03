@@ -6,10 +6,35 @@ import { connect } from 'kea'
 import shortid from 'shortid'
 import builderLogic from '../../logic/app-logic'
 import HTML from '../HTML/HTML'
+import { getFieldAttributeMeta } from '../../utils/field-attribute-meta'
 
 const renderTree = (tree) => {
   const nodeGenerator = ({ tag: Tag, attributes, children, key, template, label }) => {
-    const { wplfbattributes, ...attrs } = attributes
+    const { wplfbattributes: rawAttrData, ...attrs } = attributes
+
+    let attrData =  {}
+    try {
+      attrData = JSON.parse(rawAttrData)
+
+    } catch (e) {
+      console.log('Unable to parse attribute data', e)
+    }
+
+    Object.entries(attrs).forEach(([attrName, attrValue]) => {
+      const meta = getFieldAttributeMeta(attrName, attrData)
+
+      if (meta.type === 'checkbox') {
+        if (attrValue === '1') {
+          attrs[attrName] = 'true'
+          // This may not work on some attributes, like on required
+          // Said some attributes print like this: required=""
+          // That triggers form validation so thisisfine.jpg
+        } else {
+          attrs[attrName] = null
+        }
+      }
+    })
+
     const id = attributes.id || shortid.generate()
     let element = children ? (
       <Tag id={id} {...attrs} key={`${key}-tag`}>
