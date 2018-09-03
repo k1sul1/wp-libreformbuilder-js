@@ -13,6 +13,7 @@ import HTML from '../HTML/HTML'
 import builderLogic from '../../logic/app-logic'
 import Button from '../button/Button'
 import Icon from '../icon/Icon'
+import { isDevelopment } from '../../utils/env'
 
 Modal.setAppElement('#wplfb_buildarea')
 
@@ -670,7 +671,10 @@ export default class WorkArea extends Component {
         </section>
 
         <footer>
-          <h4>{heading} <span className="wplfb-field-key">({key})</span></h4>
+          <h4>
+            {heading}
+            {isDevelopment() && <span className="wplfb-field-key">({key})</span>}
+          </h4>
           {options.renderControls && this.renderControls(key, index)}
         </footer>
       </article>
