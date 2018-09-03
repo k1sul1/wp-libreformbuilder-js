@@ -76,11 +76,29 @@ export default class WorkArea extends Component {
   }
 
   openModal = (data) => {
-    this.setState({ modal: {
-      ...this.state.modal,
-      ...data,
-      open: true,
-    }})
+    const { edit } = data
+
+    this.setState({
+      modal: {
+        ...this.state.modal,
+        ...data,
+        open: true,
+      },
+    })
+
+    if (edit) {
+      const { builderTree } = this.props
+      const { addFieldTarget } = data
+      const field = builderTree[addFieldTarget]
+      const { wplfbattributes, ...attributes } = field.attributes
+
+      this.setState({
+        preview: {
+          attributes: { ...attributes },
+          label: field.label,
+        }
+      })
+    }
   }
 
   closeModal = () => {
@@ -112,7 +130,7 @@ export default class WorkArea extends Component {
 
   updatePreview = e => {
     const { target } = e
-    const { value, name } = target
+    const { value, name, type } = target
 
     if (name === 'label') {
       this.setState({
@@ -122,15 +140,29 @@ export default class WorkArea extends Component {
         }
       })
     } else {
-      this.setState({
-        preview: {
-          ...this.state.preview,
-          attributes: {
-            ...this.state.preview.attributes,
-            [name]: value,
+      if (type === 'checkbox') {
+        const checked = this.state.preview.attributes[name]
+
+        this.setState({
+          preview: {
+            ...this.state.preview,
+            attributes: {
+              ...this.state.preview.attributes,
+              [name]: checked ? null : '1',
+            }
           }
-        }
-      })
+        })
+      } else {
+        this.setState({
+          preview: {
+            ...this.state.preview,
+            attributes: {
+              ...this.state.preview.attributes,
+              [name]: value,
+            }
+          }
+        })
+      }
     }
   }
 
@@ -230,16 +262,13 @@ export default class WorkArea extends Component {
       const form = e.target.closest('form') || e.target
       const entries = Array.from(new window.FormData(form).entries())
         .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {})
-      const { target, addUnderField, label, ...attributes } = entries
+      const { target, addUnderField, label, [entries.name]: discarded, ...attributes } = entries
 
       const temp = get(builderTree, `${addFieldTarget}.children`, [])
       const targetIndex = temp.length ? temp.indexOf(addUnderField) : 0
 
       const populated = getPopulatedField(selectedField, { attributes, label })
       populated.children = Array.isArray(populated.children) ? [] : false
-      // populated.id = shortid.generate()
-      // populated.id = Date.now()
-      // console.log(target, '\n', populated, '\n', temp)
 
       if (edit) {
         editField(addFieldTarget, populated)
@@ -287,10 +316,14 @@ export default class WorkArea extends Component {
 
     switch (type) {
       case 'checkbox': {
+        // Value is forced as 1, because checked comparison
+        // wouldn't work if it were a freely chosen value
+
         return (
           <input {...getAttrs({
             type: 'checkbox',
-            value: value || 1
+            value: '1',
+            checked: value === '1',
           })} />
         )
       }
@@ -331,6 +364,7 @@ export default class WorkArea extends Component {
 
   renderModalControls = ({ attributes, label }) => {
     const { 'wplfbattributes': rawAttrData, ...attrs } = attributes
+
     let attrData = {}
 
     if (rawAttrData) {
