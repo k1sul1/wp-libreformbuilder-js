@@ -38,30 +38,8 @@ const dirtyParser = (html) => {
   return [el.tagName.toLowerCase(), attributes]
 }
 
-const logReturn = x => console.log(x) || x
 const objectFromArray = (obj, [k, v]) => ({ ...obj, [k]: v })
-const defaultFields = {
-  /* wrapper: {
-    children: [],
-    template: `<div class="outer"><h1>Heading</h1><div class="wplfb-field-container"></div></div>`,
-    label: false,
-    tag: 'div',
-    attributes: {
-      className: 'wplfb-child-container',
-    }
-  },
-  text: {
-    children: false,
-    template: `<div><h2>PERKELE</h2><div class="wplfb-field-container"></div></div>`,
-    label: 'Text field label',
-    tag: 'input',
-    attributes: {
-      type: 'text',
-      placeholder: 'Test',
-      name: 'text-input',
-    }
-  }, */
-}
+const defaultFields = {} // No defaults shipped with the app, provide from demo if necessary
 const defaultBuilderTree = {
   Root: {
     children: [],
@@ -73,22 +51,7 @@ const MODE_MOVE = 1
 const MODE_MOVE_ANYWHERE = 3
 const MODE_PREVIEW = 2
 
-export const MODES = {
-}
-
 const builderModes = {
-  // available: {
-    // insert: MODES[MODE_INSERT],
-    // move: MODES[MODE_MOVE],
-    // moveAnywhere: MODES[MODE_MOVE_ANYWHERE],
-    // preview: MODES[MODE_PREVIEW],
-  // },
-  /* available: [MODE_INSERT, MODE_MOVE, MODE_MOVE_ANYWHERE, MODE_PREVIEW].reduce((obj, mode) => {
-    const modeObj = MODES[mode]
-    obj[modeObj.name] = modeObj
-
-    return obj
-  }, {}), */
   available: {
     insert: {
       name: 'Insert',
@@ -250,7 +213,7 @@ export default kea({
         const { fieldKey } = payload
         const entries = Object.entries(state)
 
-        return logReturn(entries
+        return entries
           .map(([key, data]) => {
             const { children } = data
             const posInChildren = Array.isArray(children) ? children.indexOf(fieldKey) : -1
@@ -262,7 +225,7 @@ export default kea({
             return [key, data]
           })
           .filter(([key, data]) => key !== fieldKey)
-          .reduce(objectFromArray, {}))
+          .reduce(objectFromArray, {})
       },
     }],
   }),
