@@ -55,7 +55,14 @@ export default class WorkArea extends Component {
         selectedField: null,
         addFieldTarget: null,
         addFieldIndex: null,
+        addUnderField: null,
         edit: false,
+      },
+      preview: {
+        attributes: {
+
+        },
+        label: null,
       },
       moveAnywhere: {
         fieldKey: null,
@@ -76,18 +83,54 @@ export default class WorkArea extends Component {
   }
 
   closeModal = () => {
-    this.setState({ modal: {
-      open: false,
-      edit: false,
-      selectedField: null,
-    }})
+    this.setState({
+      modal: {
+        open: false,
+        edit: false,
+        selectedField: null,
+      },
+      preview: {
+        attributes: {},
+        label: null,
+      }
+    })
   }
 
   selectField = (key) => {
-    this.setState({ modal: {
-      ...this.state.modal,
-      selectedField: key,
-    }})
+    this.setState({
+      modal: {
+        ...this.state.modal,
+        selectedField: key,
+      },
+      preview: {
+        attributes: {},
+        label: null,
+      }
+    })
+  }
+
+  updatePreview = e => {
+    const { target } = e
+    const { value, name } = target
+
+    if (name === 'label') {
+      this.setState({
+        preview: {
+          ...this.state.preview,
+          label: value,
+        }
+      })
+    } else {
+      this.setState({
+        preview: {
+          ...this.state.preview,
+          attributes: {
+            ...this.state.preview.attributes,
+            [name]: value,
+          }
+        }
+      })
+    }
   }
 
   addField = (key, index) => {
@@ -212,6 +255,125 @@ export default class WorkArea extends Component {
     }
   }
 
+  getInput = (name, value, attrData = undefined) => {
+    const defaultData = {
+      type: ['required'].indexOf(name) > -1 ? 'checkbox' : 'text', // Default checkbox attributes
+      readOnly: null,
+      hidden: ['type'].indexOf(name) > -1, // Default blacklisted attributes
+    }
+
+    if (!attrData) {
+      attrData = defaultData
+    } else {
+      attrData = { ...defaultData, ...attrData }
+    }
+
+    const { type, hidden, readOnly } = attrData
+
+    if (hidden) {
+      return false
+    }
+
+    const getAttrs = (attrs = {}) => ({
+        name,
+        readOnly,
+        id: `control-${name}`,
+        value,
+        onChange: this.updatePreview,
+       ...attrs,
+    })
+
+    switch (type) {
+      case 'checkbox': {
+        return (
+          <input {...getAttrs({
+            type: 'checkbox',
+            value: value || 1
+          })} />
+        )
+      }
+
+      case 'text': {
+        return (
+          <input {...getAttrs({ type: 'text' })} />
+        )
+      }
+
+      default: {
+        console.error(`Invalid type ${attrData.type} for input ${name}, defaulting to text`)
+        return this.getInput(name, value)
+      }
+    }
+  }
+
+  printAttributes = ([name, value], attrData) => {
+    const saneName = this.getName(name)
+    const input = this.getInput(name, value, attrData[saneName])
+
+    if (input) {
+      return (
+        <label key={name} htmlFor={`control-${name}`}>
+          <strong>{saneName}</strong>
+
+          {input}
+        </label>
+      )
+    } else {
+      return null
+    }
+  }
+
+  getName = (name) => (({
+    className: 'class',
+  })[name] || name)
+
+  renderModalControls = ({ attributes, label }) => {
+    const { 'wplfbattributes': rawAttrData, ...attrs } = attributes
+    let attrData = {}
+
+    if (rawAttrData) {
+      try {
+        attrData = JSON.parse(rawAttrData)
+      } catch (e) {
+        console.error('Unable to parse attribute data, falling back to default', e)
+      }
+    }
+
+    return (
+      <div className="wplfb-attribute-customization">
+        {attrs ? (
+          Object.entries({
+            ...attrs,
+            ...this.state.preview.attributes,
+          }).reverse().map(pair => this.printAttributes(pair, attrData))
+        ) : (
+          <p>{`Field doen't allow attribute customization`}</p>
+        )}
+
+        {label ? (
+          <label htmlFor="control-label">
+            Field label
+
+            <input type="text" name="label" id="control-label"
+              onChange={this.updatePreview}
+              defaultValue={this.state.preview.label || label} />
+          </label>
+        ) : (
+          <p>{`Field doesn't take a label.`}</p>
+        )}
+      </div>
+    )
+  }
+
+  // Hack to not lose focus when typing into attributes because re-render happens
+  /* shouldComponentUpdate (newProps, newState) {
+    if (!isEqual(newState.preview, this.state.preview)) {
+      return false
+    }
+
+    return true
+  } */
+
   renderModal () {
     const state = this.state.modal
     const { builderTree, fields, getPopulatedField } = this.props
@@ -222,108 +384,9 @@ export default class WorkArea extends Component {
 
     const { open, addFieldTarget, addFieldIndex, selectedField, edit } = state
     const targetChildren = builderTree[addFieldTarget].children
-    const addUnder = targetChildren[addFieldIndex]
-    const controls = ({ attributes, label }) => {
-      const getName = (name) => (({
-        className: 'class',
-      })[name] || name)
-      const { 'wplfbattributes': rawAttrData, ...attrs } = attributes
-      let attrData = {}
 
-      if (rawAttrData) {
-        try {
-          attrData = JSON.parse(rawAttrData)
-        } catch (e) {
-          console.error('Unable to parse attribute data, falling back to default', e)
-        }
-      }
-
-      const getInput = (name, value, attrData = undefined) => {
-        const defaultData = {
-          type: ['required'].indexOf(name) > -1 ? 'checkbox' : 'text', // Default checkbox attributes
-          readOnly: null,
-          hidden: ['type'].indexOf(name) > -1, // Default blacklisted attributes
-        }
-
-        if (!attrData) {
-          attrData = defaultData
-        } else {
-          attrData = { ...defaultData, ...attrData }
-        }
-
-        const { type, hidden, readOnly } = attrData
-
-        if (hidden) {
-          return false
-        }
-
-        const getAttrs = (attrs = {}) => ({
-            name,
-            readOnly,
-            id: `control-${name}`,
-            defaultValue: value,
-           ...attrs,
-        })
-
-        switch (type) {
-          case 'checkbox': {
-            return (
-              <input {...getAttrs({
-                type: 'checkbox',
-                defaultValue: value || 1
-              })} />
-            )
-          }
-
-          case 'text': {
-            return (
-              <input {...getAttrs({ type: 'text' })} />
-            )
-          }
-
-          default: {
-            console.error(`Invalid type ${attrData.type} for input ${name}, defaulting to text`)
-            return getInput(name, value)
-          }
-        }
-      }
-      const printAttributes = ([name, value]) => {
-        const saneName = getName(name)
-        const input = getInput(name, value, attrData[saneName])
-
-        if (input) {
-          return (
-            <label key={`${name}-${value}`} htmlFor={`control-${name}`}>
-              <strong>{saneName}</strong>
-
-              {input}
-            </label>
-          )
-        } else {
-          return null
-        }
-      }
-
-      return (
-        <div className="wplfb-attribute-customization">
-          {attrs ? (
-            Object.entries(attrs).reverse().map(printAttributes)
-          ) : (
-            <p>{`Field doen't allow attribute customization`}</p>
-          )}
-
-          {label ? (
-            <label htmlFor="control-label">
-              Field label
-
-              <input type="text" name="label" id="control-label" defaultValue={label} />
-            </label>
-          ) : (
-            <p>{`Field doesn't take a label.`}</p>
-          )}
-        </div>
-      )
-    }
+    const defaultValue = [...targetChildren].reverse()[addFieldIndex]
+    const { addUnderField } = this.state.modal
 
     if (edit) {
       const currentFieldData = edit ? builderTree[addFieldTarget] : null
@@ -367,10 +430,32 @@ export default class WorkArea extends Component {
                 {disabled && <p>{`Fields that have children can't change field type.`}</p>}
               </section>
 
+              <section className="field-target">
+                <h3>Preview</h3>
+
+                {selectedField ? this.renderField(
+                  [addFieldTarget, getPopulatedField(
+                    selectedField,
+                    {
+                      ...builderTree[addFieldTarget],
+                      ...{
+                        label: this.state.preview.label,
+                        attributes: this.state.preview.attributes,
+                      },
+                    }
+                  )],
+                  0,
+                  'Root',
+                  { renderControls: false }
+                ) : (
+                  <p>Select field to display preview</p>
+                )}
+              </section>
+
               <section className="field-attributes">
                 <h3>Attributes</h3>
                 {selectedField
-                  ? controls({
+                  ? this.renderModalControls({
                     ...getPopulatedField(selectedField),
                     ...currentFieldData,
                   }) : <p>Select field first.</p>
@@ -414,59 +499,35 @@ export default class WorkArea extends Component {
               </section>
 
               <section className="field-target">
-                <h3>Target</h3>
+                <h3>Preview</h3>
 
-                <label htmlFor="wplfb-field-target">
-                  <h4>Parent</h4>
+                <input type="hidden" value={addFieldTarget} name="target" />
+                <input type="hidden" value={defaultValue} name="addUnderField" />
 
-                  <select name="target" id={'wplfb-field-target'} readOnly defaultValue={addFieldTarget}>
-                    {Object.entries(builderTree)
-                      .filter(([k, { children }]) => children)
-                      .map(([key, data]) => (
-                        <option value={key} key={key}>
-                          {key}
-                        </option>
-                      ))}
-                  </select>
-                </label>
-
-                {addUnder && (
-                  <label htmlFor={'wplfb-field-target-under'}>
-                    <h4>Child to add under</h4>
-
-                    <select
-                      name="addUnderField"
-                      id={'wplfb-field-target-under'}
-                      defaultValue={[...targetChildren].reverse()[addFieldIndex]}
-                    >
-                      {targetChildren
-                        .map((key, index) => {
-                          const field = builderTree[key]
-                          const { attributes } = field
-
-                          let text = `${field.name}`
-
-                          if (attributes && attributes.name) {
-                            text += ` - ${attributes.name}`
-                          }
-
-                          text += `: ${key}`
-
-                          return (
-                            <option value={key} key={key}>
-                              {text}
-                            </option>
-                          )
-                        })}
-                    </select>
-                  </label>
+                {this.renderField(!addUnderField
+                    ? [defaultValue, builderTree[defaultValue]]
+                    : [addUnderField, builderTree[addUnderField]],
+                  addFieldIndex,
+                  addFieldTarget,
+                  { renderControls: false }
+                )}
+                {selectedField ? this.renderField(
+                  ['preview', getPopulatedField(selectedField, {
+                    label: this.state.preview.label,
+                    attributes: this.state.preview.attributes,
+                  })],
+                  0,
+                  'Root',
+                  { renderControls: false }
+                ) : (
+                  <p>Select field to display preview</p>
                 )}
               </section>
 
               <section className="field-attributes">
                 <h3>Attributes</h3>
                 {selectedField
-                  ? controls(getPopulatedField(selectedField))
+                  ? this.renderModalControls(getPopulatedField(selectedField))
                   : <p>Select field first.</p>
                 }
               </section>
@@ -539,7 +600,10 @@ export default class WorkArea extends Component {
     }
   }
 
-  renderField ([key, data], index = 0, parent = 'Root') {
+  renderField ([key, data], index = 0, parent = 'Root', options = {
+    renderControls: true,
+  }) {
+
     const { builderTree, mode, modes } = this.props
     const { tag: Tag, attributes, children, template, label, field } = data
     const { name } = attributes
@@ -608,7 +672,7 @@ export default class WorkArea extends Component {
 
         <footer>
           <h4>{heading} <span className="wplfb-field-key">({key})</span></h4>
-          {this.renderControls(key, index)}
+          {options.renderControls && this.renderControls(key, index)}
         </footer>
       </article>
     )
