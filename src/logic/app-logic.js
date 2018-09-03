@@ -269,14 +269,76 @@ export default kea({
 
   start: function * () {
     const actions = this.actions
-    const fieldReq = yield req.get('/wplfb/fields')
-    const { data } = fieldReq
-    const fields = Object.entries(data.fields)
 
-    for (let i = 0; i < fields.length; i++) {
-      const [index, data] = fields[i]
+    try {
+      const fieldReq = yield req.get('/wplfb/fields')
+      const { data } = fieldReq
+      const fields = Object.entries(data.fields)
 
-      yield put(actions.addAvailableField(index, data))
+      console.log(fields)
+
+      for (let i = 0; i < fields.length; i++) {
+        const [index, data] = fields[i]
+
+        yield put(actions.addAvailableField(index, data))
+      }
+    } catch (e) {
+      console.error('Unable to get fields, running with demo', e)
+      const demoFields = [
+        [
+          "C0",
+          {
+            "name": "Wrapper",
+            "field": "<div class=\"wplfb-wrapper\" id=\"wrapper_#\"><div class=\"wplfb-child-container\"></div></div>",
+            "template": null,
+            "label": null
+          }
+        ],
+        [
+          "C1",
+          {
+            "name": "Text",
+            "field": "<input type=\"text\" required=\"true\" name=\"textinput\" class=\"\" placeholder=\"...\"\n          wplfbAttributes='{ \"type\": { \"hidden\": true } }'>",
+            "template": "<div class=\"wplfb-input\"><div class=\"wplfb-field-container\"></div></div>",
+            "label": "Default label"
+          }
+        ],
+        [
+          "C2",
+          {
+            "name": "Email",
+            "field": "<input type=\"email\" name=\"email\" class=\"\" placeholder=\"someone@example.com\"\n          wplfbAttributes='{ \"type\": { \"hidden\": true } }'>",
+            "template": "<div class=\"wplfb-input\"><div class=\"wplfb-field-container\"></div></div>",
+            "label": "Enter your email address"
+          }
+        ],
+        [
+          "C3",
+          {
+            "name": "Password",
+            "field": "<input type=\"password\" required name=\"password\" class=\"\" placeholder=\"hunter2\"\n          wplfbAttributes='{ \"type\": { \"hidden\": true } }'>",
+            "template": "<div class=\"wplfb-input\"><div class=\"wplfb-field-container\"></div></div>",
+            "label": "Enter your password"
+          }
+        ],
+        [
+          "C4",
+          {
+            "name": "Submit",
+            "field": "<input type=\"submit\" class=\"\" value=\"Submit\">",
+            "template": null,
+            "label": null
+          }
+        ]
+      ]
+
+      const fields = demoFields
+
+      for (let i = 0; i < fields.length; i++) {
+        const [index, data] = fields[i]
+
+        yield put(actions.addAvailableField(index, data))
+      }
     }
   },
 
