@@ -386,7 +386,6 @@ export default class WorkArea extends Component {
     const targetChildren = builderTree[addFieldTarget].children
 
     const defaultValue = [...targetChildren].reverse()[addFieldIndex]
-    const { addUnderField } = this.state.modal
 
     if (edit) {
       const currentFieldData = edit ? builderTree[addFieldTarget] : null
