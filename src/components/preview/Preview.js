@@ -9,15 +9,14 @@ import HTML from '../HTML/HTML'
 
 const renderTree = (tree) => {
   const nodeGenerator = ({ tag: Tag, attributes, children, key, template, label }) => {
+    const { wplfbattributes, ...attrs } = attributes
     const id = attributes.id || shortid.generate()
-    const textContent = attributes['data-text']
     let element = children ? (
-      <Tag id={id} {...attributes} key={`${key}-tag`}>
-        {textContent}
+      <Tag id={id} {...attrs} key={`${key}-tag`}>
         {children.map(key => nodeGenerator({ ...tree[key], key }))}
       </Tag>
     ) : (
-      <Tag id={id} {...attributes} key={`${key}-tag`} />
+      <Tag id={id} {...attrs} key={`${key}-tag`} />
     )
 
     if (label) {
