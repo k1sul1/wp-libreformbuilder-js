@@ -1,8 +1,10 @@
+// Only used by editors, CRA uses it's own template
+
 module.exports = {
   "parser": "babel-eslint",
   "root": true,
   "extends": [
-    "standard",
+    // "standard", // can't use standard with CRA because eslint config https://github.com/facebook/create-react-app/issues/3886
     "plugin:react/recommended",
     "plugin:jsx-a11y/recommended",
     "plugin:import/warnings",
@@ -15,7 +17,7 @@ module.exports = {
   ],
   "rules": {
     "comma-dangle": [0],
-    "indent": ["warn", 2, { "ignoreComments": true }],
+    // "indent": ["warn", 2, { "ignoreComments": true }], // standard rule
   },
   "env": {
     "browser": true,
