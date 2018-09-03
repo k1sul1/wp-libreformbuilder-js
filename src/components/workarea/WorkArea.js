@@ -136,6 +136,7 @@ export default class WorkArea extends Component {
   addField = (key, index) => {
     const { getFieldParent, getAbilityToHaveChildren } = this.props
     const addFieldTarget = getAbilityToHaveChildren(key) ? key : getFieldParent(key)
+
     this.openModal({
       addFieldTarget,
       addFieldIndex: index,
@@ -385,7 +386,7 @@ export default class WorkArea extends Component {
     const { open, addFieldTarget, addFieldIndex, selectedField, edit } = state
     const targetChildren = builderTree[addFieldTarget].children
 
-    const defaultValue = [...targetChildren].reverse()[addFieldIndex]
+    const defaultValue = [...targetChildren][addFieldIndex]
 
     if (edit) {
       const currentFieldData = edit ? builderTree[addFieldTarget] : null

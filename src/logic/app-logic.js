@@ -275,8 +275,6 @@ export default kea({
       const { data } = fieldReq
       const fields = Object.entries(data.fields)
 
-      console.log(fields)
-
       for (let i = 0; i < fields.length; i++) {
         const [index, data] = fields[i]
 
