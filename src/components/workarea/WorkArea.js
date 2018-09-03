@@ -463,7 +463,9 @@ export default class WorkArea extends Component {
                 }
               </section>
 
-              {selectedField && <Button onClick={this.handleSubmit}>Save</Button>}
+              {selectedField && (
+                <Button onClick={this.handleSubmit} className="bg-blue">Save</Button>
+              )}
             </form>
           </div>
         </Modal>
@@ -532,7 +534,9 @@ export default class WorkArea extends Component {
                 }
               </section>
 
-              {selectedField && <Button onClick={this.handleSubmit}>Add</Button>}
+              {selectedField && (
+                <Button onClick={this.handleSubmit} className="bg-blue">Add</Button>
+              )}
             </form>
           </div>
         </Modal>
