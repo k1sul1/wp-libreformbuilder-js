@@ -570,14 +570,14 @@ export default class WorkArea extends Component {
         return (
           <div className="controls">
             <div className="wplfb-button-group">
+              <Button title="Move anywhere" className="bg-gray" onClick={() => this.startMoveAnywhere(key)}>
+                <Icon icon="arrows-alt" srtext="Move anywhere" />
+              </Button>
               <Button title="Move upwards" className="bg-gray" onClick={() => this.moveUp(key, index)}>
                 <Icon icon="arrow-up" srtext="Move upwards" />
               </Button>
               <Button title="Move downwards" className="bg-gray" onClick={() => this.moveDown(key, index)}>
                 <Icon icon="arrow-down" srtext="Move downwards" />
-              </Button>
-              <Button title="Move anywhere" className="bg-gray" onClick={() => this.startMoveAnywhere(key)}>
-                <Icon icon="arrows-alt" srtext="Move anywhere" />
               </Button>
             </div>
 
@@ -634,15 +634,15 @@ export default class WorkArea extends Component {
     }
 
     const fieldIdentifier = (
-      <span className="wplfb-field-identifier">
+      <span className="wplfb-field-identifier" data-label="Field">
         {data.name}[{field}]
       </span>
     )
     const heading = name
       ? (
         <Fragment>
-          <span className="wplfb-field-name">{name}</span>
           {fieldIdentifier}
+          <span className="wplfb-field-name" data-label="Input name">{name}</span>
         </Fragment>
       )
       : fieldIdentifier
@@ -673,7 +673,7 @@ export default class WorkArea extends Component {
         <footer>
           <h4>
             {heading}
-            {isDevelopment() && <span className="wplfb-field-key">({key})</span>}
+            {isDevelopment() && <span className="wplfb-field-key" data-label="Field key">({key})</span>}
           </h4>
           {options.renderControls && this.renderControls(key, index)}
         </footer>

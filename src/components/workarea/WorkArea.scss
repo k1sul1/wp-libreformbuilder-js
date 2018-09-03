@@ -154,30 +154,13 @@
         position: absolute;
         top: 0;
         font-size: 0.75rem;
-      }
-    }
-
-    .wplfb-field-name {
-      &:before {
-        content: 'Input name';
-      }
-
-    }
-
-    .wplfb-field-identifier {
-      &:before {
-        content: 'Field ID';
+        content: attr(data-label);
       }
     }
 
     .wplfb-field-key {
       opacity: 0.8;
       float: right;
-      // font-size: 0.8em;
-
-      &:before {
-        content: 'Field key';
-      }
     }
   }
 
