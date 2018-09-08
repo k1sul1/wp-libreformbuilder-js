@@ -84,8 +84,12 @@
     }
   }
 
-  ul {
+  ul, ol {
     padding: 1rem 2rem;
     list-style: disc;
+
+    ul, ol {
+      padding: 0.5rem 1rem;
+    }
   }
 }
