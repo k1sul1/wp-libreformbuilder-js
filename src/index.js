@@ -56,7 +56,10 @@ if (WP.isAdmin()) {
       formbuilderBtn.addEventListener('click', runAppInAdmin)
     }
   } else if (isFieldPage) {
-    // noop
+    // The standard content field breaks UI flow, remove it
+    const content = document.getElementById('content')
+
+    content.parentNode.removeChild(content)
   }
 } else {
   main()
