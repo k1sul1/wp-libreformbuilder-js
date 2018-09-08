@@ -35,21 +35,28 @@ const runAppInAdmin = () => {
 }
 
 if (WP.isAdmin()) {
-  if (WP.active()) {
-    runAppInAdmin()
-  } else {
-    const bar = document.querySelector('#wp-content-editor-tools')
-    const publishBtn = document.querySelector('#publish')
-    const formbuilderBtn = publishBtn.cloneNode(true)
+  const isFormPage = document.body.classList.contains('post-type-wplf-form')
+  const isFieldPage = document.body.classList.contains('post-type-wplfb-field')
 
-    formbuilderBtn.id = null
-    formbuilderBtn.type = 'button'
-    formbuilderBtn.value = 'Use formbuilder'
-    formbuilderBtn.style.float = 'right'
-    formbuilderBtn.style.transform = 'translateY(-5px)'
-    bar.appendChild(formbuilderBtn)
+  if (isFormPage) {
+    if (WP.active()) {
+      runAppInAdmin()
+    } else {
+      const bar = document.querySelector('#wp-content-editor-tools')
+      const publishBtn = document.querySelector('#publish')
+      const formbuilderBtn = publishBtn.cloneNode(true)
 
-    formbuilderBtn.addEventListener('click', runAppInAdmin)
+      formbuilderBtn.id = null
+      formbuilderBtn.type = 'button'
+      formbuilderBtn.value = 'Use formbuilder'
+      formbuilderBtn.style.float = 'right'
+      formbuilderBtn.style.transform = 'translateY(-5px)'
+      bar.appendChild(formbuilderBtn)
+
+      formbuilderBtn.addEventListener('click', runAppInAdmin)
+    }
+  } else if (isFieldPage) {
+    // noop
   }
 } else {
   main()

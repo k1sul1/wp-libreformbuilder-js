@@ -63,6 +63,26 @@
   }
 
   textarea {
-    min-height: 300px;
+    min-height: 150px;
+  }
+
+  code {
+    display: block;
+  }
+
+  section {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #222;
+    margin-bottom: 1rem;
+
+    &:last-of-type {
+      border-bottom: 0;
+      margin-bottom: 0;
+    }
+  }
+
+  ul {
+    padding: 1rem 2rem;
+    list-style: disc;
   }
 }
