@@ -331,7 +331,7 @@ export default class WorkArea extends Component {
     }
   }
 
-  printAttributes = ([name, value], attrData) => {
+  printAttribute = ([name, value], attrData) => {
     const saneName = this.getName(name)
     const input = this.getInput(name, value, attrData[saneName])
 
@@ -372,7 +372,7 @@ export default class WorkArea extends Component {
           Object.entries({
             ...attrs,
             ...this.state.preview.attributes,
-          }).reverse().map(pair => this.printAttributes(pair, attrData))
+          }).reverse().map(pair => this.printAttribute(pair, attrData))
         ) : (
           <p>{`Field doen't allow attribute customization`}</p>
         )}
@@ -472,7 +472,7 @@ export default class WorkArea extends Component {
                   )],
                   0,
                   'Root',
-                  { renderControls: false }
+                  { renderControls: false, renderName: false, }
                 ) : (
                   <p>Select field to display preview</p>
                 )}
@@ -641,16 +641,17 @@ export default class WorkArea extends Component {
 
   renderField ([key, data], index = 0, parent = 'Root', options = {
     renderControls: true,
+    renderName: true, // if false, don't render the name attribute
   }) {
 
     const { builderTree, mode, modes } = this.props
     const { tag: Tag, attributes, children, template, label, field } = data
-    const { name } = attributes
+    const { name, ...attrs } = attributes
     const isMoveAnywhere = mode === modes.moveAnywhere
     const isBeingMoved = isMoveAnywhere && this.state.moveAnywhere.fieldKey === key
     const isBeingMovedInto = isMoveAnywhere && this.state.moveAnywhere.targetFieldKey === key
     let element = children ? (
-      <Tag {...attributes} readOnly>
+      <Tag name={options.renderName ? name : null} {...attrs} readOnly>
         {isMoveAnywhere && (
           <Button
             className="wplfb-ma-move-here-wrapper bg-blue"
@@ -665,7 +666,7 @@ export default class WorkArea extends Component {
         }
       </Tag>
     ) : (
-      <Tag {...attributes} readOnly />
+      <Tag name={options.renderName ? name : null} {...attrs} readOnly />
     )
 
     if (template) {
