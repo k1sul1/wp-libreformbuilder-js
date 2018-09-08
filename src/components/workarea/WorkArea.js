@@ -350,6 +350,7 @@ export default class WorkArea extends Component {
 
   getName = (name) => (({
     className: 'class',
+    htmlFor: 'for',
   })[name] || name)
 
   renderModalControls = ({ attributes, label }) => {
