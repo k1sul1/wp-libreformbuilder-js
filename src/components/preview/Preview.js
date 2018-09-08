@@ -104,13 +104,13 @@ export default class Preview extends Component {
         <p>Please note that this preview is subject to admin area styles,
           and the frontend probably looks different.</p>
 
-        <h2>Form preview</h2>
+        <h3>Form preview</h3>
 
         <div className="wplfb-preview-render" ref={n => { this.result = n }}>
           {renderTree(builderTree)}
         </div>
 
-        <h2>HTML preview</h2>
+        <h3>HTML preview</h3>
 
         <textarea className="wplfb-preview-html" value={previewHTML} readOnly />
       </div>
