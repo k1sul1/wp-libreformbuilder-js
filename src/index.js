@@ -57,9 +57,11 @@ if (WP.isAdmin()) {
     }
   } else if (isFieldPage) {
     // The standard content field breaks UI flow, remove it
-    const content = document.getElementById('content')
+    const content = document.getElementById('postdivrich')
 
-    content.parentNode.removeChild(content)
+    if (content) {
+      content.parentNode.removeChild(content)
+    }
   }
 } else {
   main()
