@@ -13,11 +13,14 @@ const renderTree = (tree) => {
     const { wplfbattributes: rawAttrData, ...attrs } = attributes
 
     let attrData =  {}
-    try {
-      attrData = JSON.parse(rawAttrData)
 
-    } catch (e) {
-      console.log('Unable to parse attribute data', e)
+    if (rawAttrData) {
+      try {
+        attrData = JSON.parse(rawAttrData)
+
+      } catch (e) {
+        console.log('Unable to parse attribute data', e)
+      }
     }
 
     Object.entries(attrs).forEach(([attrName, attrValue]) => {
@@ -37,11 +40,11 @@ const renderTree = (tree) => {
 
     const id = attributes.id || shortid.generate()
     let element = children ? (
-      <Tag id={id} {...attrs} key={`${key}-tag`}>
+      <Tag id={id} {...attrs} key={`${key}-tag`} readOnly>
         {children.map(key => nodeGenerator({ ...tree[key], key }))}
       </Tag>
     ) : (
-      <Tag id={id} {...attrs} key={`${key}-tag`} />
+      <Tag id={id} {...attrs} key={`${key}-tag`} readOnly />
     )
 
     if (label) {
