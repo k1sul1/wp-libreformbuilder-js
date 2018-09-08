@@ -40,11 +40,11 @@ const renderTree = (tree) => {
 
     const id = attributes.id || shortid.generate()
     let element = children ? (
-      <Tag id={id} {...attrs} key={`${key}-tag`} readOnly>
+      <Tag id={id} {...attrs} key={`${key}-tag`}>
         {children.map(key => nodeGenerator({ ...tree[key], key }))}
       </Tag>
     ) : (
-      <Tag id={id} {...attrs} key={`${key}-tag`} readOnly />
+      <Tag id={id} {...attrs} key={`${key}-tag`} />
     )
 
     if (label) {
