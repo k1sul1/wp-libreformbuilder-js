@@ -245,7 +245,17 @@ export default kea({
       }
     } catch (e) {
       console.error('Unable to get fields, running with demo', e)
+
       const demoFields = [
+        [
+          "U0",
+          {
+            "name": "Range input",
+            "field": "<input type=\"range\" name=\"rangeslider\" min=\"1\" max=\"5\" step=\"1\" value=\"3\" >",
+            "template": "<div class=\"wplfb-input\">\r\n  <div class=\"wplfb-field-container\"></div>\r\n  <div class=\"scale\" style=\"overflow: hidden;\">\r\n    <span class=\"lower\" style=\"float: left;\">Worse</span>\r\n    <span class=\"higher\" style=\"float: right;\">Better</span>\r\n  </div>\r\n</div>",
+            "label": "How did we do?"
+          }
+        ],
         [
           "C0",
           {
@@ -259,7 +269,7 @@ export default kea({
           "C1",
           {
             "name": "Text",
-            "field": "<input type=\"text\" required=\"true\" name=\"textinput\" class=\"\" placeholder=\"...\"\n          wplfbAttributes='{ \"type\": { \"hidden\": true } }'>",
+            "field": "<input type=\"text\" required name=\"textinput\" class=\"\" placeholder=\"Name\"\n          wplfbAttributes='{ \"type\": { \"hidden\": true } }'>",
             "template": "<div class=\"wplfb-input\"><div class=\"wplfb-field-container\"></div></div>",
             "label": "Default label"
           }
@@ -268,7 +278,7 @@ export default kea({
           "C2",
           {
             "name": "Email",
-            "field": "<input type=\"email\" name=\"email\" class=\"\" placeholder=\"someone@example.com\"\n          wplfbAttributes='{ \"type\": { \"hidden\": true } }'>",
+            "field": "<input type=\"email\" required name=\"email\" class=\"\" placeholder=\"someone@example.com\"\n          wplfbAttributes='{ \"type\": { \"hidden\": true } }'>",
             "template": "<div class=\"wplfb-input\"><div class=\"wplfb-field-container\"></div></div>",
             "label": "Enter your email address"
           }
