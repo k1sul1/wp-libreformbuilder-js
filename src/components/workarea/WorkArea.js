@@ -422,7 +422,9 @@ export default class WorkArea extends Component {
           <div className="wplfb">
             <header className="modal-header">
               <h2>Edit field</h2>
-              <Button className="bg-red" type="button" onClick={e => this.closeModal()}>&times;</Button>
+              <Button className="bg-red" type="button" onClick={e => this.closeModal()}>
+                <Icon icon="times" srtext="Close" />
+              </Button>
             </header>
 
             <form className="modal-content" ref={n => { this.modalForm = n }} onSubmit={this.handleSubmit}>
@@ -432,7 +434,7 @@ export default class WorkArea extends Component {
                 <div className="wplfb-button-group">
                   {Object.entries(fields).map(([key, data]) => (
                     <Button
-                      type="button"
+                      type="button bg-gray"
                       className={selectedField === key ? 'active bg-blue' : ''}
                       disabled={disabled}
                       onClick={(e) => this.actions.editField(addFieldTarget, {
