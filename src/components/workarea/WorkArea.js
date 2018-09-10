@@ -232,7 +232,7 @@ export default class WorkArea extends Component {
 
     // await new Promise(resolve => setTimeout(resolve, 300))
     moveField(fieldKey, targetFieldKey, preciseTarget)
-    setMode(modes.move)
+    setMode(modes.edit)
 
     this.setState({
       moveAnywhere: {
@@ -241,14 +241,6 @@ export default class WorkArea extends Component {
         targetChildToAddAfter: null,
       }
     })
-  }
-
-  moveToTop = (key) => {
-    this.actions.moveField(key, 'Root', 0)
-  }
-
-  moveToBottom = (key) => {
-    this.actions.moveField(key, 'Root', Number.MAX_SAFE_INTEGER)
   }
 
   deleteField = (key) => {
@@ -570,7 +562,7 @@ export default class WorkArea extends Component {
   }
 
   renderControls (key, index) {
-    const { mode, modes, builderTree } = this.props
+    const { builderTree } = this.props
     const isWrapperField = Array.isArray(builderTree[key].children)
     const parent = isWrapperField && this.props.getFieldParent(key)
 
@@ -583,59 +575,42 @@ export default class WorkArea extends Component {
         </div>
       )
     } else {
-      if (mode === modes.insert) {
-        return (
-          <div className="controls wplfb-button-group">
+      return (
+        <div className="controls">
+          <div className="wplfb-button-group">
+            <Button title="Move anywhere" className="bg-gray" onClick={() => this.startMoveAnywhere(key)}>
+              <Icon icon="arrows-alt" srtext="Move anywhere" />
+            </Button>
+            <Button title="Move upwards" className="bg-gray" onClick={() => this.moveUp(key, index)}>
+              <Icon icon="arrow-up" srtext="Move upwards" />
+            </Button>
+            <Button title="Move downwards" className="bg-gray" onClick={() => this.moveDown(key, index)}>
+              <Icon icon="arrow-down" srtext="Move downwards" />
+            </Button>
+          </div>
+
+          <div className="wplfb-button-group">
             {isWrapperField && (
-              <Button title="Add field inside" onClick={(e) => this.addField(key, index)}>
+              <Button title="Add field inside" className="bg-gray" onClick={(e) => this.addField(key, index)}>
                 <Icon icon="plus-square" srtext="Add field inside" />
               </Button>
             )}
-            <Button title="Add field under" onClick={(e) => isWrapperField
+            <Button title="Add field under" className="bg-gray" onClick={(e) => isWrapperField
               ? this.addField(parent, index)
               : this.addField(key, index)
             }>
               <Icon icon="plus" srtext="Add field under" />
             </Button>
-            <Button title="Edit field" onClick={(e) => this.editField(key, index)}>
+            <Button title="Edit field" className="bg-gray" onClick={(e) => this.editField(key, index)}>
               <Icon icon="edit" srtext="Edit field" />
             </Button>
-            <Button title="Delete" className="bg-red" onClick={(e) => this.deleteField(key)}>
-              <Icon icon="trash-alt" srtext="Delete" />
-            </Button>
-          </div>
-        )
-      } else {
-        return (
-          <div className="controls">
-            <div className="wplfb-button-group">
-              <Button title="Move anywhere" className="bg-gray" onClick={() => this.startMoveAnywhere(key)}>
-                <Icon icon="arrows-alt" srtext="Move anywhere" />
-              </Button>
-              <Button title="Move upwards" className="bg-gray" onClick={() => this.moveUp(key, index)}>
-                <Icon icon="arrow-up" srtext="Move upwards" />
-              </Button>
-              <Button title="Move downwards" className="bg-gray" onClick={() => this.moveDown(key, index)}>
-                <Icon icon="arrow-down" srtext="Move downwards" />
-              </Button>
-            </div>
-
-            <div className="wplfb-button-group">
-              <Button title="Move to top" className="bg-gray" onClick={(e) => this.moveToTop(key)}>
-                <Icon icon="angle-double-up" srtext="Move to top" />
-              </Button>
-
-              <Button title="Move to bottom" className="bg-gray" onClick={(e) => this.moveToBottom(key)}>
-                <Icon icon="angle-double-down" srtext="Move to bottom" />
-              </Button>
-            </div>
 
             <Button className="bg-red" onClick={(e) => this.deleteField(key)}>
               <Icon icon="trash-alt" srtext="Delete" />
             </Button>
           </div>
-        )
-      }
+        </div>
+      )
     }
   }
 

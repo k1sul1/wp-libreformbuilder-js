@@ -60,7 +60,7 @@ export default class Builder extends Component {
           </div>
         </header>
 
-        {(activeMode === modes.insert || activeMode === modes.move) && (
+        {activeMode === modes.edit && (
           <WorkArea
             mode={mode}
             modes={modes}

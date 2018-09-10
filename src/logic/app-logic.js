@@ -46,26 +46,21 @@ const defaultBuilderTree = {
   },
 }
 
-const MODE_INSERT = 0
-const MODE_MOVE = 1
-const MODE_MOVE_ANYWHERE = 3
-const MODE_PREVIEW = 2
+const MODE_PREVIEW = 0
+const MODE_EDIT = 1
+const MODE_MOVE_ANYWHERE = 2
+
 
 const builderModes = {
   available: {
-    insert: {
-      name: 'Insert',
+    edit: {
+      name: 'Edit',
       submode: false,
-      id: MODE_INSERT,
-    },
-    move: {
-      name: 'Move',
-      submode: false,
-      id: MODE_MOVE,
+      id: MODE_EDIT,
     },
     moveAnywhere: {
       name: 'Move anywhere',
-      submode: MODE_MOVE,
+      submode: MODE_EDIT,
       id: MODE_MOVE_ANYWHERE,
     },
     preview: {
@@ -74,7 +69,7 @@ const builderModes = {
       id: MODE_PREVIEW,
     },
   },
-  enabled: MODE_INSERT,
+  enabled: MODE_EDIT,
 }
 
 export default kea({
