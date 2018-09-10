@@ -6,7 +6,7 @@
 .work-area {
   padding: 1.5rem 1rem;
   padding-bottom: 0.5rem;
-  transition: 0.8s ease;
+  // transition: 0.8s ease;
   position: relative;
 
   .child-container {
@@ -60,6 +60,7 @@
 
   .controls {
     display: flex;
+    transition: 0.1s ease-in;
 
     @media (max-width: 480px) {
       display: block;
@@ -135,7 +136,7 @@
   border: 1px solid #222;
   margin-top: 1rem;
   // margin-top: 46px;
-  transition: 0.8s ease;
+  // transition: 0.8s ease;
 
   &.wplfb-ma-show-controls {
     margin-top: 46px;
@@ -158,6 +159,7 @@
     color: #f1f1f1;
     padding: 0.25rem 0.5rem;
     padding: 6px 4px;
+    overflow: hidden;
 
     h4 {
       margin: 0;
@@ -208,6 +210,18 @@
     flex-flow: column nowrap;
     align-items: flex-start;
     justify-content: center;
+  }
+
+  @media (min-width: 1280px) {
+    > footer .controls {
+      transform: translateY(-150%);
+    }
+
+    &:hover {
+      > footer .controls {
+        transform: translateY(0);
+      }
+    }
   }
 }
 
