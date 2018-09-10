@@ -135,8 +135,24 @@
 .wplfb-field {
   border: 1px solid #222;
   margin-top: 1rem;
-  // margin-top: 46px;
-  // transition: 0.8s ease;
+  background: #f1f1f1;
+  transition: background 0.1s ease;
+
+  &:focus-within, &:hover {
+    background: lighten(#f1f1f1, 10%);
+  }
+
+  @media (min-width: 1280px) {
+    > footer .controls {
+      transform: translateY(-150%);
+    }
+
+    &:hover, &:focus-within {
+      > footer .controls {
+        transform: translateY(0);
+      }
+    }
+  }
 
   &.wplfb-ma-show-controls {
     margin-top: 46px;
@@ -205,23 +221,11 @@
   section {
     padding: 0.5rem;
     min-height: 3rem;
-    background: #f1f1f1;
+    background: transparent;
     display: flex;
     flex-flow: column nowrap;
     align-items: flex-start;
     justify-content: center;
-  }
-
-  @media (min-width: 1280px) {
-    > footer .controls {
-      transform: translateY(-150%);
-    }
-
-    &:hover {
-      > footer .controls {
-        transform: translateY(0);
-      }
-    }
   }
 }
 
