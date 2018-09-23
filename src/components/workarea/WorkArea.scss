@@ -134,6 +134,10 @@
 
 .wplfb-field {
   outline: 1px solid #222;
+  // sidemargins are to make sure that outlines do not collapse on nested fields
+  margin-left: 1px;
+  margin-right: 1px;
+
   margin-top: 1rem;
   background: #f1f1f1;
   transition: background 0.1s ease;
