@@ -643,7 +643,7 @@ export default class WorkArea extends Component {
         }
       </Tag>
     ) : (
-      <Tag name={options.renderName ? name : null} {...attrs} readOnly />
+      <Tag name={options.renderName ? name : null} {...attrs} readOnly disabled={Tag === 'button' || attributes.type === 'submit'} />
     )
 
     if (template) {
