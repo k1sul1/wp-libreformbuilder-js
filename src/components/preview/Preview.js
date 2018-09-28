@@ -9,8 +9,8 @@ import HTML from '../HTML/HTML'
 import { getFieldAttributeMeta } from '../../utils/field-attribute-meta'
 
 const renderTree = (tree) => {
-  const nodeGenerator = ({ tag: Tag, attributes, children, key, template, label }) => {
-    const { wplfbattributes: rawAttrData, ...attrs } = attributes
+  const nodeGenerator = ({ tag: Tag, attributes, children, key, template, label, valueAsInnerText }) => {
+    const { wplfbattributes: rawAttrData, value, ...attrs } = attributes
 
     let attrData =  {}
 
@@ -40,11 +40,16 @@ const renderTree = (tree) => {
 
     const id = attributes.id || shortid.generate()
     let element = children ? (
-      <Tag id={id} {...attrs} key={`${key}-tag`}>
+      <Tag id={id} {...attrs} {...{value}} key={`${key}-tag`}>
         {children.map(key => nodeGenerator({ ...tree[key], key }))}
       </Tag>
     ) : (
-      <Tag id={id} {...attrs} key={`${key}-tag`} />
+      <Tag
+        id={id}
+        {...{ [`${valueAsInnerText ? 'children' : 'value'}`]: value }}
+        {...attrs}
+        key={`${key}-tag`}
+      />
     )
 
     if (label) {
