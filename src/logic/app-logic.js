@@ -15,14 +15,14 @@ const getFieldTagAndAttributes = (html) => {
   const attributes = {}
   const tagObj = {
     tag: el.tagName.toLowerCase(),
-    valueAsInnerText: false,
+    containsTextNode: false,
   }
 
   if (el.childNodes) {
     const child = el.childNodes[0]
 
     if (child && child.nodeType === Node.TEXT_NODE) {
-      tagObj.valueAsInnerText = true
+      tagObj.containsTextNode = true
       attributes.value = child.textContent
     }
   }
@@ -125,7 +125,7 @@ export default kea({
         const [key, data] = Object.entries(payload)[0]
         const { field, ...filtered } = data
         const [tagObj, attributes] = getFieldTagAndAttributes(field)
-        const { tag, valueAsInnerText } = tagObj
+        const { tag, containsTextNode } = tagObj
 
         // If field contains a string "wplfb-child-container", allow putting children inside this field.
         const children = data.field.indexOf('wplfb-child-container') !== -1 ? [] : false
@@ -133,7 +133,7 @@ export default kea({
           [key]: {
             children,
             tag,
-            valueAsInnerText,
+            containsTextNode,
             attributes,
             ...filtered,
           }

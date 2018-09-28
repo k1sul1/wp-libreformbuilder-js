@@ -9,7 +9,7 @@ import HTML from '../HTML/HTML'
 import { getFieldAttributeMeta } from '../../utils/field-attribute-meta'
 
 const renderTree = (tree) => {
-  const nodeGenerator = ({ tag: Tag, attributes, children, key, template, label, valueAsInnerText }) => {
+  const nodeGenerator = ({ tag: Tag, attributes, children, key, template, label, containsTextNode }) => {
     const { wplfbattributes: rawAttrData, value, ...attrs } = attributes
 
     let attrData =  {}
@@ -46,7 +46,7 @@ const renderTree = (tree) => {
     ) : (
       <Tag
         id={id}
-        {...{ [`${valueAsInnerText ? 'children' : 'value'}`]: value }}
+        {...{ [`${containsTextNode ? 'children' : 'value'}`]: value }}
         {...attrs}
         key={`${key}-tag`}
       />

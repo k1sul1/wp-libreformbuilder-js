@@ -622,7 +622,7 @@ export default class WorkArea extends Component {
   }) {
 
     const { builderTree, mode, modes } = this.props
-    const { tag: Tag, attributes, children, template, label, field, valueAsInnerText } = data
+    const { tag: Tag, attributes, children, template, label, field, containsTextNode } = data
     const { name, value, ...attrs } = attributes
     const isMoveAnywhere = mode === modes.moveAnywhere
     const isBeingMoved = isMoveAnywhere && this.state.moveAnywhere.fieldKey === key
@@ -645,7 +645,7 @@ export default class WorkArea extends Component {
     ) : (
       <Tag
         name={options.renderName ? name : null}
-        {...{ [`${valueAsInnerText ? 'children' : 'value'}`]: value }}
+        {...{ [`${containsTextNode ? 'children' : 'value'}`]: value }}
         {...attrs}
         readOnly
         disabled={Tag === 'button' || attributes.type === 'submit'}
