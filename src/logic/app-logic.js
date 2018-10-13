@@ -10,6 +10,8 @@ const getFieldTagAndAttributes = (html) => {
   let el = document.createElement('div')
   el.innerHTML = html
 
+  console.log(el)
+
   el = el.children[0]
 
   const attributes = {}
@@ -122,6 +124,7 @@ export default kea({
     }],
     fields: [defaultFields, PropTypes.object, {}, {
       [actions.addAvailableField]: (state, payload) => {
+        console.log(payload)
         const [key, data] = Object.entries(payload)[0]
         const { field, ...filtered } = data
         const [tagObj, attributes] = getFieldTagAndAttributes(field)

@@ -623,6 +623,8 @@ export default class WorkArea extends Component {
 
     const { builderTree, mode, modes } = this.props
     const { tag: Tag, attributes, children, template, label, field, containsTextNode } = data
+
+    console.log('wtf', children)
     const { name, value, ...attrs } = attributes
     const isMoveAnywhere = mode === modes.moveAnywhere
     const isBeingMoved = isMoveAnywhere && this.state.moveAnywhere.fieldKey === key
