@@ -5,38 +5,7 @@ import pretty from 'pretty'
 import shortid from 'shortid'
 import PropTypes from 'prop-types'
 import req from '../utils/req'
-
-const getFieldTagNameAndAttributes = (html) => {
-  let el = document.createElement('div')
-  el.innerHTML = html
-  el = el.children[0]
-
-  const attributes = {}
-
-  for (let i = el.attributes.length - 1; i >= 0; i--) {
-    const k = el.attributes[i].name
-    const v = el.attributes[i].value
-
-    switch (k) {
-    case 'class': {
-      attributes['className'] = v
-      break
-    }
-
-    case 'for': {
-      attributes['htmlFor'] = v
-      break
-    }
-
-    default: {
-      attributes[k] = v
-      break
-    }
-    }
-  }
-
-  return [el.tagName.toLowerCase(), attributes]
-}
+import parser from 'html-react-parser'
 
 const objectFromArray = (obj, [k, v]) => ({ ...obj, [k]: v })
 const defaultFields = {} // No defaults shipped with the app, provide from demo if necessary
@@ -109,10 +78,40 @@ export default kea({
       [actions.addAvailableField]: (state, payload) => {
         const [key, data] = Object.entries(payload)[0]
         const { field, ...filtered } = data
-        const [tag, attributes] = getFieldTagNameAndAttributes(field)
+
+        const extract = objOrString => {
+          if (typeof objOrString === 'string') {
+            return {
+              type: 'html',
+              tag: 'textNode',
+              props: {
+                children: objOrString,
+              }
+            }
+          }
+
+          const { type: tag, props } = objOrString
+
+          return {
+            type: 'html', // the other type is component
+            tag,
+            props,
+          }
+        }
+
+        const { tag, props } = extract(parser(field))
+        const { children: nodeChildren, ...attributes } = props
+        const children = nodeChildren 
+          ? typeof nodeChildren === 'string' 
+            ? nodeChildren
+            // : Array.from(nodeChildren).map(extract) 
+            : Array.from(nodeChildren)
+              .filter(n => !(typeof n === 'string' && n === '\n'))
+              .map(extract)
+          : false
 
         // If field contains a string "wplfb-child-container", allow putting children inside this field.
-        const children = data.field.indexOf('wplfb-child-container') !== -1 ? [] : false
+        // const children = data.field.indexOf('wplfb-child-container') !== -1 ? [] : false
         const fieldObj = {
           [key]: {
             children,
@@ -139,9 +138,10 @@ export default kea({
           throw new Error(`Attempted to add a new field to a nonexistent parent ${to}`)
         }
 
-        if (rest.children && rest.children.length !== 0) {
-          throw new Error(`Field can't contain children on creation!`)
-        }
+        /* What is this? Why? ??? */
+        // if (rest.children && rest.children.length !== 0) {
+        //   throw new Error(`Field can't contain children on creation!`)
+        // }
 
         const children = state[to].children
         children.splice(toIndex, 0, id)

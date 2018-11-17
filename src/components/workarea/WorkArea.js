@@ -261,7 +261,8 @@ export default class WorkArea extends Component {
       const targetIndex = temp.length ? temp.indexOf(addUnderField) : 0
 
       const populated = getPopulatedField(selectedField, { attributes, label })
-      populated.children = Array.isArray(populated.children) ? [] : false
+      console.log(target, targetIndex + 1, entries, populated)
+      // populated.children = Array.isArray(populated.children) ? [] : false
 
       if (edit) {
         editField(addFieldTarget, populated)
@@ -532,6 +533,11 @@ export default class WorkArea extends Component {
                   addFieldTarget,
                   { renderControls: false }
                 )}
+
+                {selectedField && console.log(selectedField, getPopulatedField(selectedField, {
+                  label: this.state.preview.label,
+                  attributes: this.state.preview.attributes,
+                }))}
                 {selectedField ? this.renderField(
                   ['preview', getPopulatedField(selectedField, {
                     label: this.state.preview.label,
@@ -621,12 +627,18 @@ export default class WorkArea extends Component {
     renderName: true, // if false, don't render the name attribute
   }) {
 
+    if (!data) {
+      console.log('wtf?', { key, data, index, parent, options })
+      return false
+    }
+
     const { builderTree, mode, modes } = this.props
     const { tag: Tag, attributes, children, template, label, field } = data
-    const { name, ...attrs } = attributes
+    const { name, ...attrs } = attributes || {}
     const isMoveAnywhere = mode === modes.moveAnywhere
     const isBeingMoved = isMoveAnywhere && this.state.moveAnywhere.fieldKey === key
     const isBeingMovedInto = isMoveAnywhere && this.state.moveAnywhere.targetFieldKey === key
+    // console.log('children', key, children)
     let element = children ? (
       <Tag name={options.renderName ? name : null} {...attrs} readOnly>
         {isMoveAnywhere && (
@@ -637,10 +649,46 @@ export default class WorkArea extends Component {
             Move field here
           </Button>
         )}
-        {children
+        {/*children
           .map(id => [id, builderTree[id]])
           .map(([id, data], i) => this.renderField([id, data], i, key))
+        */}
+        {children
+          .map((x, i) => {
+            const isComponent = typeof x === 'string'
+
+            if (isComponent) {
+              // x is child key
+              const child = builderTree[x] || {}
+
+              return this.renderField([x, child], i, key)
+            }
+
+            const { type = 'component', tag, props } = x
+            console.log({ x, type, tag, props })
+            if (type === 'html') {
+              if (tag !== 'textNode') {
+                const Tag = tag
+                
+                return <Tag {...props} key={`c-${tag}-${i}`}/>
+              }
+
+              return typeof props.children === 'string' 
+                ? props.children
+                : props.children.join('')
+              // return "kissa";
+              // return props.children[0] // Should only contain one
+            } else {
+              console.log('what the fuck is happening', x)
+            }
+
+            return null
+          })
         }
+        {false && children && isDevelopment() && <div>
+          <strong>Children</strong>
+          {JSON.stringify(children, null, 2)}
+        </div>}
       </Tag>
     ) : (
       <Tag name={options.renderName ? name : null} {...attrs} readOnly disabled={Tag === 'button' || attributes.type === 'submit'} />

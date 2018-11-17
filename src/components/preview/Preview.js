@@ -9,10 +9,11 @@ import HTML from '../HTML/HTML'
 import { getFieldAttributeMeta } from '../../utils/field-attribute-meta'
 
 const renderTree = (tree) => {
-  const nodeGenerator = ({ tag: Tag, attributes, children, key, template, label }) => {
+  const nodeGenerator = ({ tag: Tag, attributes = {}, children, key, template, label }) => {
     const { wplfbattributes: rawAttrData, ...attrs } = attributes
 
-    let attrData =  {}
+    console.log('pls', { Tag, attributes, children, key, template, label })
+    let attrData =  {} 
 
     if (rawAttrData) {
       try {
