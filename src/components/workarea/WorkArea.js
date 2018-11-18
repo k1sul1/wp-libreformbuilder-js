@@ -638,7 +638,6 @@ export default class WorkArea extends Component {
     const isMoveAnywhere = mode === modes.moveAnywhere
     const isBeingMoved = isMoveAnywhere && this.state.moveAnywhere.fieldKey === key
     const isBeingMovedInto = isMoveAnywhere && this.state.moveAnywhere.targetFieldKey === key
-    // console.log('children', key, children)
     let element = children ? (
       <Tag name={options.renderName ? name : null} {...attrs} readOnly>
         {isMoveAnywhere && (
@@ -649,10 +648,6 @@ export default class WorkArea extends Component {
             Move field here
           </Button>
         )}
-        {/*children
-          .map(id => [id, builderTree[id]])
-          .map(([id, data], i) => this.renderField([id, data], i, key))
-        */}
         {children
           .map((x, i) => {
             const isComponent = typeof x === 'string'

@@ -103,7 +103,7 @@ export default kea({
         const { children: nodeChildren, ...attributes } = props
         const children = nodeChildren 
           ? typeof nodeChildren === 'string' 
-            ? nodeChildren
+            ? [extract(nodeChildren)]
             // : Array.from(nodeChildren).map(extract) 
             : Array.from(nodeChildren)
               .filter(n => !(typeof n === 'string' && n === '\n'))

@@ -44,35 +44,25 @@ const renderTree = (tree) => {
     const id = attributes.id || shortid.generate()
     let element = children ? (
       <Tag id={id} {...attrs} key={`${key}-tag`}>
-        {/*children.map(key => nodeGenerator({ ...tree[key], key }))*/}
         {children.map((x, i) => {
           // x may be a string key or an object
           const isComponent = typeof x === 'string'
-          console.log(x, isComponent)
 
           if (isComponent) {
-            // x is child key
-            // const child = tree[x] || {}
             return nodeGenerator({ ...tree[x], key: x })
-            // return "kissa"
           }
 
           const { type = 'component', tag, props } = x
           if (type === 'html') {
             if (tag !== 'textNode') {
               const Tag = tag
-              console.log('not textnode', type, tag, props, i)
               
               return <Tag {...props} key={`c-${tag}-${i}`}/>
             }
 
-            console.log('is textnode', props.children, x)
-
             return typeof props.children === 'string' 
               ? props.children
               : props.children.join('')
-            // return "kissa";
-            // return props.children[0] // Should only contain one
           } else {
             console.log('what the fuck is happening', x)
           }
@@ -100,9 +90,8 @@ const renderTree = (tree) => {
     return element
   }
 
-  // console.log(tree.Root.children.map(k => ({ ...tree[k], key: k })))
   const rootNodes = tree.Root.children
-    .map(key => console.log('key?', key) || ({ ...tree[key], key }))
+    .map(key => ({ ...tree[key], key }))
     .map(nodeGenerator)
 
   return (
