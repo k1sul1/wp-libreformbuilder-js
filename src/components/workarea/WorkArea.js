@@ -622,13 +622,15 @@ export default class WorkArea extends Component {
   }) {
 
     const { builderTree, mode, modes } = this.props
-    const { tag: Tag, attributes, children, template, label, field } = data
-    const { name, ...attrs } = attributes
+    const { tag: Tag, attributes, children, template, label, field, containsTextNode } = data
+
+    console.log('wtf', children)
+    const { name, value, ...attrs } = attributes
     const isMoveAnywhere = mode === modes.moveAnywhere
     const isBeingMoved = isMoveAnywhere && this.state.moveAnywhere.fieldKey === key
     const isBeingMovedInto = isMoveAnywhere && this.state.moveAnywhere.targetFieldKey === key
     let element = children ? (
-      <Tag name={options.renderName ? name : null} {...attrs} readOnly>
+      <Tag name={options.renderName ? name : null} {...{value}} {...attrs} readOnly>
         {isMoveAnywhere && (
           <Button
             className="wplfb-ma-move-here-wrapper bg-blue"
@@ -643,7 +645,13 @@ export default class WorkArea extends Component {
         }
       </Tag>
     ) : (
-      <Tag name={options.renderName ? name : null} {...attrs} readOnly disabled={Tag === 'button' || attributes.type === 'submit'} />
+      <Tag
+        name={options.renderName ? name : null}
+        {...{ [`${containsTextNode ? 'children' : 'value'}`]: value }}
+        {...attrs}
+        readOnly
+        disabled={Tag === 'button' || attributes.type === 'submit'}
+        />
     )
 
     if (template) {

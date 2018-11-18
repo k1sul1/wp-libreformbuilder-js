@@ -6,12 +6,29 @@ import shortid from 'shortid'
 import PropTypes from 'prop-types'
 import req from '../utils/req'
 
-const getFieldTagNameAndAttributes = (html) => {
+const getFieldTagAndAttributes = (html) => {
   let el = document.createElement('div')
   el.innerHTML = html
+
+  console.log(el)
+
   el = el.children[0]
 
   const attributes = {}
+  const tagObj = {
+    tag: el.tagName.toLowerCase(),
+    containsTextNode: false,
+  }
+
+  if (el.childNodes) {
+    const child = el.childNodes[0]
+
+    if (child && child.nodeType === Node.TEXT_NODE) {
+      tagObj.containsTextNode = true
+      attributes.value = child.textContent
+    }
+  }
+
 
   for (let i = el.attributes.length - 1; i >= 0; i--) {
     const k = el.attributes[i].name
@@ -35,7 +52,7 @@ const getFieldTagNameAndAttributes = (html) => {
     }
   }
 
-  return [el.tagName.toLowerCase(), attributes]
+  return [tagObj, attributes]
 }
 
 const objectFromArray = (obj, [k, v]) => ({ ...obj, [k]: v })
@@ -107,9 +124,11 @@ export default kea({
     }],
     fields: [defaultFields, PropTypes.object, {}, {
       [actions.addAvailableField]: (state, payload) => {
+        console.log(payload)
         const [key, data] = Object.entries(payload)[0]
         const { field, ...filtered } = data
-        const [tag, attributes] = getFieldTagNameAndAttributes(field)
+        const [tagObj, attributes] = getFieldTagAndAttributes(field)
+        const { tag, containsTextNode } = tagObj
 
         // If field contains a string "wplfb-child-container", allow putting children inside this field.
         const children = data.field.indexOf('wplfb-child-container') !== -1 ? [] : false
@@ -117,6 +136,7 @@ export default kea({
           [key]: {
             children,
             tag,
+            containsTextNode,
             attributes,
             ...filtered,
           }
