@@ -665,7 +665,6 @@ export default class WorkArea extends Component {
             }
 
             const { type = 'component', tag, props } = x
-            console.log({ x, type, tag, props })
             if (type === 'html') {
               if (tag !== 'textNode') {
                 const Tag = tag
