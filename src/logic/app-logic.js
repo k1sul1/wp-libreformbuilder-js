@@ -7,6 +7,9 @@ import PropTypes from 'prop-types'
 import req from '../utils/req'
 import parser from 'html-react-parser'
 
+
+alert("Add field children to workarea preview state and make them editable in the modal")
+
 const objectFromArray = (obj, [k, v]) => ({ ...obj, [k]: v })
 const defaultFields = {} // No defaults shipped with the app, provide from demo if necessary
 const defaultBuilderTree = {

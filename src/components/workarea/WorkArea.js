@@ -65,6 +65,7 @@ export default class WorkArea extends Component {
 
         },
         label: null,
+        textNode: null,
       },
       moveAnywhere: {
         fieldKey: null,
@@ -138,6 +139,13 @@ export default class WorkArea extends Component {
         preview: {
           ...this.state.preview,
           label: value,
+        }
+      })
+    } else if (name === 'textNode') {
+      this.setState({
+        preview: {
+          ...this.state.preview,
+          textNode: value,
         }
       })
     } else {
@@ -261,8 +269,6 @@ export default class WorkArea extends Component {
       const targetIndex = temp.length ? temp.indexOf(addUnderField) : 0
 
       const populated = getPopulatedField(selectedField, { attributes, label })
-      console.log(target, targetIndex + 1, entries, populated)
-      // populated.children = Array.isArray(populated.children) ? [] : false
 
       if (edit) {
         editField(addFieldTarget, populated)
@@ -346,9 +352,14 @@ export default class WorkArea extends Component {
     htmlFor: 'for',
   })[name] || name)
 
-  renderModalControls = ({ attributes, label }) => {
+  renderModalControls = ({ attributes, label, children, ...rest }) => {
+    console.log(attributes, label, children, rest)
     const { 'wplfbattributes': rawAttrData, ...attrs } = attributes
 
+    const singleTextChild = children && children.length === 1 && children[0].tag === 'textNode'
+    if (singleTextChild) {
+      console.log('element has a singular child', children)
+    }
     let attrData = {}
 
     if (rawAttrData) {
@@ -368,6 +379,22 @@ export default class WorkArea extends Component {
           }).reverse().map(pair => this.printAttribute(pair, attrData))
         ) : (
           <p>{`Field doen't allow attribute customization`}</p>
+        )}
+
+        {children && children.map(child => {
+          return JSON.stringify(child, null, 2)
+        })}
+
+        {singleTextChild ? (
+          <label htmlFor="control-textNode">
+            Text
+
+            <input type="text" name="textNode" id="control-textNode"
+              onChange={this.updatePreview}
+              defaultValue={this.state.preview.textNode || children[0].props.children} />
+          </label>
+        ) : (
+          null
         )}
 
         {label ? (
@@ -541,6 +568,7 @@ export default class WorkArea extends Component {
                 {selectedField ? this.renderField(
                   ['preview', getPopulatedField(selectedField, {
                     label: this.state.preview.label,
+                    textNode: this.state.preview.textNode,
                     attributes: this.state.preview.attributes,
                   })],
                   0,
@@ -631,6 +659,8 @@ export default class WorkArea extends Component {
       console.log('wtf?', { key, data, index, parent, options })
       return false
     }
+
+    console.log(data)
 
     const { builderTree, mode, modes } = this.props
     const { tag: Tag, attributes, children, template, label, field } = data
